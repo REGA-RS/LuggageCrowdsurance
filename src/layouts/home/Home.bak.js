@@ -6,23 +6,38 @@ class Home extends Component {
     super(props)
 
     this.contracts = context.drizzle.contracts
-    this.handleSetButton = this.handleSetButton.bind(this)
+    this.handleScoringButton = this.handleScoringButton.bind(this)
     this.handleSendTokens = this.handleSendTokens.bind(this)
+    this.handleApproveTokens = this.handleApproveTokens.bind(this)
+    this.handleJoinButton = this.handleJoinButton.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
 
     this.state = {
-      storageAmount: 0,
+      joinAmount: 0,
+      newMemberAddress: '',
+      newMemberScore: 0,
+      newMemberJoinAmount: 0,
       tokenRecipientAddress: '',
-      tokenTransferAmount: 0
+      tokenTransferAmount: 0,
+      tokenApproveAddress: '',
+      tokenApproveAmount: 0
     }
   }
 
-  handleSetButton() {
-    this.contracts.SimpleStorage.methods.set(this.state.storageAmount).send()
+  handleScoringButton() {
+    this.contracts.LCSToken.methods.scoring(this.state.newMemberAddress, this.state.newMemberScore, this.state.newMemberJoinAmount).send()
   }
 
   handleSendTokens() {
-    this.contracts.TutorialToken.methods.transfer(this.state.tokenRecipientAddress, this.state.tokenTransferAmount).send()
+    this.contracts.RSTToken.methods.transfer(this.state.tokenRecipientAddress, this.state.tokenTransferAmount).send()
+  }
+
+  handleApproveTokens() {
+    this.contracts.RSTToken.methods.approve(this.state.tokenApproveAddress, this.state.tokenApproveAmount).send()
+  }
+
+  handleJoinButton() {
+    this.contracts.LCSToken.methods.join().send({from: this.props.accounts[0], value: this.state.joinAmount})
   }
 
   handleInputChange(event) {
@@ -30,35 +45,37 @@ class Home extends Component {
   }
 
   render() {
-    // SimpleStorage Vars
-    var storedData = this.props.drizzleStatus.initialized ? this.contracts.SimpleStorage.methods.storedData.data() : 'Loading...'
 
-    // TutorialToken Vars
-    var tokenSymbol = this.props.drizzleStatus.initialized ? this.contracts.TutorialToken.methods.symbol.data() : ''
-    var tokenSupply = this.props.drizzleStatus.initialized ? this.contracts.TutorialToken.methods.totalSupply.data() : 'Loading...'
-    var tokenBalance = this.props.drizzleStatus.initialized ? this.contracts.TutorialToken.methods.balanceOf.data(this.props.accounts[0]) : 'Loading...'
+    // RSTbToken Vars
+    var tokenSymbol = this.props.drizzleStatus.initialized ? this.contracts.RSTToken.methods.symbol.data() : ''
+    var tokenSupply = this.props.drizzleStatus.initialized ? this.contracts.RSTToken.methods.totalSupply.data() : 'Loading...'
+    var tokenBalance = this.props.drizzleStatus.initialized ? this.contracts.RSTToken.methods.balanceOf.data(this.props.accounts[0]) : 'Loading...'
+
+    var joinAmount = this.props.drizzleStatus.initialized ? this.contracts.LCSToken.methods.apply.data() : 'Loading...'
+    var joinBalance = this.props.drizzleStatus.initialized ? this.contracts.LCSToken.methods.balanceOf.data(this.props.accounts[0]) : 'Loading...'
 
     return(
       <main className="container">
         <div className="pure-g">
           <div className="pure-u-1-1">
-            <h1>Drizzle Examples</h1>
-            <p>Here you'll find two example contract front-ends.</p>
+            <h1>REGA Luggage Crowdsurance Examples</h1>
+            <p>Examples of how to use REGA Crowdsurance contract.</p>
           </div>
 
           <div className="pure-u-1-1">
-            <h2>SimpleStorage</h2>
-            <p><strong>Stored Value</strong>: {storedData}</p>
+            <h2>LCSToken</h2>
+            <h3>Score new member</h3>
             <form className="pure-form pure-form-stacked">
-              <input name="storageAmount" type="number" value={this.state.storageAmount} onChange={this.handleInputChange} />
-              <button className="pure-button" type="button" onClick={this.handleSetButton}>Store Value of {this.state.storageAmount}</button>
+              <input name="newMemberAddress" type="text" value={this.state.newMemberAddress} onChange={this.handleInputChange} placeholder="Address" />
+              <input name="newMemberScore" type="number" value={this.state.newMemberScore} onChange={this.handleInputChange} placeholder="Score" />
+              <input name="newMemberJoinAmount" type="number" value={this.state.newMemberJoinAmount} onChange={this.handleInputChange} placeholder="Join amount" />
+              <button className="pure-button" type="button" onClick={this.handleScoringButton}>Score {this.state.newMemberAddress}</button>
             </form>
-
             <br/><br/>
           </div>
 
           <div className="pure-u-1-1">
-            <h2>TutorialToken</h2>
+            <h2>RSTToken</h2>
             <p><strong>Total Supply</strong>: {tokenSupply} {tokenSymbol}</p>
             <p><strong>My Balance</strong>: {tokenBalance}</p>
             <h3>Send Tokens</h3>
@@ -67,7 +84,33 @@ class Home extends Component {
               <input name="tokenTransferAmount" type="number" value={this.state.tokenTransferAmount} onChange={this.handleInputChange} placeholder="Amount" />
               <button className="pure-button" type="button" onClick={this.handleSendTokens}>Send Tokens to {this.state.tokenRecipientAddress}</button>
             </form>
+            <br/><br/>
           </div>
+
+          <div className="pure-u-1-1">
+            <h2>RSTToken</h2>
+            <p><strong>Total Supply</strong>: {tokenSupply} {tokenSymbol}</p>
+            <p><strong>My Balance</strong>: {tokenBalance}</p>
+            <h3>Approve Token Transfer</h3>
+            <form className="pure-form pure-form-stacked">
+              <input name="tokenApproveAddress" type="text" value={this.state.tokenApproveAddress} onChange={this.handleInputChange} placeholder="Address" />
+              <input name="tokenApproveAmount" type="number" value={this.state.tokenApproveAmount} onChange={this.handleInputChange} placeholder="Amount" />
+              <button className="pure-button" type="button" onClick={this.handleApproveTokens}>Approve Transfer for {this.state.tokenApproveAddress}</button>
+            </form>
+            <br/><br/>
+          </div>
+
+          <div className="pure-u-1-1">
+            <h2>LCSToken</h2>
+            <p><strong>Join Amount</strong>: {joinAmount}</p>
+            <p><strong>Join Balance</strong>: {joinBalance}</p>
+            <h3>Join Crowdsurance</h3>
+            <form className="pure-form pure-form-stacked">
+              <button className="pure-button" type="button" onClick={this.handleJoinButton}>Join </button>
+            </form>
+            <br/><br/>
+          </div>
+
         </div>
       </main>
     )
