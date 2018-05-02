@@ -284,7 +284,7 @@
       "absolutePath": "/Users/sergei/LuggageCrowdsurance/contracts/interfaces/IEtherToken.sol",
       "exportedSymbols": {
         "IEtherToken": [
-          6261
+          6281
         ]
       }
     },
@@ -298,58 +298,58 @@
             ".18"
           ]
         },
-        "id": 6239,
+        "id": 6259,
         "name": "PragmaDirective",
-        "src": "0:24:21"
+        "src": "0:24:22"
       },
       {
         "attributes": {
-          "SourceUnit": 6295,
+          "SourceUnit": 6315,
           "absolutePath": "/Users/sergei/LuggageCrowdsurance/contracts/interfaces/ITokenHolder.sol",
           "file": "./ITokenHolder.sol",
-          "scope": 6262,
+          "scope": 6282,
           "symbolAliases": [
             null
           ],
           "unitAlias": ""
         },
-        "id": 6240,
+        "id": 6260,
         "name": "ImportDirective",
-        "src": "25:28:21"
+        "src": "25:28:22"
       },
       {
         "attributes": {
-          "SourceUnit": 6145,
+          "SourceUnit": 6165,
           "absolutePath": "/Users/sergei/LuggageCrowdsurance/contracts/interfaces/IERC20Token.sol",
           "file": "./IERC20Token.sol",
-          "scope": 6262,
+          "scope": 6282,
           "symbolAliases": [
             null
           ],
           "unitAlias": ""
         },
-        "id": 6241,
+        "id": 6261,
         "name": "ImportDirective",
-        "src": "54:27:21"
+        "src": "54:27:22"
       },
       {
         "attributes": {
           "contractDependencies": [
-            6144,
-            6278,
-            6294
+            6164,
+            6298,
+            6314
           ],
           "contractKind": "contract",
           "documentation": null,
           "fullyImplemented": false,
           "linearizedBaseContracts": [
-            6261,
-            6144,
-            6294,
-            6278
+            6281,
+            6164,
+            6314,
+            6298
           ],
           "name": "IEtherToken",
-          "scope": 6262
+          "scope": 6282
         },
         "children": [
           {
@@ -363,17 +363,17 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "ITokenHolder",
-                  "referencedDeclaration": 6294,
+                  "referencedDeclaration": 6314,
                   "type": "contract ITokenHolder"
                 },
-                "id": 6242,
+                "id": 6262,
                 "name": "UserDefinedTypeName",
-                "src": "139:12:21"
+                "src": "139:12:22"
               }
             ],
-            "id": 6243,
+            "id": 6263,
             "name": "InheritanceSpecifier",
-            "src": "139:12:21"
+            "src": "139:12:22"
           },
           {
             "attributes": {
@@ -386,17 +386,17 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "IERC20Token",
-                  "referencedDeclaration": 6144,
+                  "referencedDeclaration": 6164,
                   "type": "contract IERC20Token"
                 },
-                "id": 6244,
+                "id": 6264,
                 "name": "UserDefinedTypeName",
-                "src": "153:11:21"
+                "src": "153:11:22"
               }
             ],
-            "id": 6245,
+            "id": 6265,
             "name": "InheritanceSpecifier",
-            "src": "153:11:21"
+            "src": "153:11:22"
           },
           {
             "attributes": {
@@ -409,7 +409,7 @@
               ],
               "name": "deposit",
               "payable": true,
-              "scope": 6261,
+              "scope": 6281,
               "stateMutability": "payable",
               "superFunction": null,
               "visibility": "public"
@@ -422,9 +422,9 @@
                   ]
                 },
                 "children": [],
-                "id": 6246,
+                "id": 6266,
                 "name": "ParameterList",
-                "src": "187:2:21"
+                "src": "187:2:22"
               },
               {
                 "attributes": {
@@ -433,14 +433,14 @@
                   ]
                 },
                 "children": [],
-                "id": 6247,
+                "id": 6267,
                 "name": "ParameterList",
-                "src": "204:0:21"
+                "src": "204:0:22"
               }
             ],
-            "id": 6248,
+            "id": 6268,
             "name": "FunctionDefinition",
-            "src": "171:34:21"
+            "src": "171:34:22"
           },
           {
             "attributes": {
@@ -453,7 +453,7 @@
               ],
               "name": "withdraw",
               "payable": false,
-              "scope": 6261,
+              "scope": 6281,
               "stateMutability": "nonpayable",
               "superFunction": null,
               "visibility": "public"
@@ -465,7 +465,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "_amount",
-                      "scope": 6253,
+                      "scope": 6273,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -478,19 +478,19 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 6249,
+                        "id": 6269,
                         "name": "ElementaryTypeName",
-                        "src": "228:7:21"
+                        "src": "228:7:22"
                       }
                     ],
-                    "id": 6250,
+                    "id": 6270,
                     "name": "VariableDeclaration",
-                    "src": "228:15:21"
+                    "src": "228:15:22"
                   }
                 ],
-                "id": 6251,
+                "id": 6271,
                 "name": "ParameterList",
-                "src": "227:17:21"
+                "src": "227:17:22"
               },
               {
                 "attributes": {
@@ -499,14 +499,14 @@
                   ]
                 },
                 "children": [],
-                "id": 6252,
+                "id": 6272,
                 "name": "ParameterList",
-                "src": "251:0:21"
+                "src": "251:0:22"
               }
             ],
-            "id": 6253,
+            "id": 6273,
             "name": "FunctionDefinition",
-            "src": "210:42:21"
+            "src": "210:42:22"
           },
           {
             "attributes": {
@@ -519,7 +519,7 @@
               ],
               "name": "withdrawTo",
               "payable": false,
-              "scope": 6261,
+              "scope": 6281,
               "stateMutability": "nonpayable",
               "superFunction": null,
               "visibility": "public"
@@ -531,7 +531,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "_to",
-                      "scope": 6260,
+                      "scope": 6280,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -544,20 +544,20 @@
                           "name": "address",
                           "type": "address"
                         },
-                        "id": 6254,
+                        "id": 6274,
                         "name": "ElementaryTypeName",
-                        "src": "277:7:21"
+                        "src": "277:7:22"
                       }
                     ],
-                    "id": 6255,
+                    "id": 6275,
                     "name": "VariableDeclaration",
-                    "src": "277:11:21"
+                    "src": "277:11:22"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "name": "_amount",
-                      "scope": 6260,
+                      "scope": 6280,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -570,19 +570,19 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 6256,
+                        "id": 6276,
                         "name": "ElementaryTypeName",
-                        "src": "290:7:21"
+                        "src": "290:7:22"
                       }
                     ],
-                    "id": 6257,
+                    "id": 6277,
                     "name": "VariableDeclaration",
-                    "src": "290:15:21"
+                    "src": "290:15:22"
                   }
                 ],
-                "id": 6258,
+                "id": 6278,
                 "name": "ParameterList",
-                "src": "276:30:21"
+                "src": "276:30:22"
               },
               {
                 "attributes": {
@@ -591,24 +591,24 @@
                   ]
                 },
                 "children": [],
-                "id": 6259,
+                "id": 6279,
                 "name": "ParameterList",
-                "src": "313:0:21"
+                "src": "313:0:22"
               }
             ],
-            "id": 6260,
+            "id": 6280,
             "name": "FunctionDefinition",
-            "src": "257:57:21"
+            "src": "257:57:22"
           }
         ],
-        "id": 6261,
+        "id": 6281,
         "name": "ContractDefinition",
-        "src": "115:201:21"
+        "src": "115:201:22"
       }
     ],
-    "id": 6262,
+    "id": 6282,
     "name": "SourceUnit",
-    "src": "0:316:21"
+    "src": "0:316:22"
   },
   "compiler": {
     "name": "solc",
@@ -616,5 +616,5 @@
   },
   "networks": {},
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-04-28T20:48:03.769Z"
+  "updatedAt": "2018-05-02T08:59:07.936Z"
 }

@@ -53,10 +53,15 @@ contract LuggageCrowdsurance is TokenCrowdsurance {
             // now need to check that the member has approved the transfer joinAmountRST to join
             require(RST != address(0));                     // check that we have valid contract address
             require(joinAmountRST != uint256(0));           // join RST amount must be > 0
-            uint256 rstAmt = RST.allowance(member, owner);  // check if the member has gave permision to spend some amount
+            uint256 rstAmt = RST.allowance(member, this);   // check if the member has gave permision to spend some amount
+            uint8 rstDecimals = RST.decimals();             // need RST decimals to convert RST to ETH based on the convertion rate
             require(rstAmt >= joinAmountRST);               // ... and check if allowance is more then joinAmount
             amount = addressToAmount[member];               // get join amount and check...
-            require((rstAmt * rstETHRate) >= amount && amount >= parameters.joinAmount);
+            uint256 rstAmtInETH = rstAmt * rstETHRate;      // ... and now calculate join amount from RST to ETH
+            if (rstDecimals != uint8(0)) {                  // ... check if RST decimals is not 0 
+                rstAmtInETH = rstAmtInETH / rstDecimals;    // ... and use decimals to convert RST to ETH
+            }
+            require(rstAmtInETH >= amount && amount >= parameters.joinAmount);
             // transfer join RST amount to the owner account
             require(RST.transferFrom(member, owner, joinAmountRST));
         }

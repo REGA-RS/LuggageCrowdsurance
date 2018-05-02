@@ -72,7 +72,7 @@
       "absolutePath": "/Users/sergei/LuggageCrowdsurance/contracts/interfaces/ITokenHolder.sol",
       "exportedSymbols": {
         "ITokenHolder": [
-          6294
+          6314
         ]
       }
     },
@@ -86,54 +86,54 @@
             ".18"
           ]
         },
-        "id": 6280,
+        "id": 6300,
         "name": "PragmaDirective",
-        "src": "0:24:23"
+        "src": "0:24:24"
       },
       {
         "attributes": {
-          "SourceUnit": 6279,
+          "SourceUnit": 6299,
           "absolutePath": "/Users/sergei/LuggageCrowdsurance/contracts/interfaces/IOwned.sol",
           "file": "./IOwned.sol",
-          "scope": 6295,
+          "scope": 6315,
           "symbolAliases": [
             null
           ],
           "unitAlias": ""
         },
-        "id": 6281,
+        "id": 6301,
         "name": "ImportDirective",
-        "src": "25:22:23"
+        "src": "25:22:24"
       },
       {
         "attributes": {
-          "SourceUnit": 5962,
+          "SourceUnit": 5982,
           "absolutePath": "/Users/sergei/LuggageCrowdsurance/contracts/interfaces/IERC20.sol",
           "file": "./IERC20.sol",
-          "scope": 6295,
+          "scope": 6315,
           "symbolAliases": [
             null
           ],
           "unitAlias": ""
         },
-        "id": 6282,
+        "id": 6302,
         "name": "ImportDirective",
-        "src": "48:22:23"
+        "src": "48:22:24"
       },
       {
         "attributes": {
           "contractDependencies": [
-            6278
+            6298
           ],
           "contractKind": "contract",
           "documentation": null,
           "fullyImplemented": false,
           "linearizedBaseContracts": [
-            6294,
-            6278
+            6314,
+            6298
           ],
           "name": "ITokenHolder",
-          "scope": 6295
+          "scope": 6315
         },
         "children": [
           {
@@ -147,17 +147,17 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "IOwned",
-                  "referencedDeclaration": 6278,
+                  "referencedDeclaration": 6298,
                   "type": "contract IOwned"
                 },
-                "id": 6283,
+                "id": 6303,
                 "name": "UserDefinedTypeName",
-                "src": "130:6:23"
+                "src": "130:6:24"
               }
             ],
-            "id": 6284,
+            "id": 6304,
             "name": "InheritanceSpecifier",
-            "src": "130:6:23"
+            "src": "130:6:24"
           },
           {
             "attributes": {
@@ -170,7 +170,7 @@
               ],
               "name": "withdrawTokens",
               "payable": false,
-              "scope": 6294,
+              "scope": 6314,
               "stateMutability": "nonpayable",
               "superFunction": null,
               "visibility": "public"
@@ -182,7 +182,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "_token",
-                      "scope": 6293,
+                      "scope": 6313,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "contract IERC20",
@@ -194,23 +194,23 @@
                         "attributes": {
                           "contractScope": null,
                           "name": "IERC20",
-                          "referencedDeclaration": 5961,
+                          "referencedDeclaration": 5981,
                           "type": "contract IERC20"
                         },
-                        "id": 6285,
+                        "id": 6305,
                         "name": "UserDefinedTypeName",
-                        "src": "167:6:23"
+                        "src": "167:6:24"
                       }
                     ],
-                    "id": 6286,
+                    "id": 6306,
                     "name": "VariableDeclaration",
-                    "src": "167:13:23"
+                    "src": "167:13:24"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "name": "_to",
-                      "scope": 6293,
+                      "scope": 6313,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -223,20 +223,20 @@
                           "name": "address",
                           "type": "address"
                         },
-                        "id": 6287,
+                        "id": 6307,
                         "name": "ElementaryTypeName",
-                        "src": "182:7:23"
+                        "src": "182:7:24"
                       }
                     ],
-                    "id": 6288,
+                    "id": 6308,
                     "name": "VariableDeclaration",
-                    "src": "182:11:23"
+                    "src": "182:11:24"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "name": "_amount",
-                      "scope": 6293,
+                      "scope": 6313,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -249,19 +249,19 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 6289,
+                        "id": 6309,
                         "name": "ElementaryTypeName",
-                        "src": "195:7:23"
+                        "src": "195:7:24"
                       }
                     ],
-                    "id": 6290,
+                    "id": 6310,
                     "name": "VariableDeclaration",
-                    "src": "195:15:23"
+                    "src": "195:15:24"
                   }
                 ],
-                "id": 6291,
+                "id": 6311,
                 "name": "ParameterList",
-                "src": "166:45:23"
+                "src": "166:45:24"
               },
               {
                 "attributes": {
@@ -270,24 +270,24 @@
                   ]
                 },
                 "children": [],
-                "id": 6292,
+                "id": 6312,
                 "name": "ParameterList",
-                "src": "218:0:23"
+                "src": "218:0:24"
               }
             ],
-            "id": 6293,
+            "id": 6313,
             "name": "FunctionDefinition",
-            "src": "143:76:23"
+            "src": "143:76:24"
           }
         ],
-        "id": 6294,
+        "id": 6314,
         "name": "ContractDefinition",
-        "src": "105:116:23"
+        "src": "105:116:24"
       }
     ],
-    "id": 6295,
+    "id": 6315,
     "name": "SourceUnit",
-    "src": "0:221:23"
+    "src": "0:221:24"
   },
   "compiler": {
     "name": "solc",
@@ -295,5 +295,5 @@
   },
   "networks": {},
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-04-28T20:48:03.768Z"
+  "updatedAt": "2018-05-02T08:59:07.936Z"
 }
