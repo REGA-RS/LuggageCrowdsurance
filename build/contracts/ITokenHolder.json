@@ -72,7 +72,7 @@
       "absolutePath": "/Users/sergei/LuggageCrowdsurance/contracts/interfaces/ITokenHolder.sol",
       "exportedSymbols": {
         "ITokenHolder": [
-          6314
+          6310
         ]
       }
     },
@@ -86,54 +86,54 @@
             ".18"
           ]
         },
-        "id": 6300,
+        "id": 6296,
         "name": "PragmaDirective",
         "src": "0:24:24"
       },
       {
         "attributes": {
-          "SourceUnit": 6299,
+          "SourceUnit": 6295,
           "absolutePath": "/Users/sergei/LuggageCrowdsurance/contracts/interfaces/IOwned.sol",
           "file": "./IOwned.sol",
-          "scope": 6315,
+          "scope": 6311,
           "symbolAliases": [
             null
           ],
           "unitAlias": ""
         },
-        "id": 6301,
+        "id": 6297,
         "name": "ImportDirective",
         "src": "25:22:24"
       },
       {
         "attributes": {
-          "SourceUnit": 5982,
+          "SourceUnit": 5978,
           "absolutePath": "/Users/sergei/LuggageCrowdsurance/contracts/interfaces/IERC20.sol",
           "file": "./IERC20.sol",
-          "scope": 6315,
+          "scope": 6311,
           "symbolAliases": [
             null
           ],
           "unitAlias": ""
         },
-        "id": 6302,
+        "id": 6298,
         "name": "ImportDirective",
         "src": "48:22:24"
       },
       {
         "attributes": {
           "contractDependencies": [
-            6298
+            6294
           ],
           "contractKind": "contract",
           "documentation": null,
           "fullyImplemented": false,
           "linearizedBaseContracts": [
-            6314,
-            6298
+            6310,
+            6294
           ],
           "name": "ITokenHolder",
-          "scope": 6315
+          "scope": 6311
         },
         "children": [
           {
@@ -147,15 +147,15 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "IOwned",
-                  "referencedDeclaration": 6298,
+                  "referencedDeclaration": 6294,
                   "type": "contract IOwned"
                 },
-                "id": 6303,
+                "id": 6299,
                 "name": "UserDefinedTypeName",
                 "src": "130:6:24"
               }
             ],
-            "id": 6304,
+            "id": 6300,
             "name": "InheritanceSpecifier",
             "src": "130:6:24"
           },
@@ -170,7 +170,7 @@
               ],
               "name": "withdrawTokens",
               "payable": false,
-              "scope": 6314,
+              "scope": 6310,
               "stateMutability": "nonpayable",
               "superFunction": null,
               "visibility": "public"
@@ -182,7 +182,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "_token",
-                      "scope": 6313,
+                      "scope": 6309,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "contract IERC20",
@@ -194,15 +194,15 @@
                         "attributes": {
                           "contractScope": null,
                           "name": "IERC20",
-                          "referencedDeclaration": 5981,
+                          "referencedDeclaration": 5977,
                           "type": "contract IERC20"
                         },
-                        "id": 6305,
+                        "id": 6301,
                         "name": "UserDefinedTypeName",
                         "src": "167:6:24"
                       }
                     ],
-                    "id": 6306,
+                    "id": 6302,
                     "name": "VariableDeclaration",
                     "src": "167:13:24"
                   },
@@ -210,7 +210,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "_to",
-                      "scope": 6313,
+                      "scope": 6309,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -223,12 +223,12 @@
                           "name": "address",
                           "type": "address"
                         },
-                        "id": 6307,
+                        "id": 6303,
                         "name": "ElementaryTypeName",
                         "src": "182:7:24"
                       }
                     ],
-                    "id": 6308,
+                    "id": 6304,
                     "name": "VariableDeclaration",
                     "src": "182:11:24"
                   },
@@ -236,7 +236,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "_amount",
-                      "scope": 6313,
+                      "scope": 6309,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -249,17 +249,17 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 6309,
+                        "id": 6305,
                         "name": "ElementaryTypeName",
                         "src": "195:7:24"
                       }
                     ],
-                    "id": 6310,
+                    "id": 6306,
                     "name": "VariableDeclaration",
                     "src": "195:15:24"
                   }
                 ],
-                "id": 6311,
+                "id": 6307,
                 "name": "ParameterList",
                 "src": "166:45:24"
               },
@@ -270,22 +270,22 @@
                   ]
                 },
                 "children": [],
-                "id": 6312,
+                "id": 6308,
                 "name": "ParameterList",
                 "src": "218:0:24"
               }
             ],
-            "id": 6313,
+            "id": 6309,
             "name": "FunctionDefinition",
             "src": "143:76:24"
           }
         ],
-        "id": 6314,
+        "id": 6310,
         "name": "ContractDefinition",
         "src": "105:116:24"
       }
     ],
-    "id": 6315,
+    "id": 6311,
     "name": "SourceUnit",
     "src": "0:221:24"
   },
@@ -295,5 +295,5 @@
   },
   "networks": {},
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-05-02T08:59:07.936Z"
+  "updatedAt": "2018-05-02T21:04:40.573Z"
 }

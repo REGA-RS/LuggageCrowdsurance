@@ -25,12 +25,22 @@ class Home extends Component {
 
           <div className="pure-u-1-1">
             <h2>LCSToken</h2>
+            <h3>Pool structure</h3>
+            <p><strong>Super Pool</strong>: <ContractData contract="LCSToken" method="valueOf" methodArgs={[1]} /> Wei </p>
+            <p><strong>Pool</strong>: <ContractData contract="LCSToken" method="valueOf" methodArgs={[2]} /> Wei </p>
+            <p><strong>Sub Pool</strong>: <ContractData contract="LCSToken" method="valueOf" methodArgs={[3]} /> Wei </p>
+            <p><strong>Commission</strong>: <BalanceData contract="LCSToken" method="getComission" accountIndex="0" units="wei" correction="1" precision="3" viewOnly /> Wei </p>
+            <br/><br/>
+          </div>
+
+          <div className="pure-u-1-1">
+            <h2>LCSToken</h2>
             <h3>The first stage is member scoring</h3>
             <p><strong>RST Address</strong>: <ContractData contract="LCSToken" method="RST" /></p>
             <p><strong>LCS Address</strong>: <ContractData contract="ERC20Adapter" method="controller" /></p>
             <p><strong>LCS Owner</strong>: <ContractData contract="LCSToken" method="owner" /></p>
             <p><strong>RST Join Amount</strong>: <BalanceData contract="LCSToken" method="joinAmountRST" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
-            <p><strong>ERC20 Balance</strong>: <BalanceData contract="ERC20Adapter" method="balanceOf" accountIndex="0" units="ether" precision="3" /> Ether </p>
+            <p><strong>ERC20 Balance</strong>: <BalanceData contract="ERC20Adapter" method="balanceOf" accountIndex="0" units="ether" precision="4" /> Ether </p>
             <p><strong>LCS Balance</strong>: <ContractData contract="LCSToken" method="balanceOf" methodArgs={[this.props.accounts[0]]} /> <ContractData contract="LCSToken" method="symbol" hideIndicator /> </p>
             <h3>Score new member [owner only]</h3>
             <ContractForm contract="LCSToken" method="scoring" labels={['Member Address', 'Member Score', 'Join Amount']}/>

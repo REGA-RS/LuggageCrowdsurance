@@ -158,7 +158,7 @@ contract TokenCrowdsurance is TokenPool {
     function _join(address _member, uint256 _score, uint256 _amount) internal returns(uint256) {
         uint256 id = _createNFT(_amount, "Crowdsurance", uint256(0), _member);
         // Create extension 
-        Crowdsurance memory _crowdsurance = Crowdsurance ({
+        extensions[id] = Crowdsurance ({
             timeStamp: now,
             activated: uint(0),
             duration: parameters.coverageDuration,
@@ -168,8 +168,6 @@ contract TokenCrowdsurance is TokenPool {
             claimNumber: uint8(0),
             status: uint8(Status.Init)
         });
-        // add extension
-        extensions[id] = _crowdsurance;
         // now insert in the pool
         insertPool(id);
         // emit event 
@@ -215,18 +213,21 @@ contract TokenCrowdsurance is TokenPool {
         require(_claim != uint256(0));
         require(extensions[_id].status == uint(Status.Active));
         require(extensions[_id].claimNumber < parameters.maxClaimNumber);
-        uint256 _payment = _claim * 100 / parameters.paymentRatio;
+        uint256 _payment = _claim * parameters.paymentRatio / 100;
         require((extensions[_id].paid + _payment) <= parameters.maxPaymentAmount);
         uint coverageEnd = extensions[_id].activated + extensions[_id].duration;
         require(coverageEnd >= now);
         // now ready to accept the claim request
-        Request memory _request;
-        _request.amount = _claim;
-        _request.timeStamp = now;
-        _request.duration = parameters.votingDuration;
-        _request.number = uint8(0);
         // change status
-        requests[_id] = _request;
+        requests[_id] = Request ({
+            amount: _claim,
+            timeStamp: now,
+            duration: parameters.votingDuration,
+            positive: uint8(0),
+            negative: uint8(0),
+            number: uint8(0),
+            members: [address(0), address(0), address(0), address(0), address(0)]
+        });
         extensions[_id].claimNumber++;
         extensions[_id].status = uint8(Status.Claim);
         // emit event
@@ -293,7 +294,7 @@ contract TokenCrowdsurance is TokenPool {
         require(votingEnd <= now);
         if(_request.positive > _request.negative) {
             // pay claims
-            uint256 _payment = _request.amount * 100 / parameters.paymentRatio;
+            uint256 _payment = _request.amount * parameters.paymentRatio / 100;
             msg.sender.transfer(_payment);
             extensions[_id].status = uint8(Status.Approved);
             extensions[_id].paid = extensions[_id].paid + _payment;

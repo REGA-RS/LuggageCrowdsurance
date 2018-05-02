@@ -153,11 +153,11 @@ contract TokenPool is TokenContainer {
         uint256 superPoolId = tokenIndexToPoolToken[poolId];
         require(superPoolId != uint256(0)); // SuperPool
         // calculate values to distribute based of pool structure shares
-        uint256 subPoolValue = nfts[_id].value * 100 / pools[2].share;
+        uint256 subPoolValue = nfts[_id].value * pools[2].share / 100;
         require(subPoolValue != uint256(0));
-        uint256 poolValue = nfts[_id].value * 100 / pools[1].share;
+        uint256 poolValue = nfts[_id].value * pools[1].share / 100;
         require(poolValue != uint256(0));
-        uint256 superPoolValue = nfts[_id].value * 100 / pools[0].share;
+        uint256 superPoolValue = nfts[_id].value * pools[0].share / 100;
         require(superPoolValue != uint256(0));
         uint256 commission = nfts[_id].value - subPoolValue - poolValue - superPoolValue;
         require(commission != uint256(0));
