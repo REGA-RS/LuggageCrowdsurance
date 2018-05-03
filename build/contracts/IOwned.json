@@ -50,7 +50,7 @@
       "absolutePath": "/Users/sergei/LuggageCrowdsurance/contracts/interfaces/IOwned.sol",
       "exportedSymbols": {
         "IOwned": [
-          6294
+          6306
         ]
       }
     },
@@ -64,7 +64,7 @@
             ".18"
           ]
         },
-        "id": 6279,
+        "id": 6291,
         "name": "PragmaDirective",
         "src": "0:24:23"
       },
@@ -80,10 +80,10 @@
           "documentation": null,
           "fullyImplemented": false,
           "linearizedBaseContracts": [
-            6294
+            6306
           ],
           "name": "IOwned",
-          "scope": 6295
+          "scope": 6307
         },
         "children": [
           {
@@ -96,7 +96,7 @@
               ],
               "name": "owner",
               "payable": false,
-              "scope": 6294,
+              "scope": 6306,
               "stateMutability": "pure",
               "superFunction": null,
               "visibility": "public"
@@ -109,7 +109,7 @@
                   ]
                 },
                 "children": [],
-                "id": 6280,
+                "id": 6292,
                 "name": "ParameterList",
                 "src": "211:2:23"
               },
@@ -119,7 +119,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "",
-                      "scope": 6285,
+                      "scope": 6297,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -132,17 +132,17 @@
                           "name": "address",
                           "type": "address"
                         },
-                        "id": 6281,
+                        "id": 6293,
                         "name": "ElementaryTypeName",
                         "src": "235:7:23"
                       }
                     ],
-                    "id": 6282,
+                    "id": 6294,
                     "name": "VariableDeclaration",
                     "src": "235:7:23"
                   }
                 ],
-                "id": 6283,
+                "id": 6295,
                 "name": "ParameterList",
                 "src": "234:9:23"
               },
@@ -153,12 +153,12 @@
                   ]
                 },
                 "children": [],
-                "id": 6284,
+                "id": 6296,
                 "name": "Block",
                 "src": "244:2:23"
               }
             ],
-            "id": 6285,
+            "id": 6297,
             "name": "FunctionDefinition",
             "src": "197:49:23"
           },
@@ -173,7 +173,7 @@
               ],
               "name": "transferOwnership",
               "payable": false,
-              "scope": 6294,
+              "scope": 6306,
               "stateMutability": "nonpayable",
               "superFunction": null,
               "visibility": "public"
@@ -185,7 +185,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "_newOwner",
-                      "scope": 6290,
+                      "scope": 6302,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -198,17 +198,17 @@
                           "name": "address",
                           "type": "address"
                         },
-                        "id": 6286,
+                        "id": 6298,
                         "name": "ElementaryTypeName",
                         "src": "279:7:23"
                       }
                     ],
-                    "id": 6287,
+                    "id": 6299,
                     "name": "VariableDeclaration",
                     "src": "279:17:23"
                   }
                 ],
-                "id": 6288,
+                "id": 6300,
                 "name": "ParameterList",
                 "src": "278:19:23"
               },
@@ -219,12 +219,12 @@
                   ]
                 },
                 "children": [],
-                "id": 6289,
+                "id": 6301,
                 "name": "ParameterList",
                 "src": "304:0:23"
               }
             ],
-            "id": 6290,
+            "id": 6302,
             "name": "FunctionDefinition",
             "src": "252:53:23"
           },
@@ -239,7 +239,7 @@
               ],
               "name": "acceptOwnership",
               "payable": false,
-              "scope": 6294,
+              "scope": 6306,
               "stateMutability": "nonpayable",
               "superFunction": null,
               "visibility": "public"
@@ -252,7 +252,7 @@
                   ]
                 },
                 "children": [],
-                "id": 6291,
+                "id": 6303,
                 "name": "ParameterList",
                 "src": "334:2:23"
               },
@@ -263,22 +263,22 @@
                   ]
                 },
                 "children": [],
-                "id": 6292,
+                "id": 6304,
                 "name": "ParameterList",
                 "src": "343:0:23"
               }
             ],
-            "id": 6293,
+            "id": 6305,
             "name": "FunctionDefinition",
             "src": "310:34:23"
           }
         ],
-        "id": 6294,
+        "id": 6306,
         "name": "ContractDefinition",
         "src": "61:285:23"
       }
     ],
-    "id": 6295,
+    "id": 6307,
     "name": "SourceUnit",
     "src": "0:346:23"
   },
@@ -288,5 +288,5 @@
   },
   "networks": {},
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-05-02T21:04:40.573Z"
+  "updatedAt": "2018-05-03T12:01:12.957Z"
 }

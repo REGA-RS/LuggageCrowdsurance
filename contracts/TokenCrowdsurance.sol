@@ -180,7 +180,7 @@ contract TokenCrowdsurance is TokenPool {
     } 
     /// join function
     /// @return cowdsuranceId NFT token ID for created crowdsurance
-    function join() public payable returns(uint256 cowdsuranceId) {
+    function join() public payable returns(uint256 crowdsuranceId) {
         uint256 amount = msg.value;
         address member = msg.sender;
         uint256 score = addressToScore[member];
@@ -188,7 +188,7 @@ contract TokenCrowdsurance is TokenPool {
         require(score != uint256(0));
         require(amount == addressToAmount[member]);
         // call internal _join after all checkups 
-        cowdsuranceId = _join(member, score, amount);
+        crowdsuranceId = _join(member, score, amount);
     }
     /// activate function 
     /// @param _id NFT token ID to activate
@@ -196,6 +196,7 @@ contract TokenCrowdsurance is TokenPool {
         require(_id != uint256(0));
         require(_owns(msg.sender, _id));
         require(extensions[_id].amount != uint256(0));
+        require(extensions[_id].status != uint8(Status.Active));        // protect multiple activation that extend coverage
 
         nfts[_id].state = StateBlocked; // block transfer
         extensions[_id].status = uint8(Status.Active);
@@ -342,7 +343,7 @@ contract TokenCrowdsurance is TokenPool {
         parameters.paymentRatio = 80;                       // claim to payment patio
         parameters.maxPaymentAmount = 10 ether;             // max payment amount for the contract
         parameters.minJuriesNumber = 3;                     // min juries number to count voting 
-        parameters.votingDuration = uint8(60*60*24*2);      // juries voting duration in sec
+        parameters.votingDuration = uint(60*60*24*2);       // juries voting duration in sec
         parameters.juriesNumber = 5;                        // juries number -- not more than 5
     }
 }

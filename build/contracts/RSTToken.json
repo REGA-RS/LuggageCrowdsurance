@@ -299,8 +299,8 @@
         "attributes": {
           "contractDependencies": [
             1373,
-            5955,
-            6160
+            5967,
+            6172
           ],
           "contractKind": "contract",
           "documentation": null,
@@ -308,8 +308,8 @@
           "linearizedBaseContracts": [
             3162,
             1373,
-            5955,
-            6160
+            5967,
+            6172
           ],
           "name": "RSTToken",
           "scope": 3163
@@ -583,7 +583,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 6322,
+                                      "referencedDeclaration": 6334,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -708,5 +708,5 @@
     }
   },
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-05-02T21:05:48.598Z"
+  "updatedAt": "2018-05-03T12:02:05.208Z"
 }

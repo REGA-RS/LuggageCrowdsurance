@@ -82,6 +82,46 @@ class Home extends Component {
 
             <br/><br/>
           </div>
+
+          <div className="pure-u-1-1">
+            <h2>LCSToken</h2>
+            <h3>To protect your luggage activate crowdsurance</h3>
+            <h3>Activate</h3>
+            <ContractForm contract="LCSToken" method="activate" labels={['NFT Token ID']} />
+
+            <br/><br/>
+          </div>
+
+          <div className="pure-u-1-1">
+            <h2>LCSToken</h2>
+            <h3>If your luggage is lost make a claim</h3>
+           
+            <h3>Claim</h3>
+            <ContractForm contract="LCSToken" method="claim" labels={['NFT Token ID','Claim Amount']} />
+
+            <br/><br/>
+          </div>
+
+          <div className="pure-u-1-1">
+            <h2>LCSToken</h2>
+            <h3>Add jury [owner only]</h3>
+           
+            <h3>Add Voter</h3>
+            <ContractForm contract="LCSToken" method="addVoter" labels={['Voter address','NFT Token ID']} />
+
+            <br/><br/>
+          </div>
+
+          <div className="pure-u-1-1">
+            <h2>LCSToken</h2>
+            <h3>Voting process</h3>
+           
+            <h3>Cast Vote</h3>
+            <ContractForm contract="LCSToken" method="vote" labels={['NFT Token ID','Positive?']} />
+
+            <br/><br/>
+          </div>
+
         </div>
       </main>
     )
