@@ -273,6 +273,13 @@ contract TokenCrowdsurance is TokenPool {
         // emit event
         Vote(msg.sender, _id, _positive);
     }
+    /// helpers voting 
+    function castPositive(uint256 _id) public {
+        vote(_id, true);
+    }
+    function castNegative(uint256 _id) public {
+        vote(_id, false);
+    }
     /// check claim voting status
     /// @param _id NFT token to check
     function votingStatus(uint256 _id) public view returns (bool votingEnded, uint8 positive, uint8 negative) {
@@ -293,20 +300,25 @@ contract TokenCrowdsurance is TokenPool {
         Request storage _request = requests[_id];
         uint votingEnd = _request.timeStamp + _request.duration;
         require(votingEnd <= now);
-        if(_request.positive > _request.negative) {
+        uint256 _payment = _request.amount * parameters.paymentRatio / 100;
+        if(_request.positive > _request.negative && _checkPayment(_id, _payment)) {
             // pay claims
-            uint256 _payment = _request.amount * parameters.paymentRatio / 100;
             msg.sender.transfer(_payment);
             extensions[_id].status = uint8(Status.Approved);
             extensions[_id].paid = extensions[_id].paid + _payment;
+            // update pools' balances
+            _payValue(_id, _payment);
             // emit event
             Payment(msg.sender, _id, _payment, uint8(Status.Approved));
-        } else if   (_request.positive == _request.negative || 
-                    (_request.positive + _request.negative) < parameters.minJuriesNumber ) {
+        } else if   ((_request.positive == _request.negative || 
+                    (_request.positive + _request.negative) < parameters.minJuriesNumber )
+                    && _checkPayment(_id, extensions[_id].amount)) {
             // pay back join amount
             msg.sender.transfer(extensions[_id].amount);
             extensions[_id].status = uint8(Status.Closed);
             extensions[_id].paid = extensions[_id].paid + extensions[_id].amount;
+             // update pools' balances
+            _payValue(_id, extensions[_id].amount);
             // emit event
             Payment(msg.sender, _id, extensions[_id].amount, uint8(Status.Closed));
         } else {
@@ -337,13 +349,14 @@ contract TokenCrowdsurance is TokenPool {
     function TokenCrowdsurance(string _name, string _symbol) TokenPool(_name, _symbol) public {
         // setup default crowdsurance product parameters
         parameters.joinAmount = 0.1 ether;                  // default join amount
-        parameters.coverageDuration = uint(60*60*24*180);   // coverage duration in sec
+        parameters.coverageDuration = 0.5 years;            // coverage duration in sec
         parameters.maxClaimAmount = 10 ether;               // max claim amount
         parameters.maxClaimNumber = 1;                      // max claim number for the contract
         parameters.paymentRatio = 80;                       // claim to payment patio
         parameters.maxPaymentAmount = 10 ether;             // max payment amount for the contract
         parameters.minJuriesNumber = 3;                     // min juries number to count voting 
-        parameters.votingDuration = uint(60*60*24*2);       // juries voting duration in sec
+        parameters.votingDuration = 2 days;                 // juries voting duration in sec
         parameters.juriesNumber = 5;                        // juries number -- not more than 5
     }
+    function() public payable { }                           //  fallback function to get Ether on contract account
 }

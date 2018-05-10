@@ -255,12 +255,30 @@ contract TokenPool is TokenContainer {
             SecondTierCall(_id, _value);
         }
     }
+    function _checkPayment(uint256 _id, uint256 _value) internal view returns(bool possible) {
+        possible = false;
+        uint256 subPoolId = tokenIndexToPoolToken[_id];
+        require(subPoolId != uint256(0)); // SubPool
+        uint256 poolId = tokenIndexToPoolToken[subPoolId];
+        require(poolId != uint256(0)); // Pool
+        uint256 superPoolId = tokenIndexToPoolToken[poolId];
+        require(superPoolId != uint256(0)); // SuperPool
+        if(_value <= nfts[subPoolId].value) {
+            possible = true;
+        }
+        else if (_value <= nfts[poolId].value + nfts[subPoolId].value) {
+            possible = true;
+        }
+        else if (_value <= nfts[superPoolId].value + nfts[poolId].value + nfts[subPoolId].value) {
+            possible = true;
+        }
+    }
     /// TokenPool Constructor
     function TokenPool(string _name, string _symbol) TokenContainer(_name, _symbol) public { 
         maxLevel = 4; // FIXED DO NOT CHANGE!
 
         // Creating templates
-        uint superPoolId = _createNFT(uint256(0), "SuperPool", uint256(1), owner);
+        uint superPoolId = _createNFT(10 ether, "SuperPool", uint256(1), owner);    // fix initial capital for 10 Ether
         uint poolId = _createNFT(uint256(0), "Pool", uint256(1), owner);
         uint subPoolId = _createNFT(uint256(0), "SubPool", uint256(2), owner);
 

@@ -281,7 +281,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 5968,
+          "SourceUnit": 5990,
           "absolutePath": "/Users/sergei/LuggageCrowdsurance/contracts/Utils.sol",
           "file": "./Utils.sol",
           "scope": 1374,
@@ -296,7 +296,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 6173,
+          "SourceUnit": 6195,
           "absolutePath": "/Users/sergei/LuggageCrowdsurance/contracts/interfaces/IERC20Token.sol",
           "file": "./interfaces/IERC20Token.sol",
           "scope": 1374,
@@ -312,16 +312,16 @@
       {
         "attributes": {
           "contractDependencies": [
-            5967,
-            6172
+            5989,
+            6194
           ],
           "contractKind": "contract",
           "documentation": "ERC20 Standard Token implementation",
           "fullyImplemented": true,
           "linearizedBaseContracts": [
             1373,
-            5967,
-            6172
+            5989,
+            6194
           ],
           "name": "ERC20Token",
           "scope": 1374
@@ -338,7 +338,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "IERC20Token",
-                  "referencedDeclaration": 6172,
+                  "referencedDeclaration": 6194,
                   "type": "contract IERC20Token"
                 },
                 "id": 1133,
@@ -361,7 +361,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "Utils",
-                  "referencedDeclaration": 5967,
+                  "referencedDeclaration": 5989,
                   "type": "contract Utils"
                 },
                 "id": 1135,
@@ -1032,7 +1032,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 6337,
+                              "referencedDeclaration": 6359,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -1456,7 +1456,7 @@
               "payable": false,
               "scope": 1373,
               "stateMutability": "nonpayable",
-              "superFunction": 6151,
+              "superFunction": 6173,
               "visibility": "public"
             },
             "children": [
@@ -1560,7 +1560,7 @@
                       "overloadedDeclarations": [
                         null
                       ],
-                      "referencedDeclaration": 5878,
+                      "referencedDeclaration": 5900,
                       "type": "modifier (address)",
                       "value": "validAddress"
                     },
@@ -1644,7 +1644,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 6334,
+                                      "referencedDeclaration": 6356,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -1692,7 +1692,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 5936,
+                                  "referencedDeclaration": 5958,
                                   "type": "function (uint256,uint256) pure returns (uint256)",
                                   "value": "safeSub"
                                 },
@@ -1742,7 +1742,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 6334,
+                                          "referencedDeclaration": 6356,
                                           "type": "msg",
                                           "value": "msg"
                                         },
@@ -1875,7 +1875,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 5916,
+                                  "referencedDeclaration": 5938,
                                   "type": "function (uint256,uint256) pure returns (uint256)",
                                   "value": "safeAdd"
                                 },
@@ -2017,7 +2017,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 6334,
+                                  "referencedDeclaration": 6356,
                                   "type": "msg",
                                   "value": "msg"
                                 },
@@ -2114,7 +2114,7 @@
               "payable": false,
               "scope": 1373,
               "stateMutability": "nonpayable",
-              "superFunction": 6162,
+              "superFunction": 6184,
               "visibility": "public"
             },
             "children": [
@@ -2244,7 +2244,7 @@
                       "overloadedDeclarations": [
                         null
                       ],
-                      "referencedDeclaration": 5878,
+                      "referencedDeclaration": 5900,
                       "type": "modifier (address)",
                       "value": "validAddress"
                     },
@@ -2279,7 +2279,7 @@
                       "overloadedDeclarations": [
                         null
                       ],
-                      "referencedDeclaration": 5878,
+                      "referencedDeclaration": 5900,
                       "type": "modifier (address)",
                       "value": "validAddress"
                     },
@@ -2392,7 +2392,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 6334,
+                                      "referencedDeclaration": 6356,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -2440,7 +2440,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 5936,
+                                  "referencedDeclaration": 5958,
                                   "type": "function (uint256,uint256) pure returns (uint256)",
                                   "value": "safeSub"
                                 },
@@ -2519,7 +2519,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 6334,
+                                          "referencedDeclaration": 6356,
                                           "type": "msg",
                                           "value": "msg"
                                         },
@@ -2652,7 +2652,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 5936,
+                                  "referencedDeclaration": 5958,
                                   "type": "function (uint256,uint256) pure returns (uint256)",
                                   "value": "safeSub"
                                 },
@@ -2818,7 +2818,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 5916,
+                                  "referencedDeclaration": 5938,
                                   "type": "function (uint256,uint256) pure returns (uint256)",
                                   "value": "safeAdd"
                                 },
@@ -3040,7 +3040,7 @@
               "payable": false,
               "scope": 1373,
               "stateMutability": "nonpayable",
-              "superFunction": 6171,
+              "superFunction": 6193,
               "visibility": "public"
             },
             "children": [
@@ -3144,7 +3144,7 @@
                       "overloadedDeclarations": [
                         null
                       ],
-                      "referencedDeclaration": 5878,
+                      "referencedDeclaration": 5900,
                       "type": "modifier (address)",
                       "value": "validAddress"
                     },
@@ -3201,7 +3201,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 6337,
+                              "referencedDeclaration": 6359,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -3342,7 +3342,7 @@
                                                   "overloadedDeclarations": [
                                                     null
                                                   ],
-                                                  "referencedDeclaration": 6334,
+                                                  "referencedDeclaration": 6356,
                                                   "type": "msg",
                                                   "value": "msg"
                                                 },
@@ -3481,7 +3481,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 6334,
+                                          "referencedDeclaration": 6356,
                                           "type": "msg",
                                           "value": "msg"
                                         },
@@ -3604,7 +3604,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 6334,
+                                  "referencedDeclaration": 6356,
                                   "type": "msg",
                                   "value": "msg"
                                 },
@@ -3708,5 +3708,5 @@
   },
   "networks": {},
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-05-03T12:01:12.946Z"
+  "updatedAt": "2018-05-04T12:55:26.185Z"
 }

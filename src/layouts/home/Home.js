@@ -3,6 +3,7 @@ import { AccountData, ContractData, ContractForm } from 'drizzle-react-component
 import rega from '../../rega.png'
 import BalanceData  from './BalanceData.js'
 
+
 class Home extends Component {
   render() {
     return (
@@ -114,10 +115,22 @@ class Home extends Component {
 
           <div className="pure-u-1-1">
             <h2>LCSToken</h2>
-            <h3>Voting process</h3>
+            <h3>Claim Voting</h3>
+            <ContractData contract="LCSToken" method="votingStatus" methodArgs={[4]} />
+            <h3>Cast Positive</h3>
+            <ContractForm contract="LCSToken" method="castPositive" labels={['NFT Token ID']} />
+            <h3>Cast Negative</h3>
+            <ContractForm contract="LCSToken" method="castNegative" labels={['NFT Token ID']} />
+            <br/><br/>
+          </div>
+
+           <div className="pure-u-1-1">
+            <h2>LCSToken</h2>
+            <h3>Now get claim payment</h3>
+            <ContractData contract="LCSToken" method="extensions" methodArgs={[4]} />
            
-            <h3>Cast Vote</h3>
-            <ContractForm contract="LCSToken" method="vote" labels={['NFT Token ID','Positive?']} />
+            <h3>PAYMENT</h3>
+            <ContractForm contract="LCSToken" method="payment" labels={['NFT Token ID']} />
 
             <br/><br/>
           </div>
