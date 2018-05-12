@@ -88,6 +88,20 @@ contract TokenCrowdsurance is TokenPool {
         uint8       minJuriesNumber;    // min juries number to count voting 
         uint        votingDuration;     // juries voting duration
         uint8       juriesNumber;       // number of juries
+        uint256     maxApplications;    // maximum number of unprocessed applications
+    }
+    /// New member application
+    /// @param timeStamp application time stamp
+    /// @param member new member address 
+    /// @param tokensToBuys number of tokens to buy
+    /// @param paymetMethod join payment method : 0 - ETH
+    /// @param processed application processing status
+    struct Application {
+        uint        timeStamp;          // application time stamp
+        address     member;             // new member address
+        uint8       tokensToBuy;        // number of tokens to buy
+        uint8       paymetMethod;       // payment method : 0 - ETH
+        bool        processed;          // processing status
     }
     /// Crowdsurance parameters
     Parameters public parameters;
@@ -96,11 +110,13 @@ contract TokenCrowdsurance is TokenPool {
     mapping (uint256 => Crowdsurance) public extensions;            // crowdsurance extension mapping
     mapping (address => uint256) public voters;                     // crowdsurance voting
     mapping (uint256 => Request) public requests;                   // crowdsurance token Id to Claim
+    mapping (address => uint256) public addressToApplication;       // address to application mapping
+    Application[] public applications;                              // applications
+    uint256 public appNumber = 0;                                   // number of applications to process
     /// TokenCrowdsurance Apply event
     /// @param member new member address
-    /// @param score member score
-    /// @param amount need to pay to join
-    event Apply(address member, uint256 score, uint256 amount);
+    /// @param appId member appication id
+    event Apply(address member, uint256 appId);
     /// TokenCrowdsurance Join event
     /// @param member new member addrsss
     /// @param id NFT token id for crowdsurance token
@@ -144,16 +160,70 @@ contract TokenCrowdsurance is TokenPool {
         require(_amount != uint256(0) && _amount >= parameters.joinAmount);
         addressToAmount[_member] = _amount;
         addressToScore[_member] = _score;
+        
+        // clear appication
+        uint256 addId = addressToApplication[_member];
+        if(addId != uint256(0) && addId < applications.length) {
+            applications[addId].processed = true;
+            delete addressToApplication[_member];
+            appNumber--;
+            // if no more applications to process then clear the app array
+            if (appNumber == uint256(0)) {
+                delete applications;
+            }
+        }
+
         // emit scoring event
         Scoring(_member, _score, _amount);
     }
-    /// apply function 
-    /// @return join ampount - must be not zero to join
-    function apply() public view returns(uint256 amount) {
+    /// get next application to process
+    function getApplication() view public returns (address member, uint256 appId) {
+        member = address(0);
+        appId = uint256(0);
+
+        if(appNumber == uint256(0)) {
+            return;
+        }
+
+        for(uint256 i = 1; i < applications.length; i++) {
+            if(!applications[i].processed) {
+                member = applications[i].member;
+                appId = i;
+                return;
+            }
+        }
+    }
+    /// get join amount for sender
+    function getJoinAmount() view public returns (uint256 amount) {
         amount = addressToAmount[msg.sender];
-        uint256 score = addressToScore[msg.sender];
-        // emit Apply event
-        Apply(msg.sender, score, amount);
+    }
+    /// apply function 
+    /// @return application ID must be not zero if application is accepted 
+    function apply() public returns(uint256 addId) {
+        addId = addressToApplication[msg.sender];
+
+        if (addId == uint256(0) && appNumber < parameters.maxApplications) {
+            // new application
+            Application memory app = Application({
+                timeStamp: now,
+                member: msg.sender,
+                tokensToBuy: uint8(1),
+                paymetMethod: uint8(0),
+                processed: false
+            });
+            
+            addId = applications.push(app) - 1;
+            if(addId == uint256(0)) {
+                // process the first one -- keep 0 index reserved
+                addId = applications.push(app) - 1;
+            }
+            require(addId == uint256(uint32(addId)));
+            addressToApplication[msg.sender] = addId;
+            appNumber++;
+
+            // emit Apply event
+            Apply(msg.sender, addId);
+        }
     }
     function _join(address _member, uint256 _score, uint256 _amount) internal returns(uint256) {
         uint256 id = _createNFT(_amount, "Crowdsurance", uint256(0), _member);
@@ -175,6 +245,7 @@ contract TokenCrowdsurance is TokenPool {
         // clear mapping
         delete addressToAmount[_member];
         delete addressToScore[_member];
+        
         // return NFT token ID
         return id;
     } 
@@ -357,6 +428,7 @@ contract TokenCrowdsurance is TokenPool {
         parameters.minJuriesNumber = 3;                     // min juries number to count voting 
         parameters.votingDuration = 2 days;                 // juries voting duration in sec
         parameters.juriesNumber = 5;                        // juries number -- not more than 5
+        parameters.maxApplications = 10;                    // max number of unprocessed applications
     }
     function() public payable { }                           //  fallback function to get Ether on contract account
 }

@@ -107,7 +107,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 4931,
+          "SourceUnit": 5138,
           "absolutePath": "/Users/sergei/LuggageCrowdsurance/contracts/interfaces/IOwned.sol",
           "file": "./interfaces/IOwned.sol",
           "scope": 1865,
@@ -123,14 +123,14 @@
       {
         "attributes": {
           "contractDependencies": [
-            4930
+            5137
           ],
           "contractKind": "contract",
           "documentation": null,
           "fullyImplemented": true,
           "linearizedBaseContracts": [
             1864,
-            4930
+            5137
           ],
           "name": "Owned",
           "scope": 1865
@@ -147,7 +147,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "IOwned",
-                  "referencedDeclaration": 4930,
+                  "referencedDeclaration": 5137,
                   "type": "contract IOwned"
                 },
                 "id": 1788,
@@ -368,7 +368,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 4942,
+                                  "referencedDeclaration": 5149,
                                   "type": "msg",
                                   "value": "msg"
                                 },
@@ -448,7 +448,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 4933,
+                              "referencedDeclaration": 5140,
                               "type": "function (bool) pure",
                               "value": "assert"
                             },
@@ -489,7 +489,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 4942,
+                                      "referencedDeclaration": 5149,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -555,7 +555,7 @@
               "payable": false,
               "scope": 1864,
               "stateMutability": "nonpayable",
-              "superFunction": 4926,
+              "superFunction": 5133,
               "visibility": "public"
             },
             "children": [
@@ -659,7 +659,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 4945,
+                              "referencedDeclaration": 5152,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -798,7 +798,7 @@
               "payable": false,
               "scope": 1864,
               "stateMutability": "nonpayable",
-              "superFunction": 4929,
+              "superFunction": 5136,
               "visibility": "public"
             },
             "children": [
@@ -854,7 +854,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 4945,
+                              "referencedDeclaration": 5152,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -895,7 +895,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 4942,
+                                      "referencedDeclaration": 5149,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -1185,5 +1185,5 @@
   },
   "networks": {},
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-05-10T20:03:18.349Z"
+  "updatedAt": "2018-05-12T19:58:39.859Z"
 }
