@@ -20,8 +20,11 @@ class BalanceData extends Component {
     // Fetch initial value from chain and return cache key for reactive updates.
     var methodArgs = [this.props.accounts[this.props.accountIndex]];
 
+    if (this.props.methodArgs) {
+      methodArgs = this.props.methodArgs;
+    }
     if (this.props.viewOnly) {
-        methodArgs = [];
+      methodArgs = [];
     }
     
     this.dataKey = this.contracts[this.props.contract].methods[this.props.method].cacheCall(...methodArgs);

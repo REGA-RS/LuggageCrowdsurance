@@ -54,7 +54,7 @@ contract LuggageCrowdsurance is TokenCrowdsurance {
             require(RST != address(0));                             // check that we have valid contract address
             require(joinAmountRST != uint256(0));                   // join RST amount must be > 0
             uint256 rstAmt = RST.allowance(member, this);           // check if the member has gave permision to spend some amount
-            uint8 rstDecimals = RST.decimals();                     // need RST decimals to convert RST to ETH based on the convertion rate
+            uint256 rstDecimals = uint256(RST.decimals());          // need RST decimals to convert RST to ETH based on the convertion rate
             require(rstAmt >= joinAmountRST);                       // ... and check if allowance is more then joinAmount
             amount = addressToAmount[member];                       // get join amount and check...
             uint256 rstAmtInETH = rstAmt * rstETHRate;              // ... and now calculate join amount from RST to ETH
@@ -107,7 +107,7 @@ contract LuggageCrowdsurance is TokenCrowdsurance {
         super.activate(_id);
     }
     /// get commission function
-    function getCommission() ownerOnly public {
+    function transferCommission() ownerOnly public {
         uint256 commission = nfts[0].value;
         require(commission != uint256(0)); 
         nfts[0].value = 0;

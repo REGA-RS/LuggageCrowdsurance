@@ -317,5 +317,7 @@ contract TokenPool is TokenContainer {
             share: uint256(50)
         });
         pools.push(subPool);
+        // set comission to 0
+        nfts[0].value = uint256(0);
     }
 }

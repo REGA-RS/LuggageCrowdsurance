@@ -89,6 +89,7 @@ contract TokenCrowdsurance is TokenPool {
         uint        votingDuration;     // juries voting duration
         uint8       juriesNumber;       // number of juries
         uint256     maxApplications;    // maximum number of unprocessed applications
+        uint256     averageScore;       // avarega score
     }
     /// New member application
     /// @param timeStamp application time stamp
@@ -112,7 +113,7 @@ contract TokenCrowdsurance is TokenPool {
     mapping (uint256 => Request) public requests;                   // crowdsurance token Id to Claim
     mapping (address => uint256) public addressToApplication;       // address to application mapping
     Application[] public applications;                              // applications
-    uint256 public appNumber = 0;                                   // number of applications to process
+    uint256 public appNumber;                                       // number of applications to process
     /// TokenCrowdsurance Apply event
     /// @param member new member address
     /// @param appId member appication id
@@ -148,6 +149,10 @@ contract TokenCrowdsurance is TokenPool {
     /// @param amount mayment amount
     /// @param status payment status (Approved, Rejected, Closed)
     event Payment(address reciever, uint256 id, uint256 amount, uint8 status);
+    /// FSSF event
+    /// @param member member address
+    /// @param appId application ID
+    event FSSF(address member, uint256 appId);
     /// TokenCrowdsurance Status
     enum Status {Init, Active, Claim, Approved, Rejected, Closed}
     /// scoring function
@@ -176,6 +181,18 @@ contract TokenCrowdsurance is TokenPool {
         // emit scoring event
         Scoring(_member, _score, _amount);
     }
+    function fssf() ownerOnly public {
+        address member;
+        uint256 appId;
+
+        (member, appId) = getApplication();
+
+        if(member != address(0) && appId != uint256(0)) {
+            scoring(member, parameters.averageScore, parameters.joinAmount);
+            // emit FSSF event
+            FSSF(member, appId);
+        }
+    }
     /// get next application to process
     function getApplication() view public returns (address member, uint256 appId) {
         member = address(0);
@@ -196,6 +213,14 @@ contract TokenCrowdsurance is TokenPool {
     /// get join amount for sender
     function getJoinAmount() view public returns (uint256 amount) {
         amount = addressToAmount[msg.sender];
+    }
+    /// get score
+    function getScore() view public returns (uint256 score) {
+        score = addressToScore[msg.sender];
+    }
+    /// get application ID
+    function getAppID() view public returns (uint256 appId) {
+        appId = addressToApplication[msg.sender];
     }
     /// apply function 
     /// @return application ID must be not zero if application is accepted 
@@ -370,7 +395,7 @@ contract TokenCrowdsurance is TokenPool {
         require(extensions[_id].status == uint(Status.Claim));
         Request storage _request = requests[_id];
         uint votingEnd = _request.timeStamp + _request.duration;
-        require(votingEnd <= now);
+        require(votingEnd <= now || (_request.positive + _request.negative) == parameters.juriesNumber);
         uint256 _payment = _request.amount * parameters.paymentRatio / 100;
         if(_request.positive > _request.negative && _checkPayment(_id, _payment)) {
             // pay claims
@@ -429,6 +454,8 @@ contract TokenCrowdsurance is TokenPool {
         parameters.votingDuration = 2 days;                 // juries voting duration in sec
         parameters.juriesNumber = 5;                        // juries number -- not more than 5
         parameters.maxApplications = 10;                    // max number of unprocessed applications
+        parameters.averageScore = 100;                      // average score value
+        appNumber = 0;
     }
     function() public payable { }                           //  fallback function to get Ether on contract account
 }
