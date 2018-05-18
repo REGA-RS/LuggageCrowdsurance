@@ -155,6 +155,7 @@ contract TokenCrowdsurance is TokenPool {
     event FSSF(address member, uint256 appId);
     /// TokenCrowdsurance Status
     enum Status {Init, Active, Claim, Approved, Rejected, Closed}
+    enum VotingState {Progress, Voted, Timeout}
     /// scoring function
     /// @param _member address of the member to score
     /// @param _score member scoroing result
@@ -263,8 +264,8 @@ contract TokenCrowdsurance is TokenPool {
             claimNumber: uint8(0),
             status: uint8(Status.Init)
         });
-        // now insert in the pool
-        insertPool(id);
+        // now insert in a subpool
+        _addTokenToSubPool(id);
         // emit event 
         Join(_member, id, _amount);
         // clear mapping
@@ -378,14 +379,28 @@ contract TokenCrowdsurance is TokenPool {
     }
     /// check claim voting status
     /// @param _id NFT token to check
-    function votingStatus(uint256 _id) public view returns (bool votingEnded, uint8 positive, uint8 negative) {
+    function votingStatus(uint256 _id) public view returns (VotingState state, uint8 positive, uint8 negative, uint256 payment, uint256 balance) {
         require(_id != uint256(0));
+        require(_owns(msg.sender, _id));
         require(extensions[_id].status == uint(Status.Claim));
+        
         Request storage _request = requests[_id];
-        uint votingEnd = _request.timeStamp + _request.duration;
-        votingEnded = votingEnd <= now;
+
         positive = _request.positive;
         negative = _request.negative;
+        state = VotingState.Progress;
+        payment = _request.amount * parameters.paymentRatio / 100;
+        balance = this.balance;
+        bool timeout = ( _request.timeStamp + _request.duration ) < now;
+        bool voted = ( _request.positive + _request.negative ) == parameters.juriesNumber;
+
+        if(timeout) {
+            state = VotingState.Timeout;
+        }
+        else if (voted) {
+            state = VotingState.Voted;
+        }
+        
     }
     /// get payment function
     /// @param _id NFT token to get payment
@@ -394,27 +409,29 @@ contract TokenCrowdsurance is TokenPool {
         require(_owns(msg.sender, _id));
         require(extensions[_id].status == uint(Status.Claim));
         Request storage _request = requests[_id];
-        uint votingEnd = _request.timeStamp + _request.duration;
-        require(votingEnd <= now || (_request.positive + _request.negative) == parameters.juriesNumber);
+        bool timeout = ( _request.timeStamp + _request.duration ) < now;
+        bool voted = ( _request.positive + _request.negative ) == parameters.juriesNumber;
+        require(timeout || voted);
         uint256 _payment = _request.amount * parameters.paymentRatio / 100;
-        if(_request.positive > _request.negative && _checkPayment(_id, _payment)) {
+        uint256[4] memory distribution;
+        if((_request.positive > _request.negative) && _checkPayment(_id, _payment)) {
             // pay claims
             msg.sender.transfer(_payment);
             extensions[_id].status = uint8(Status.Approved);
             extensions[_id].paid = extensions[_id].paid + _payment;
             // update pools' balances
-            _payValue(_id, _payment);
+            distribution = _payValue(_id, _payment);
             // emit event
             Payment(msg.sender, _id, _payment, uint8(Status.Approved));
-        } else if   ((_request.positive == _request.negative || 
-                    (_request.positive + _request.negative) < parameters.minJuriesNumber )
+        } else if   (((_request.positive == _request.negative) || 
+                    ((_request.positive + _request.negative) < parameters.minJuriesNumber))
                     && _checkPayment(_id, extensions[_id].amount)) {
             // pay back join amount
             msg.sender.transfer(extensions[_id].amount);
             extensions[_id].status = uint8(Status.Closed);
             extensions[_id].paid = extensions[_id].paid + extensions[_id].amount;
              // update pools' balances
-            _payValue(_id, extensions[_id].amount);
+            distribution = _payValue(_id, extensions[_id].amount);
             // emit event
             Payment(msg.sender, _id, extensions[_id].amount, uint8(Status.Closed));
         } else {
@@ -428,6 +445,7 @@ contract TokenCrowdsurance is TokenPool {
             delete voters[_request.members[i]];
         }
         delete requests[_id];
+        delete distribution;
     }
     /// status count function
     /// @param _member address of token owner
@@ -455,7 +473,7 @@ contract TokenCrowdsurance is TokenPool {
         parameters.juriesNumber = 5;                        // juries number -- not more than 5
         parameters.maxApplications = 10;                    // max number of unprocessed applications
         parameters.averageScore = 100;                      // average score value
-        appNumber = 0;
+        appNumber = 0;                                      // initial value for applications 
     }
     function() public payable { }                           //  fallback function to get Ether on contract account
 }

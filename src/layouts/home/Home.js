@@ -16,6 +16,65 @@ class Home extends Component {
 
             <br/><br/>
           </div>
+
+          <div className="pure-u-1-1">
+            <h2>Test check list</h2>
+            <label>
+              <input type="checkbox" name="ether_transfer" /> &nbsp;
+              01&nbsp;-&nbsp;Transfer Ether to the LCS Smart contract &nbsp;[owner]
+            </label>
+            <br/>
+            <label>
+              <input type="checkbox" name="rst_transfer" /> &nbsp;
+              02&nbsp;-&nbsp;Transfer RST tokens to the new member address &nbsp;[owner]
+            </label>
+            <br/>
+            <label>
+              <input type="checkbox" name="apply" /> &nbsp;
+              03&nbsp;-&nbsp;Make a application &nbsp;[member]
+            </label>
+            <br/>
+            <label>
+              <input type="checkbox" name="apply" /> &nbsp;
+              04&nbsp;-&nbsp;The new member scoring &nbsp;[owner]
+            </label>
+            <br/>
+            <label>
+              <input type="checkbox" name="allowance" /> &nbsp;
+              05&nbsp;-&nbsp;Provide an allowance to LCS for RST transfer &nbsp;[member]
+            </label>
+            <br/>
+            <label>
+              <input type="checkbox" name="join" /> &nbsp;
+              06&nbsp;-&nbsp;Join to crowdsurance &nbsp;[member]
+            </label>
+            <br/>
+            <label>
+              <input type="checkbox" name="activate" /> &nbsp;
+              07&nbsp;-&nbsp;Activate crowdsurance token &nbsp;[member]
+            </label>
+            <br/>
+            <label>
+              <input type="checkbox" name="claim" /> &nbsp;
+              08&nbsp;-&nbsp;Make a claim &nbsp;[member]
+            </label>
+            <br/>
+            <label>
+              <input type="checkbox" name="jury" /> &nbsp;
+              09&nbsp;-&nbsp;Select juries &nbsp;[owner]
+            </label>
+            <br/>
+            <label>
+              <input type="checkbox" name="voting" /> &nbsp;
+              10&nbsp;-&nbsp;Juries voting &nbsp;[juries]
+            </label>
+            <br/>
+            <label>
+              <input type="checkbox" name="payment" /> &nbsp;
+              11&nbsp;-&nbsp;Collect claim payment &nbsp;[member]
+            </label>
+            <br/><br/>
+          </div>
         
           <div className="pure-u-1-1">
             <h2>Smart Contract Information</h2>
@@ -118,6 +177,8 @@ class Home extends Component {
           <div className="pure-u-1-1">
             <h2>Claim</h2>
             <p>If your luggage is lost then make a claim for payment</p>
+            <h3>Check Claim Amount</h3>
+            <ContractData contract="LCSToken" method="checkPaymentAmount" methodArgs={[4, "1000000000000000000"]} />
            
             <h3>Claim Payment</h3>
             <ContractForm contract="LCSToken" method="claim" labels={['NFT Token ID','Claim Amount']} />
@@ -151,7 +212,9 @@ class Home extends Component {
             <h2>Receive</h2>
             <p>Now receive claim payment</p>
             <h3>Claim Info</h3>
+            <ContractData contract="LCSToken" method="tokenIndexToOwner" methodArgs={[4]} />
             <ContractData contract="LCSToken" method="extensions" methodArgs={[4]} />
+            <ContractData contract="LCSToken" method="requests" methodArgs={[4]} />
            
             <h3>PAYMENT</h3>
             <ContractForm contract="LCSToken" method="payment" labels={['NFT Token ID']} />
