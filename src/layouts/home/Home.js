@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { AccountData, ContractData, ContractForm } from 'drizzle-react-components'
 import rega from '../../rega.png'
 import BalanceData  from './BalanceData.js'
-
+import SmartContainer from './SmartContainer.js'
 
 class Home extends Component {
   render() {
@@ -12,12 +12,12 @@ class Home extends Component {
           <div className="pure-u-1-1 header">
             <img src={rega} alt="drizzle-logo" />
             <h1>REGA Luggage Crowdsurance</h1>
-            <h3>Smart contract test inviroment</h3>
+            <h3>Smart contract test enviroment</h3>
 
             <br/><br/>
           </div>
 
-          <div className="pure-u-1-1">
+          <SmartContainer accountIndex="0">
             <h2>Test check list</h2>
             <label>
               <input type="checkbox" name="ether_transfer" /> &nbsp;
@@ -74,9 +74,9 @@ class Home extends Component {
               11&nbsp;-&nbsp;Collect claim payment &nbsp;[member]
             </label>
             <br/><br/>
-          </div>
+          </SmartContainer>
         
-          <div className="pure-u-1-1">
+          <SmartContainer accountIndex="0">
             <h2>Smart Contract Information</h2>
             <h3>Current Account</h3>
             <AccountData accountIndex="0" units="ether" precision="4" />
@@ -101,9 +101,9 @@ class Home extends Component {
             <p><BalanceData contract="LCSToken" method="joinAmountRST" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
 
             <br/><br/>
-          </div>
+          </SmartContainer>
 
-          <div className="pure-u-1-1">
+          <SmartContainer accountIndex="0">
             <h2>Apply</h2>
             <p>The first step is make an application and get application ID</p>
             <h3>Application Info</h3>
@@ -114,9 +114,9 @@ class Home extends Component {
             <ContractForm contract="LCSToken" method="apply" />
 
             <br/><br/>
-          </div>
+          </SmartContainer>
 
-          <div className="pure-u-1-1">
+          <SmartContainer accountIndex="0" ownerOnly>
             <h2>Score</h2>
             <p>The next step is new member scoring</p>
             <h3>Applications Info</h3>
@@ -126,9 +126,9 @@ class Home extends Component {
             <ContractForm contract="LCSToken" method="fssf" />
 
             <br/><br/>
-          </div>
+          </SmartContainer>
 
-          <div className="pure-u-1-1">
+          <SmartContainer accountIndex="0" ownerOnly>
             <h2>Transfer</h2>
             <p>Transfer some RST Tokens to the new member if needed.</p>
             <h3>Current Account RST Balance</h3>
@@ -137,9 +137,9 @@ class Home extends Component {
             <ContractForm contract="RSTToken" method="transfer" labels={['To Address', 'Amount to Transfer']} />
             
             <br/><br/>
-          </div>
+          </SmartContainer>
 
-          <div className="pure-u-1-1">
+          <SmartContainer accountIndex="0" >
             <h2>Approve</h2>
             <p>Now the new member need to approve token transfer.</p>
             <h3>Current Account RST Balance</h3>
@@ -150,9 +150,9 @@ class Home extends Component {
             <ContractForm contract="RSTToken" method="approve" labels={['To Address', 'Amount to Approve']} />
             
             <br/><br/>
-          </div>
+          </SmartContainer>
 
-          <div className="pure-u-1-1">
+          <SmartContainer accountIndex="0">
             <h2>Join</h2>
             <p>Now new member can join crowdsurance</p>
             <h3>Join Info</h3>
@@ -163,18 +163,18 @@ class Home extends Component {
             <ContractForm contract="LCSToken" method="join" />
 
             <br/><br/>
-          </div>
+          </SmartContainer>
 
-          <div className="pure-u-1-1">
+          <SmartContainer accountIndex="0">
             <h2>Activate</h2>
             <p>To protect your luggage activate crowdsurance</p>
             <h3>Activate Crowdsurance</h3>
             <ContractForm contract="LCSToken" method="activate" labels={['NFT Token ID']} />
 
             <br/><br/>
-          </div>
+          </SmartContainer>
 
-          <div className="pure-u-1-1">
+          <SmartContainer accountIndex="0">
             <h2>Claim</h2>
             <p>If your luggage is lost then make a claim for payment</p>
             <h3>Check Claim Amount</h3>
@@ -184,9 +184,9 @@ class Home extends Component {
             <ContractForm contract="LCSToken" method="claim" labels={['NFT Token ID','Claim Amount']} />
 
             <br/><br/>
-          </div>
+          </SmartContainer>
 
-          <div className="pure-u-1-1">
+          <SmartContainer accountIndex="0" ownerOnly>
             <h2>Select</h2>
             <p>Select jury to vote the claim payment</p>
            
@@ -194,9 +194,9 @@ class Home extends Component {
             <ContractForm contract="LCSToken" method="addVoter" labels={['Voter address','NFT Token ID']} />
 
             <br/><br/>
-          </div>
+          </SmartContainer>
 
-          <div className="pure-u-1-1">
+          <SmartContainer accountIndex="0" >
             <h2>Vote</h2>
             <p>Now jury can vote for the claim</p>
             <h3>Voting Results</h3>
@@ -206,9 +206,9 @@ class Home extends Component {
             <h3>Cast Negative</h3>
             <ContractForm contract="LCSToken" method="castNegative" labels={['NFT Token ID']} />
             <br/><br/>
-          </div>
+          </SmartContainer>
 
-           <div className="pure-u-1-1">
+           <SmartContainer accountIndex="0">
             <h2>Receive</h2>
             <p>Now receive claim payment</p>
             <h3>Claim Info</h3>
@@ -220,7 +220,7 @@ class Home extends Component {
             <ContractForm contract="LCSToken" method="payment" labels={['NFT Token ID']} />
 
             <br/><br/>
-          </div>
+          </SmartContainer>
 
         </div>
       </main>
