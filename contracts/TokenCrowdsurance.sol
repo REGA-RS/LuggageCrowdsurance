@@ -90,6 +90,7 @@ contract TokenCrowdsurance is TokenPool {
         uint8       juriesNumber;       // number of juries
         uint256     maxApplications;    // maximum number of unprocessed applications
         uint256     averageScore;       // avarega score
+        uint256     defaultClaimAmount; // default claim amount
     }
     /// New member application
     /// @param timeStamp application time stamp
@@ -114,6 +115,8 @@ contract TokenCrowdsurance is TokenPool {
     mapping (address => uint256) public addressToApplication;       // address to application mapping
     Application[] public applications;                              // applications
     uint256 public appNumber;                                       // number of applications to process
+    uint256[] public claims;
+    uint256 first;
     /// TokenCrowdsurance Apply event
     /// @param member new member address
     /// @param appId member appication id
@@ -274,7 +277,7 @@ contract TokenCrowdsurance is TokenPool {
         
         // return NFT token ID
         return id;
-    } 
+    }
     /// join function
     /// @return cowdsuranceId NFT token ID for created crowdsurance
     function join() public payable returns(uint256 crowdsuranceId) {
@@ -328,14 +331,20 @@ contract TokenCrowdsurance is TokenPool {
         });
         extensions[_id].claimNumber++;
         extensions[_id].status = uint8(Status.Claim);
+        // add claim to the Queue
+        claims.push(_id);
         // emit event
         Claim(_id, _claim, extensions[_id].claimNumber);
         return true;
     }
+    function getNumberOfClaims() view public returns(uint256) {
+        return (claims.length - first);
+    }
     /// add voter function
     /// @param _jury voter address
-    /// @param _id NFT id for claim voting 
-    function addVoter(address _jury, uint256 _id) ownerOnly public {
+    function addVoter(address _jury) ownerOnly public {
+        require(first < claims.length);
+        uint256 _id = claims[first];
         require(_jury != address(0));
         require(_id != uint256(0));
         require(extensions[_id].status == uint(Status.Claim));
@@ -349,6 +358,14 @@ contract TokenCrowdsurance is TokenPool {
         _request.members[_number] = _jury;
         _request.number++;
         voters[_jury] = _id;
+
+        if(_number == parameters.juriesNumber) {
+            first++;
+            if(first == claims.length) {
+                first = 0;
+                claims.length = 0;
+            }
+        }
     }
     /// vote function
     /// @param _id NFT id for claim voting
@@ -360,7 +377,7 @@ contract TokenCrowdsurance is TokenPool {
         Request storage _request = requests[_id];
         uint votingEnd = _request.timeStamp + _request.duration;
         require(votingEnd >= now);
-
+        
         if(_positive) {
             _request.positive++;
         } else {
@@ -376,6 +393,63 @@ contract TokenCrowdsurance is TokenPool {
     }
     function castNegative(uint256 _id) public {
         vote(_id, false);
+    }
+    /// token ID helpers
+    function _getCurrentTokenId(address _owner) internal view returns (uint256 currentId) {
+        uint256[] memory tokenIds = _tokensOfOwner(_owner);
+        currentId = tokenIds.length > 0 ? tokenIds[tokenIds.length-1] : uint256(0);
+    }
+    function getCurrentTokenId() public view returns (uint256 currentId) {
+        if(msg.sender == owner) {
+            currentId = uint256(0);                         // return 0 for owner
+        }
+        else {
+            currentId = _getCurrentTokenId(msg.sender);     // for the rest it will be the last token owned
+        }
+    }
+    /// actions helpers for the current token ID
+    function activateCurrent() public {
+        activate(getCurrentTokenId());
+    }
+    function claimCurrent() public returns(bool) {
+        return claim(getCurrentTokenId(), parameters.defaultClaimAmount);
+    }
+    function paymentCurrent() public {
+        payment(getCurrentTokenId());
+    }
+    /// voting helpers
+    function castPositiveSelected() public {
+        vote(voters[msg.sender], true);
+    }
+    function castNegativeSelected() public {
+        vote(voters[msg.sender], false);
+    }
+    /// status helper
+    function getCurrentStatus() view public returns(uint8 status) {
+        status = extensions[getCurrentTokenId()].status;
+    }
+    function getCurrentVotingStatus() view public returns(uint8 status) {
+        VotingState state;
+        uint8 positive;
+        uint8 negative;
+        uint256 payment;
+        uint256 balance;
+
+        uint256 amount = extensions[getCurrentTokenId()].amount;
+        (state, positive, negative, payment, balance) = votingStatus(getCurrentTokenId());
+
+        status = 0;
+        if(state == VotingState.Timeout || state == VotingState.Voted) {
+            if( positive > negative && payment <= balance ) {
+                status = 1;
+            }
+            else if ( positive == negative && amount <= balance ) {
+                status = 2;
+            }
+            else {
+                status = 3;
+            }
+        }
     }
     /// check claim voting status
     /// @param _id NFT token to check
@@ -444,9 +518,11 @@ contract TokenCrowdsurance is TokenPool {
         for(uint i; i < _request.number; i++) {
             delete voters[_request.members[i]];
         }
+    
         delete requests[_id];
         delete distribution;
     }
+
     /// status count function
     /// @param _member address of token owner
     /// @param _status status to check
@@ -473,7 +549,10 @@ contract TokenCrowdsurance is TokenPool {
         parameters.juriesNumber = 5;                        // juries number -- not more than 5
         parameters.maxApplications = 10;                    // max number of unprocessed applications
         parameters.averageScore = 100;                      // average score value
-        appNumber = 0;                                      // initial value for applications 
+        parameters.defaultClaimAmount = 1 ether;            // default claim amount
+
+        appNumber = 0;                                      // initial value for applications
+        first = 0;
     }
     function() public payable { }                           //  fallback function to get Ether on contract account
 }

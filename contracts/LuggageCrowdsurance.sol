@@ -106,12 +106,65 @@ contract LuggageCrowdsurance is TokenCrowdsurance {
         require(statusCount(member, uint8(Status.Active)) < maxHold);   
         super.activate(_id);
     }
+    function activateCurrent() public {
+        activate(getCurrentTokenId());
+    }
+    function getAllowance() public view returns (uint256 allowance) {
+        allowance = RST.allowance(msg.sender,address(this));
+    }
     /// get commission function
     function transferCommission() ownerOnly public {
         uint256 commission = nfts[0].value;
         require(commission != uint256(0)); 
         nfts[0].value = 0;
         msg.sender.transfer(commission);
+    }
+    function getBizProcessId() view public returns(address contractOwner, uint8 bizProcessId) {
+        contractOwner = owner;
+        bizProcessId = 0;
+        // check voting first
+        if (voters[msg.sender] != uint256(0)) {
+            // voter
+            bizProcessId = 5;
+            return;
+        }
+        // check if sender has Crowdsurance token
+        uint256 id = getCurrentTokenId();
+        if(id == uint256(0)) {
+            // sender don't have any token check application 
+            uint256 appId = getAppID();
+            uint256 amount = addressToAmount[msg.sender];
+            uint256 allowance = getAllowance();
+            if(appId == uint256(0) && amount == uint256(0)) {
+                // the first step - need to make application
+                bizProcessId = 1;
+            }
+            else if(appId != uint256(0) && amount == uint256(0)) {
+                // waiting for scoring
+                bizProcessId = 2; 
+            }
+            else if (appId == uint256(0) && amount != uint256(0) && allowance == uint256(0)) {
+                // need to approve token transfer
+                bizProcessId = 3;
+            }
+            else if (appId == uint256(0) && amount != uint256(0) && allowance != uint256(0)) {
+                // join 
+                bizProcessId = 4;
+            }
+        }
+        else {
+            // we have current token id
+            if (extensions[id].status == uint(Status.Init)) {
+                bizProcessId = 10;  // activate
+            }
+            else if (extensions[id].status == uint(Status.Active)) {
+                bizProcessId = 11;  // claim
+            }
+            else if (extensions[id].status == uint(Status.Claim)) {
+                bizProcessId = 20 + getCurrentVotingStatus();
+
+            }
+        }
     }
     function LuggageCrowdsurance(address _rst, uint256 _amount, bool _only, uint8 _max) 
                 TokenCrowdsurance("Luggage Crowdsurance NFT", "LCS") public {
