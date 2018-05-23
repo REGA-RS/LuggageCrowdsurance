@@ -3,6 +3,7 @@ import { AccountData, ContractData, ContractForm } from 'drizzle-react-component
 import rega from '../../rega.png'
 import BalanceData  from './BalanceData.js'
 import SmartContainer from './SmartContainer.js'
+import ContractFormExtension from './ContractFormExtension.js'
 
 class Home extends Component {
   render() {
@@ -196,7 +197,7 @@ class Home extends Component {
             <h3>Crowdsurance ID</h3>
             <p><ContractData contract="LCSToken" method="getCurrentTokenId" /></p>
             <h3>Activate Crowdsurance</h3>
-            <ContractForm contract="LCSToken" method="activateCurrent" />
+            <ContractFormExtension contract="LCSToken" method="activateCurrent" extension={[{name:'Name', type:'text'}, {name:'Surname', type:'text'}]} />
 
             <br/><br/>
           </SmartContainer>
