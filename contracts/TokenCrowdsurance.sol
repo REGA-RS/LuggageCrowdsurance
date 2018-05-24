@@ -361,7 +361,7 @@ contract TokenCrowdsurance is TokenPool {
         _request.number++;
         voters[_jury] = _id;
 
-        if(_number == parameters.juriesNumber) {
+        if(_request.number == parameters.juriesNumber) {
             first++;
             if(first == claims.length) {
                 first = 0;
