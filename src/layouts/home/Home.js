@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { AccountData, ContractData, ContractForm } from 'drizzle-react-components'
 import rega from '../../rega.png'
+import pass from '../../boardingpass.jpg'
 import BalanceData  from './BalanceData.js'
 import SmartContainer from './SmartContainer.js'
 import ContractFormExtension from './ContractFormExtension.js'
@@ -207,6 +208,8 @@ class Home extends Component {
             <p>If your luggage is lost then make a claim for payment</p>
             <h3>Crowdsurance ID</h3>
             <p><ContractData contract="LCSToken" method="getCurrentTokenId" /></p>
+            <h3>Upload claim docs</h3>
+            <input type="file" />
            
             <h3>Claim Payment</h3>
             <ContractForm contract="LCSToken" method="claimCurrent" />
@@ -230,9 +233,13 @@ class Home extends Component {
             <h2>Vote</h2>
             <p>Vote for the claim that you have been selected</p>
             <h3>Claim data</h3>
+            <img src={pass} alt="drizzle-logo" />
             <p>Information for the claim will be here ...</p>
+            <h3>Activation Hash</h3>
+            <p><ContractData contract="LCSToken" method="getHash" /></p>
             <h3>Cast Positive</h3>
-            <ContractForm contract="LCSToken" method="castPositiveSelected"  />
+            <p>To vote in favore of the case please enter in the form the name and surname of the member who has made the claim. You can found them above in the provided Claim data.</p>
+            <ContractFormExtension contract="LCSToken" method="castPositiveSelected" extension={[{name:'Name', type:'text'}, {name:'Surname', type:'text'}]} check />
             <h3>Cast Negative</h3>
             <ContractForm contract="LCSToken" method="castNegativeSelected"  />
             <br/><br/>

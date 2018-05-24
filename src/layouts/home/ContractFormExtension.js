@@ -20,7 +20,19 @@ class ContractFormExtension extends Component {
 
     this.inputs = [];
     this.extension = {};
+    this.error_msg = '';
     var initialState = {};
+
+    this.dataKey = this.contracts['LCSToken'].methods['getHash'].cacheCall(...[]);
+
+    // Iterate over abi for correct function.
+    for (var k = 0; k < abi.length; k++) {
+        if (abi[k].name === 'getBizProcessId') {
+            this.fnABI = abi[k];
+  
+            break;
+        }
+    }
 
     // Iterate over abi for correct function.
     for (var i = 0; i < abi.length; i++) {
@@ -39,7 +51,21 @@ class ContractFormExtension extends Component {
   }
 
   handleSubmit() {
-    this.contracts[this.props.contract].methods[this.props.method].cacheSend(...Object.values(this.state));
+    var name = this.state['Name'];
+    var surname = this.state['Surname'];
+    var hash = this.context.drizzle.web3.utils.sha3(name.concat(surname));
+    var displayData = this.props.contracts['LCSToken']['getHash'][this.dataKey].value;
+    if(this.props.check) {
+        if(hash === displayData) {
+            this.contracts[this.props.contract].methods[this.props.method].cacheSend(...[]);
+        }
+        else {
+            this.error_msg = hash;
+        }
+    }
+    else {
+        this.contracts[this.props.contract].methods[this.props.method].cacheSend(...[hash]);
+    }
   }
 
   handleInputChange(event) {
@@ -65,14 +91,14 @@ class ContractFormExtension extends Component {
   render() {
     return (
       <form className="pure-form pure-form-stacked">
+        {this.error_msg.length > 0 &&
+            <h3>
+                ERROR: the hash does not match 
+            </h3>
+        }
+        <p>{this.error_msg}</p>
         {this.props.extension.map((input, index) => {
-            return (<input key={input.name} type={input.type} name={input.name} value={this.extension[input.name]} placeholder={input.name} />)
-        })}
-        {this.inputs.map((input, index) => {            
-            var inputType = this.translateType(input.type)
-            var inputLabel = this.props.labels ? this.props.labels[index] : input.name
-            // check if input type is struct and if so loop out struct fields as well
-            return (<input key={input.name} type={inputType} name={input.name} value={this.state[input.name]} placeholder={inputLabel} onChange={this.handleInputChange} />)
+            return (<input key={input.name} type={input.type} name={input.name} value={this.state[input.name]} placeholder={input.name} onChange={this.handleInputChange} />)
         })}
         <button key="submit" className="pure-button" type="button" onClick={this.handleSubmit}>Submit</button>
       </form>

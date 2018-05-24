@@ -100,14 +100,15 @@ contract LuggageCrowdsurance is TokenCrowdsurance {
     }
     /// activate function 
     /// @param _id NFT token ID to activate
-    function activate(uint256 _id) public {
+    /// @param _hash activation hash
+    function activate(uint256 _id, string _hash) public {
         address member = msg.sender;
         // check if number of tokens is not more then maxHold
         require(statusCount(member, uint8(Status.Active)) < maxHold);   
-        super.activate(_id);
+        super.activate(_id, _hash);
     }
-    function activateCurrent() public {
-        activate(getCurrentTokenId());
+    function activateCurrent(string _hash) public {
+        activate(getCurrentTokenId(),_hash);
     }
     function getAllowance() public view returns (uint256 allowance) {
         allowance = RST.allowance(msg.sender,address(this));

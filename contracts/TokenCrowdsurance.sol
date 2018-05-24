@@ -219,8 +219,8 @@ contract TokenCrowdsurance is TokenPool {
         amount = addressToAmount[msg.sender];
     }
     /// get score
-    function getScore() view public returns (uint256 score) {
-        score = addressToScore[msg.sender];
+    function getHash() view public returns (string) {
+        return nfts[voters[msg.sender]].metadata;
     }
     /// get application ID
     function getAppID() view public returns (uint256 appId) {
@@ -292,7 +292,8 @@ contract TokenCrowdsurance is TokenPool {
     }
     /// activate function 
     /// @param _id NFT token ID to activate
-    function activate(uint256 _id) public {
+    /// @param _hash activation hash
+    function activate(uint256 _id, string _hash) public {
         require(_id != uint256(0));
         require(_owns(msg.sender, _id));
         require(extensions[_id].amount != uint256(0));
@@ -301,6 +302,7 @@ contract TokenCrowdsurance is TokenPool {
         nfts[_id].state = StateBlocked; // block transfer
         extensions[_id].status = uint8(Status.Active);
         extensions[_id].activated = now;
+        nfts[_id].metadata = _hash;
         // emit event
         Activate(_id, extensions[_id].amount, extensions[_id].score);
     }
@@ -387,29 +389,19 @@ contract TokenCrowdsurance is TokenPool {
         // emit event
         Vote(msg.sender, _id, _positive);
     }
-    /// helpers voting 
-    function castPositive(uint256 _id) public {
-        vote(_id, true);
-    }
-    function castNegative(uint256 _id) public {
-        vote(_id, false);
-    }
     /// token ID helpers
-    function _getCurrentTokenId(address _owner) internal view returns (uint256 currentId) {
-        uint256[] memory tokenIds = _tokensOfOwner(_owner);
-        currentId = tokenIds.length > 0 ? tokenIds[tokenIds.length-1] : uint256(0);
-    }
     function getCurrentTokenId() public view returns (uint256 currentId) {
         if(msg.sender == owner) {
             currentId = uint256(0);                         // return 0 for owner
         }
         else {
-            currentId = _getCurrentTokenId(msg.sender);     // for the rest it will be the last token owned
+            uint256[] memory tokenIds = _tokensOfOwner(msg.sender);
+            currentId = tokenIds.length > 0 ? tokenIds[tokenIds.length-1] : uint256(0);
         }
     }
     /// actions helpers for the current token ID
-    function activateCurrent() public {
-        activate(getCurrentTokenId());
+    function activateCurrent(string _hash) public {
+        activate(getCurrentTokenId(), _hash);
     }
     function claimCurrent() public returns(bool) {
         return claim(getCurrentTokenId(), parameters.defaultClaimAmount);
@@ -424,19 +416,27 @@ contract TokenCrowdsurance is TokenPool {
     function castNegativeSelected() public {
         vote(voters[msg.sender], false);
     }
-    /// status helper
-    function getCurrentStatus() view public returns(uint8 status) {
-        status = extensions[getCurrentTokenId()].status;
-    }
     function getCurrentVotingStatus() view public returns(uint8 status) {
-        VotingState state;
-        uint8 positive;
-        uint8 negative;
-        uint256 payment;
-        uint256 balance;
+        uint256 _id = getCurrentTokenId();
+        require(_id != uint256(0));
+        require(_owns(msg.sender, _id));
+        require(extensions[_id].status == uint(Status.Claim));
+        Request storage _request = requests[_id];
+        uint256 amount = extensions[_id].amount;
+        uint8 positive = _request.positive;
+        uint8 negative = _request.negative;
+        VotingState state = VotingState.Progress;
+        uint256 payment = _request.amount * parameters.paymentRatio / 100;
+        uint256 balance = this.balance;
+        bool timeout = ( _request.timeStamp + _request.duration ) < now;
+        bool voted = ( _request.positive + _request.negative ) == parameters.juriesNumber;
 
-        uint256 amount = extensions[getCurrentTokenId()].amount;
-        (state, positive, negative, payment, balance) = votingStatus(getCurrentTokenId());
+        if(timeout) {
+            state = VotingState.Timeout;
+        }
+        else if (voted) {
+            state = VotingState.Voted;
+        }
 
         status = 0;
         if(state == VotingState.Timeout || state == VotingState.Voted) {
@@ -450,31 +450,6 @@ contract TokenCrowdsurance is TokenPool {
                 status = 3;
             }
         }
-    }
-    /// check claim voting status
-    /// @param _id NFT token to check
-    function votingStatus(uint256 _id) public view returns (VotingState state, uint8 positive, uint8 negative, uint256 payment, uint256 balance) {
-        require(_id != uint256(0));
-        require(_owns(msg.sender, _id));
-        require(extensions[_id].status == uint(Status.Claim));
-        
-        Request storage _request = requests[_id];
-
-        positive = _request.positive;
-        negative = _request.negative;
-        state = VotingState.Progress;
-        payment = _request.amount * parameters.paymentRatio / 100;
-        balance = this.balance;
-        bool timeout = ( _request.timeStamp + _request.duration ) < now;
-        bool voted = ( _request.positive + _request.negative ) == parameters.juriesNumber;
-
-        if(timeout) {
-            state = VotingState.Timeout;
-        }
-        else if (voted) {
-            state = VotingState.Voted;
-        }
-        
     }
     /// get payment function
     /// @param _id NFT token to get payment

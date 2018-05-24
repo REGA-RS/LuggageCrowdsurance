@@ -330,7 +330,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 7472,
+          "SourceUnit": 7402,
           "absolutePath": "/Users/sergei/LuggageCrowdsurance/contracts/interfaces/IERC20Controller.sol",
           "file": "./interfaces/IERC20Controller.sol",
           "scope": 485,
@@ -345,7 +345,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 7388,
+          "SourceUnit": 7318,
           "absolutePath": "/Users/sergei/LuggageCrowdsurance/contracts/interfaces/IERC20Adapter.sol",
           "file": "./interfaces/IERC20Adapter.sol",
           "scope": 485,
@@ -361,18 +361,18 @@
       {
         "attributes": {
           "contractDependencies": [
-            7368,
-            7387,
-            7551
+            7298,
+            7317,
+            7481
           ],
           "contractKind": "contract",
           "documentation": "ERC20 Adapter",
           "fullyImplemented": true,
           "linearizedBaseContracts": [
             484,
-            7387,
-            7368,
-            7551
+            7317,
+            7298,
+            7481
           ],
           "name": "ERC20Adapter",
           "scope": 485
@@ -389,7 +389,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "IERC20Adapter",
-                  "referencedDeclaration": 7387,
+                  "referencedDeclaration": 7317,
                   "type": "contract IERC20Adapter"
                 },
                 "id": 138,
@@ -417,7 +417,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "IERC20Controller",
-                  "referencedDeclaration": 7471,
+                  "referencedDeclaration": 7401,
                   "type": "contract IERC20Controller"
                 },
                 "id": 140,
@@ -609,7 +609,7 @@
               "payable": false,
               "scope": 484,
               "stateMutability": "view",
-              "superFunction": 7497,
+              "superFunction": 7427,
               "visibility": "public"
             },
             "children": [
@@ -687,7 +687,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -828,7 +828,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "cTotalSupply",
-                              "referencedDeclaration": 7394,
+                              "referencedDeclaration": 7324,
                               "type": "function () view external returns (uint256)"
                             },
                             "children": [
@@ -883,7 +883,7 @@
               "payable": false,
               "scope": 484,
               "stateMutability": "view",
-              "superFunction": 7507,
+              "superFunction": 7437,
               "visibility": "public"
             },
             "children": [
@@ -983,7 +983,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -1119,7 +1119,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -1260,7 +1260,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "cBalanceOf",
-                              "referencedDeclaration": 7401,
+                              "referencedDeclaration": 7331,
                               "type": "function (address) view external returns (uint256)"
                             },
                             "children": [
@@ -1329,7 +1329,7 @@
               "payable": false,
               "scope": 484,
               "stateMutability": "view",
-              "superFunction": 7521,
+              "superFunction": 7451,
               "visibility": "public"
             },
             "children": [
@@ -1455,7 +1455,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -1591,7 +1591,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -1727,7 +1727,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -1872,7 +1872,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "cAllowance",
-                              "referencedDeclaration": 7410,
+                              "referencedDeclaration": 7340,
                               "type": "function (address,address) view external returns (uint256)"
                             },
                             "children": [
@@ -1955,7 +1955,7 @@
               "payable": false,
               "scope": 484,
               "stateMutability": "nonpayable",
-              "superFunction": 7530,
+              "superFunction": 7460,
               "visibility": "public"
             },
             "children": [
@@ -2081,7 +2081,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -2217,7 +2217,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -2353,7 +2353,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -2498,7 +2498,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "cTransfer",
-                              "referencedDeclaration": 7419,
+                              "referencedDeclaration": 7349,
                               "type": "function (address,uint256) external returns (bool)"
                             },
                             "children": [
@@ -2581,7 +2581,7 @@
               "payable": false,
               "scope": 484,
               "stateMutability": "nonpayable",
-              "superFunction": 7541,
+              "superFunction": 7471,
               "visibility": "public"
             },
             "children": [
@@ -2733,7 +2733,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -2869,7 +2869,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -3005,7 +3005,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -3141,7 +3141,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -3290,7 +3290,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "cTransferFrom",
-                              "referencedDeclaration": 7430,
+                              "referencedDeclaration": 7360,
                               "type": "function (address,address,uint256) external returns (bool)"
                             },
                             "children": [
@@ -3387,7 +3387,7 @@
               "payable": false,
               "scope": 484,
               "stateMutability": "nonpayable",
-              "superFunction": 7550,
+              "superFunction": 7480,
               "visibility": "public"
             },
             "children": [
@@ -3513,7 +3513,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -3649,7 +3649,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -3785,7 +3785,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -3930,7 +3930,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "cApprove",
-                              "referencedDeclaration": 7439,
+                              "referencedDeclaration": 7369,
                               "type": "function (address,uint256) external returns (bool)"
                             },
                             "children": [
@@ -4013,7 +4013,7 @@
               "payable": false,
               "scope": 484,
               "stateMutability": "nonpayable",
-              "superFunction": 7386,
+              "superFunction": 7316,
               "visibility": "public"
             },
             "children": [
@@ -4191,7 +4191,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -4327,7 +4327,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -4463,7 +4463,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -4599,7 +4599,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -4735,7 +4735,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -4871,7 +4871,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -4982,7 +4982,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "cApproveFrom",
-                              "referencedDeclaration": 7452,
+                              "referencedDeclaration": 7382,
                               "type": "function (uint256,address,uint256,uint256) external returns (bool)"
                             },
                             "children": [
@@ -5115,7 +5115,7 @@
                         "attributes": {
                           "contractScope": null,
                           "name": "IERC20Controller",
-                          "referencedDeclaration": 7471,
+                          "referencedDeclaration": 7401,
                           "type": "contract IERC20Controller"
                         },
                         "id": 440,
@@ -5251,7 +5251,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 7716,
+                              "referencedDeclaration": 7646,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -5739,5 +5739,5 @@
     }
   },
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-05-22T12:50:47.960Z"
+  "updatedAt": "2018-05-24T07:06:15.793Z"
 }

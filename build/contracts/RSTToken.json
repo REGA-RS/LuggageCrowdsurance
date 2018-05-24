@@ -262,7 +262,7 @@
       "absolutePath": "/Users/sergei/LuggageCrowdsurance/contracts/RSTToken.sol",
       "exportedSymbols": {
         "RSTToken": [
-          3385
+          3391
         ]
       }
     },
@@ -276,7 +276,7 @@
             ".17"
           ]
         },
-        "id": 3356,
+        "id": 3362,
         "name": "PragmaDirective",
         "src": "0:24:10"
       },
@@ -285,13 +285,13 @@
           "SourceUnit": 1374,
           "absolutePath": "/Users/sergei/LuggageCrowdsurance/contracts/ERC20Token.sol",
           "file": "./ERC20Token.sol",
-          "scope": 3386,
+          "scope": 3392,
           "symbolAliases": [
             null
           ],
           "unitAlias": ""
         },
-        "id": 3357,
+        "id": 3363,
         "name": "ImportDirective",
         "src": "26:26:10"
       },
@@ -299,20 +299,20 @@
         "attributes": {
           "contractDependencies": [
             1373,
-            7346,
-            7551
+            7276,
+            7481
           ],
           "contractKind": "contract",
           "documentation": null,
           "fullyImplemented": true,
           "linearizedBaseContracts": [
-            3385,
+            3391,
             1373,
-            7346,
-            7551
+            7276,
+            7481
           ],
           "name": "RSTToken",
-          "scope": 3386
+          "scope": 3392
         },
         "children": [
           {
@@ -329,12 +329,12 @@
                   "referencedDeclaration": 1373,
                   "type": "contract ERC20Token"
                 },
-                "id": 3358,
+                "id": 3364,
                 "name": "UserDefinedTypeName",
                 "src": "75:10:10"
               }
             ],
-            "id": 3359,
+            "id": 3365,
             "name": "InheritanceSpecifier",
             "src": "75:10:10"
           },
@@ -342,7 +342,7 @@
             "attributes": {
               "constant": false,
               "name": "INITIAL_SUPPLY",
-              "scope": 3385,
+              "scope": 3391,
               "stateVariable": true,
               "storageLocation": "default",
               "type": "uint256",
@@ -354,7 +354,7 @@
                   "name": "uint",
                   "type": "uint256"
                 },
-                "id": 3360,
+                "id": 3366,
                 "name": "ElementaryTypeName",
                 "src": "90:4:10"
               },
@@ -371,12 +371,12 @@
                   "type": "int_const 1500000000000000",
                   "value": "1500000000000000"
                 },
-                "id": 3361,
+                "id": 3367,
                 "name": "Literal",
                 "src": "119:16:10"
               }
             ],
-            "id": 3362,
+            "id": 3368,
             "name": "VariableDeclaration",
             "src": "90:45:10"
           },
@@ -387,7 +387,7 @@
               "isConstructor": true,
               "name": "RSTToken",
               "payable": false,
-              "scope": 3385,
+              "scope": 3391,
               "stateMutability": "nonpayable",
               "superFunction": null,
               "visibility": "public"
@@ -400,7 +400,7 @@
                   ]
                 },
                 "children": [],
-                "id": 3363,
+                "id": 3369,
                 "name": "ParameterList",
                 "src": "159:2:10"
               },
@@ -411,7 +411,7 @@
                   ]
                 },
                 "children": [],
-                "id": 3371,
+                "id": 3377,
                 "name": "ParameterList",
                 "src": "232:0:10"
               },
@@ -427,7 +427,7 @@
                       "type": "type(contract ERC20Token)",
                       "value": "ERC20Token"
                     },
-                    "id": 3364,
+                    "id": 3370,
                     "name": "Identifier",
                     "src": "162:10:10"
                   },
@@ -444,7 +444,7 @@
                       "type": "literal_string \"TEST REGA Risk Sharing Token\"",
                       "value": "TEST REGA Risk Sharing Token"
                     },
-                    "id": 3365,
+                    "id": 3371,
                     "name": "Literal",
                     "src": "173:30:10"
                   },
@@ -461,7 +461,7 @@
                       "type": "literal_string \"RST-T\"",
                       "value": "RST-T"
                     },
-                    "id": 3366,
+                    "id": 3372,
                     "name": "Literal",
                     "src": "205:7:10"
                   },
@@ -495,7 +495,7 @@
                           "type": "type(uint8)",
                           "value": "uint8"
                         },
-                        "id": 3367,
+                        "id": 3373,
                         "name": "ElementaryTypeNameExpression",
                         "src": "214:5:10"
                       },
@@ -512,17 +512,17 @@
                           "type": "int_const 10",
                           "value": "10"
                         },
-                        "id": 3368,
+                        "id": 3374,
                         "name": "Literal",
                         "src": "220:2:10"
                       }
                     ],
-                    "id": 3369,
+                    "id": 3375,
                     "name": "FunctionCall",
                     "src": "214:9:10"
                   }
                 ],
-                "id": 3370,
+                "id": 3376,
                 "name": "ModifierInvocation",
                 "src": "162:62:10"
               },
@@ -561,7 +561,7 @@
                                   "type": "mapping(address => uint256)",
                                   "value": "balanceOf"
                                 },
-                                "id": 3372,
+                                "id": 3378,
                                 "name": "Identifier",
                                 "src": "238:9:10"
                               },
@@ -583,21 +583,21 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 7713,
+                                      "referencedDeclaration": 7643,
                                       "type": "msg",
                                       "value": "msg"
                                     },
-                                    "id": 3373,
+                                    "id": 3379,
                                     "name": "Identifier",
                                     "src": "248:3:10"
                                   }
                                 ],
-                                "id": 3374,
+                                "id": 3380,
                                 "name": "MemberAccess",
                                 "src": "248:10:10"
                               }
                             ],
-                            "id": 3375,
+                            "id": 3381,
                             "name": "IndexAccess",
                             "src": "238:21:10"
                           },
@@ -607,21 +607,21 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3362,
+                              "referencedDeclaration": 3368,
                               "type": "uint256",
                               "value": "INITIAL_SUPPLY"
                             },
-                            "id": 3376,
+                            "id": 3382,
                             "name": "Identifier",
                             "src": "262:14:10"
                           }
                         ],
-                        "id": 3377,
+                        "id": 3383,
                         "name": "Assignment",
                         "src": "238:38:10"
                       }
                     ],
-                    "id": 3378,
+                    "id": 3384,
                     "name": "ExpressionStatement",
                     "src": "238:38:10"
                   },
@@ -648,7 +648,7 @@
                               "type": "uint256",
                               "value": "totalSupply"
                             },
-                            "id": 3379,
+                            "id": 3385,
                             "name": "Identifier",
                             "src": "282:11:10"
                           },
@@ -658,41 +658,41 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3362,
+                              "referencedDeclaration": 3368,
                               "type": "uint256",
                               "value": "INITIAL_SUPPLY"
                             },
-                            "id": 3380,
+                            "id": 3386,
                             "name": "Identifier",
                             "src": "296:14:10"
                           }
                         ],
-                        "id": 3381,
+                        "id": 3387,
                         "name": "Assignment",
                         "src": "282:28:10"
                       }
                     ],
-                    "id": 3382,
+                    "id": 3388,
                     "name": "ExpressionStatement",
                     "src": "282:28:10"
                   }
                 ],
-                "id": 3383,
+                "id": 3389,
                 "name": "Block",
                 "src": "232:83:10"
               }
             ],
-            "id": 3384,
+            "id": 3390,
             "name": "FunctionDefinition",
             "src": "142:173:10"
           }
         ],
-        "id": 3385,
+        "id": 3391,
         "name": "ContractDefinition",
         "src": "54:263:10"
       }
     ],
-    "id": 3386,
+    "id": 3392,
     "name": "SourceUnit",
     "src": "0:317:10"
   },
@@ -708,5 +708,5 @@
     }
   },
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-05-22T12:50:47.955Z"
+  "updatedAt": "2018-05-24T07:06:15.788Z"
 }
