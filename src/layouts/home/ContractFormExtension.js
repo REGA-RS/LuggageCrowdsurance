@@ -1,6 +1,7 @@
-import { drizzleConnect } from 'drizzle-react'
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import { drizzleConnect } from 'drizzle-react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import axios from 'axios';
 
 /*
  * Create component.
@@ -50,6 +51,16 @@ class ContractFormExtension extends Component {
     this.state = initialState;
   }
 
+  checkFileExists(url) {
+    axios.get(url).then((response) => {
+        console.log(url);
+        return url;
+      }).catch(function (error) {
+        console.log(error);
+        return ``;
+      });
+  }
+
   handleSubmit() {
     var name = this.state['Name'];
     var surname = this.state['Surname'];
@@ -89,8 +100,29 @@ class ContractFormExtension extends Component {
   }
 
   render() {
+    if(!this.props.contracts['LCSToken'].initialized) {
+        return (
+          <span>Initializing...</span>
+        )
+      }
+  
+      // If the cache key we received earlier isn't in the store yet; the initial value is still being fetched.
+      if(!(this.dataKey in this.props.contracts['LCSToken']['getHash'])) {
+        return (
+          <span>Fetching...</span>
+        )
+      }
+  
+    var displayData = this.props.contracts['LCSToken']['getHash'][this.dataKey].value;
+    // var imgUrl = `/files/${displayData}`;
+    var imgUrl = `https://rega.life/lexi/luggage/${displayData}`;
+    
     return (
       <form className="pure-form pure-form-stacked">
+        {this.props.check &&
+            <h3>Claim docs</h3> &&
+            <img alt="vote-img" src={imgUrl} />
+        }
         {this.error_msg.length > 0 &&
             <h3>
                 ERROR: the hash does not match 

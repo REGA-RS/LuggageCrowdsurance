@@ -21,6 +21,9 @@ var prompt = require('react-dev-utils/prompt');
 var pathExists = require('path-exists');
 var config = require('../config/webpack.config.dev');
 var paths = require('../config/paths');
+var axios = require('axios');
+var multer = require('multer');
+var find = require('find');
 
 var useYarn = pathExists.sync(paths.yarnLockFile);
 var cli = useYarn ? 'yarn' : 'npm';
@@ -216,7 +219,34 @@ function addMiddleware(devServer) {
   devServer.use(devServer.middleware);
 }
 
+function translateType(type) {
+  switch(true) {
+      case /jpeg$/.test(type) || /pjpeg$/.test(type):
+          return 'jpg';
+      case /png$/.test(type):
+          return 'png';   
+      case /pdf$/.test(type):
+          return 'pdf'; 
+      case /gif$/.test(type):
+          return 'gif';
+      case /tiff$/.test(type):
+          return 'tiff';   
+      default:
+          return 'text';
+  }
+}
+
 function runDevServer(host, port, protocol) {
+
+  const storage = multer.diskStorage({
+    destination: './files',
+    filename(req, file, cb) {
+      cb(null, `${file.fieldname}.${translateType(file.mimetype)}`);
+    },
+  });
+  
+  const upload = multer({ storage });
+
   var devServer = new WebpackDevServer(compiler, {
     // Enable gzip compression of generated files.
     compress: true,
@@ -257,7 +287,62 @@ function runDevServer(host, port, protocol) {
     },
     // Enable HTTPS if the HTTPS environment variable is set to 'true'
     https: protocol === "https",
-    host: host
+    host: host,
+    setup: function(app) {
+      // Here you can access the Express app object and add your own custom middleware to it.
+      // For example, to define custom handlers for some paths:
+      app.post('/files', upload.any(), (req, res) => {
+        const file = req.file; // file passed from client
+        const meta = req.body; // all other values passed from the client, like name, etc..
+ 
+        // send the data to our REST API
+        // axios({
+        //  url: `https://api.myrest.com/uploads`,
+        //  method: 'post',
+        //  data: {
+        //    file,
+        //    name: meta.name,      
+        //  },
+        // })
+        //  .then(response => res.status(200).json(response.data.data))
+        //  .catch((error) => res.status(500).json(error.response.data));
+        res.json({ name: meta.name, description: meta.description });
+      });
+      app.get('/files/:name', function (req, res, next) {
+
+        var options = {
+          root: './',
+          dotfiles: 'deny',
+          headers: {
+              'x-timestamp': Date.now(),
+              'x-sent': true
+          }
+        };
+      
+        var re = new RegExp(req.params.name);
+        find.file(re, './files/', function(files) {
+
+          var fileName = files[0];
+          res.sendFile(fileName, options, function (err) {
+            if (err) {
+              next(err);
+            } else {
+              console.log('Sent:', fileName);
+            }
+          });
+        });
+
+        // var fileName = req.params.name;
+        // res.sendFile(fileName, options, function (err) {
+        //  if (err) {
+        //    next(err);
+        //  } else {
+        //    console.log('Sent:', fileName);
+        //  }
+        // });
+      
+      });
+    }
   });
 
   // Our custom middleware proxies requests to /index.html or a remote API.
