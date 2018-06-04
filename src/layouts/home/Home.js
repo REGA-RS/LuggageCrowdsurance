@@ -14,7 +14,7 @@ class Home extends Component {
           <div className="pure-u-1-1 header">
             <img src={rega} alt="drizzle-logo" />
             <h1>REGA Luggage Crowdsurance</h1>
-            <h3>Smart contract test enviroment</h3>
+            <h3>Smart contract test enviroment &nbsp;<small>v 0.0.2</small></h3>
 
             <br/><br/>
           </div>
@@ -96,9 +96,13 @@ class Home extends Component {
             <p><BalanceData contract="ERC20Adapter" method="balanceOf" accountIndex="0" units="ether" precision="4" /> Ether </p>
             <h3>LCS Current Token</h3>
             <p><ContractData contract="LCSToken" method="getCurrentTokenId" /> </p>
+            <h3>LCS Total Supply</h3>
+            <p><ContractData contract="LCSToken" method="totalSupply" /> </p>
+            <h3>Application number</h3>
+            <p><ContractData contract="LCSToken" method="appNumber" /></p>
             <h3>LCS Token Owner</h3>
             <p><ContractData contract="LCSToken" method="owner" /></p>
-            <h3>Super Pools</h3>
+            <h3>Super Pool</h3>
             <p><BalanceData contract="LCSToken" method="valueOf" methodArgs={[1]} units="ether" precision="4" /> Ether </p>
             <h3>Pools</h3>
             <p><BalanceData contract="LCSToken" method="valueOf" methodArgs={[2]} units="ether" precision="4" /> Ether </p>
@@ -112,19 +116,19 @@ class Home extends Component {
             <br/><br/>
           </SmartContainer>
 
-          <SmartContainer accountIndex="0" notOwnerOnly bizProcessId="1">
+          <SmartContainer accountIndex="0" notOwnerOnly bizProcessId={["1"]}>
             <h2>Apply</h2>
             <p>The first step is make an application and get application ID</p>
             <h3>Application Info</h3>
             
             <p><strong>Application ID</strong>: <ContractData contract="LCSToken" method="getAppID" /></p>
             <h3>Make Application</h3>
-            <ContractForm contract="LCSToken" method="apply" />
+            <ContractFormExtension contract="LCSToken" method="apply" extension={[]} emitEvent="apply" />
 
             <br/><br/>
           </SmartContainer>
 
-          <SmartContainer accountIndex="0" notOwnerOnly bizProcessId="2">
+          <SmartContainer accountIndex="0" notOwnerOnly bizProcessId="2" >
             <h2>Wait</h2>
             <p>Wait for aplication approval...</p>
 
@@ -160,7 +164,7 @@ class Home extends Component {
             <br/><br/>
           </SmartContainer>
 
-          <SmartContainer accountIndex="0" notOwnerOnly bizProcessId="3">
+          <SmartContainer accountIndex="0" notOwnerOnly bizProcessId={["3"]}>
             <h2>Approve</h2>
             <p>Before join Crowdsurance the the new member need to approve token transfer from own account to LCS smart contract address. The amount to approve is join amount in RST</p>
             <h3>Current Account RST Balance</h3>
@@ -178,7 +182,7 @@ class Home extends Component {
             <br/><br/>
           </SmartContainer>
 
-          <SmartContainer accountIndex="0" notOwnerOnly bizProcessId="4">
+          <SmartContainer accountIndex="0" notOwnerOnly bizProcessId={["4"]}>
             <h2>Join</h2>
             <p>If token transfer approval was done then the new member can join crowdsurance and RST tokens will be transfered from the new member account to the LCS owner account. </p>
             <h3>Join Info</h3>
@@ -278,7 +282,7 @@ class Home extends Component {
           </SmartContainer>
 
           <SmartContainer accountIndex="0" notOwnerOnly bizProcessId="23">
-            <h2>Rejacted</h2>
+            <h2>Rejected</h2>
             <p>Claim is rejected</p>
 
             <br/><br/>

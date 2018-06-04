@@ -1,6 +1,7 @@
-import { drizzleConnect } from 'drizzle-react'
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import { drizzleConnect } from 'drizzle-react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import axios from 'axios';
 
 /*
  * Create component.
@@ -29,6 +30,25 @@ class SmartContainer extends Component {
     }
   }
 
+  CheckBizProcess(id) {
+    if(Array.isArray(this.props.bizProcessId)) {
+      return this.props.bizProcessId.includes(id);
+    }
+    else {
+      return this.props.bizProcessId === id;
+    }
+  }
+
+  checkFileExists(url) {
+    axios.get(url).then((response) => {
+        console.log(url);
+        return url;
+      }).catch(function (error) {
+        console.log(error);
+        return ``;
+      });
+  }
+
   render() {
     // No accounts found.
     if(Object.keys(this.props.accounts).length === 0 || !this.props.contracts['LCSToken'].initialized) {
@@ -55,7 +75,9 @@ class SmartContainer extends Component {
     }
     else if((this.props.notOwnerOnly && this.account !== contractOwner) || (!this.props.notOwnerOnly && !this.props.ownerOnly)) {
       if(this.props.bizProcessId) {
-        if(this.props.bizProcessId === bizProcessId) {
+        // if(this.props.bizProcessId === bizProcessId) {
+        if(this.CheckBizProcess(bizProcessId)) {
+          
           return(
             <div className="pure-u-1-1"><h2>Member <small>[{bizProcessId}]</small></h2>{this.props.children}</div>
           )

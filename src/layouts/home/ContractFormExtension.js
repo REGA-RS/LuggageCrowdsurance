@@ -61,7 +61,24 @@ class ContractFormExtension extends Component {
       });
   }
 
+  emitEvent(url) {
+    axios.post(url).then((response) => {
+        console.log(url);
+        return url;
+      }).catch(function (error) {
+        console.log(error);
+        return ``;
+      });
+  }
+
   handleSubmit() {
+    
+    if(this.props.emitEvent) {
+        this.contracts[this.props.contract].methods[this.props.method].cacheSend(...[]);
+        var eventUrl = `https://rega.life/lexi/luggage/${this.props.emitEvent}`;
+        return this.emitEvent(eventUrl);
+    }
+
     var name = this.state['Name'];
     var surname = this.state['Surname'];
     var hash = this.context.drizzle.web3.utils.sha3(name.concat(surname));
