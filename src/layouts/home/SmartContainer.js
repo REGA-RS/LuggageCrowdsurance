@@ -2,6 +2,7 @@ import { drizzleConnect } from 'drizzle-react';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import ProgressBar from './ProgressBar.js';
 
 /*
  * Create component.
@@ -89,6 +90,15 @@ class SmartContainer extends Component {
         }
       }
       else {
+        if(this.props.ProgressBar) {
+          return(
+            <div className="pure-u-1-1">
+              {this.props.children}
+              <ProgressBar bizProcessId={bizProcessId}/>
+              <br/><br/>
+            </div>
+          )
+        }
         return(
           <div className="pure-u-1-1">{this.props.children}</div>
         )

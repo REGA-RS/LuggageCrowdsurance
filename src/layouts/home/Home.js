@@ -1,15 +1,17 @@
-import React, { Component } from 'react'
-import { AccountData, ContractData, ContractForm } from 'drizzle-react-components'
-import rega from '../../rega.png'
-import BalanceData  from './BalanceData.js'
-import SmartContainer from './SmartContainer.js'
-import ContractFormExtension from './ContractFormExtension.js'
-import Uploader from './Uploader.js'
+import React, { Component } from 'react';
+import { AccountData, ContractData, ContractForm } from 'drizzle-react-components';
+import rega from '../../rega.png';
+import BalanceData  from './BalanceData.js';
+import SmartContainer from './SmartContainer.js';
+import ContractFormExtension from './ContractFormExtension.js';
+import Uploader from './Uploader.js';
+
 
 class Home extends Component {
   render() {
     return (
       <main className="container">
+       
         <div className="pure-g">
           <div className="pure-u-1-1 header">
             <img src={rega} alt="drizzle-logo" />
@@ -48,38 +50,8 @@ class Home extends Component {
             <br/><br/>
           </SmartContainer>
 
-          <SmartContainer accountIndex="0" notOwnerOnly>
-            <h2>New member check list</h2>
-            <label>
-              <input type="checkbox" name="apply" /> &nbsp;
-              01&nbsp;-&nbsp;Make a application &nbsp;
-            </label>
-            <br/>
-            <label>
-              <input type="checkbox" name="allowance" /> &nbsp;
-              02&nbsp;-&nbsp;Provide an allowance to LCS for RST transfer &nbsp;
-            </label>
-            <br/>
-            <label>
-              <input type="checkbox" name="join" /> &nbsp;
-              03&nbsp;-&nbsp;Join to crowdsurance &nbsp;
-            </label>
-            <br/>
-            <label>
-              <input type="checkbox" name="activate" /> &nbsp;
-              04&nbsp;-&nbsp;Activate crowdsurance token &nbsp;
-            </label>
-            <br/>
-            <label>
-              <input type="checkbox" name="claim" /> &nbsp;
-              05&nbsp;-&nbsp;Make a claim &nbsp;
-            </label>
-            <br/>
-            <label>
-              <input type="checkbox" name="payment" /> &nbsp;
-              06&nbsp;-&nbsp;Collect claim payment &nbsp;
-            </label>
-            <br/><br/>
+          <SmartContainer accountIndex="0" notOwnerOnly ProgressBar>
+            <h2>Biz process status</h2>
           </SmartContainer>
         
           <SmartContainer accountIndex="0">
