@@ -513,18 +513,18 @@ contract TokenCrowdsurance is TokenPool {
     }
     function TokenCrowdsurance(string _name, string _symbol) TokenPool(_name, _symbol) public {
         // setup default crowdsurance product parameters
-        parameters.joinAmount = 0.1 ether;                  // default join amount
+        parameters.joinAmount = 0.038 ether;                // default join amount
         parameters.coverageDuration = 0.5 years;            // coverage duration in sec
-        parameters.maxClaimAmount = 10 ether;               // max claim amount
-        parameters.maxClaimNumber = 1;                      // max claim number for the contract
-        parameters.paymentRatio = 80;                       // claim to payment patio
+        parameters.maxClaimAmount = 4 ether;                // max claim amount
+        parameters.maxClaimNumber = 3;                      // max claim number for the contract
+        parameters.paymentRatio = 100;                      // claim to payment patio
         parameters.maxPaymentAmount = 10 ether;             // max payment amount for the contract
         parameters.minJuriesNumber = 3;                     // min juries number to count voting 
         parameters.votingDuration = 2 days;                 // juries voting duration in sec
         parameters.juriesNumber = 5;                        // juries number -- not more than 5
         parameters.maxApplications = 10;                    // max number of unprocessed applications
         parameters.averageScore = 100;                      // average score value
-        parameters.defaultClaimAmount = 1 ether;            // default claim amount
+        parameters.defaultClaimAmount = 4 ether;            // default claim amount
 
         appNumber = 0;                                      // initial value for applications
         first = 0;

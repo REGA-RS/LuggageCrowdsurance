@@ -168,13 +168,13 @@ contract LuggageCrowdsurance is TokenCrowdsurance {
         }
     }
     function LuggageCrowdsurance(address _rst, uint256 _amount, bool _only, uint8 _max) 
-                TokenCrowdsurance("Luggage Crowdsurance NFT", "LCS") public {
+                TokenCrowdsurance("Luggage Crowdsurance Smart Token", "LCST") public {
         // setting up contract parameters 
         RST = IERC20Token(_rst);
-        parameters.joinAmount = 0.019 ether;
+        parameters.joinAmount = 0.038 ether;
         parameters.maxClaimAmount = 4 ether; 
         if (_amount == uint256(0)) {
-            joinAmountRST = 5000000000; 
+            joinAmountRST = 7600000000; 
         }
         else {
             joinAmountRST = _amount; 
@@ -186,7 +186,7 @@ contract LuggageCrowdsurance is TokenCrowdsurance {
             maxHold = _max;
         }
         ETHOnly = _only;
-        rstETHRate = 0.12 ether;
-        paybackRatio = 80;
+        rstETHRate = 0.05 ether;
+        paybackRatio = 100;
     }
 }
