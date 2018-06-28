@@ -34,8 +34,8 @@ class ProgressBar extends Component {
       10: {style:{width: "350px"}, max:6, value:4, description:"Activate crowdsurance token"},
       11: {style:{width: "350px"}, max:6, value:5, description:"Make a claim"},
       20: {style:{width: "380px"}, max:7, value:6, description:"Wait for the claim approval"},
-      21: {style:{width: "350px"}, max:6, value:6, description:"Collect claim payment"},
-      22: {style:{width: "350px"}, max:6, value:6, description:"Collect join amount"},
+      21: {style:{width: "350px"}, max:6, value:5.7, description:"Collect claim payment"},
+      22: {style:{width: "350px"}, max:6, value:7.7, description:"Collect join amount"},
       23: {style:{width: "350px"}, max:6, value:6, description:"Claim is rejected"},
     };
   }
@@ -44,7 +44,7 @@ class ProgressBar extends Component {
     const { bizProcessId } = this.props;
     const staticStyle = {
       borderRadius: "2px",
-      height: "20px",
+      height: "20px"
     };
     const style = {...this.bizProgress[bizProcessId].style, ...staticStyle };
     return style;

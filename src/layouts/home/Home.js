@@ -16,7 +16,7 @@ class Home extends Component {
           <div className="pure-u-1-1 header">
             <img src={rega} alt="drizzle-logo" />
             <h1>REGA Luggage Crowdsurance</h1>
-            <h3>Smart contract test enviroment &nbsp;<small>v 0.0.2</small></h3>
+            <h3>Smart contract test enviroment &nbsp;<small>v 0.0.3</small></h3>
 
             <br/><br/>
           </div>
