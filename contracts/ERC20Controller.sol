@@ -26,7 +26,7 @@
 //  
 pragma solidity ^0.4.18;
 
-import './interfaces/IERC20Controller.sol';
+import "./interfaces/IERC20Controller.sol";
 
 /// ERC20 Controller  
 contract ERC20Controller is IERC20Controller {
@@ -87,7 +87,7 @@ contract ERC20Controller is IERC20Controller {
         allowanceIds[_sender][_sender] = _fromId;
         allowanceAmt[_sender][_spender] = _value;
 
-        CApproveFrom(_fromId, _spender, _toId, _value);
+        emit CApproveFrom(_fromId, _spender, _toId, _value);
 
         return true;
     }
@@ -109,7 +109,7 @@ contract ERC20Controller is IERC20Controller {
         allowanceIds[_sender][_sender] = _fromId;
         allowanceAmt[_sender][_spender] = _value;
 
-        CApprove(_spender, _value);
+        emit CApprove(_spender, _value);
 
         return true;
     }
@@ -150,7 +150,7 @@ contract ERC20Controller is IERC20Controller {
             delete allowanceIds[_sender][_to];
         }
 
-        CTransferFrom(_from, _fromId, _to, _toId, _value, allowanceAmt[_sender][_to]);
+        emit CTransferFrom(_from, _fromId, _to, _toId, _value, allowanceAmt[_sender][_to]);
 
         return true;
     }
@@ -179,7 +179,7 @@ contract ERC20Controller is IERC20Controller {
         require(id != uint256(0));
         addValue(_to, id, _amount);
 
-        CIssue(_to, _toId, _amount);
+        emit CIssue(_to, _toId, _amount);
     }
     /// decrease value for NFT token
     /// @param _from address of token owner
@@ -195,6 +195,6 @@ contract ERC20Controller is IERC20Controller {
         require(id != uint256(0));
         removeValue(_from, id, _amount);
 
-        CDestroy(_from, _fromId, _amount);
+        emit CDestroy(_from, _fromId, _amount);
     }
 }

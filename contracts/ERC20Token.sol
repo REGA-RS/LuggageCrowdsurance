@@ -1,6 +1,6 @@
 pragma solidity ^0.4.18;
-import './Utils.sol';
-import './interfaces/IERC20Token.sol';
+import "./Utils.sol";
+import "./interfaces/IERC20Token.sol";
 
 /**
     ERC20 Standard Token implementation
@@ -24,7 +24,7 @@ contract ERC20Token is IERC20Token, Utils {
         @param _symbol      token symbol
         @param _decimals    decimal points, for display purposes
     */
-    function ERC20Token(string _name, string _symbol, uint8 _decimals) public {
+    constructor(string _name, string _symbol, uint8 _decimals) public {
         require(bytes(_name).length > 0 && bytes(_symbol).length > 0); // validate input
 
         name = _name;
@@ -48,7 +48,7 @@ contract ERC20Token is IERC20Token, Utils {
     {
         balanceOf[msg.sender] = safeSub(balanceOf[msg.sender], _value);
         balanceOf[_to] = safeAdd(balanceOf[_to], _value);
-        Transfer(msg.sender, _to, _value);
+        emit Transfer(msg.sender, _to, _value);
         return true;
     }
 
@@ -71,7 +71,7 @@ contract ERC20Token is IERC20Token, Utils {
         allowance[_from][msg.sender] = safeSub(allowance[_from][msg.sender], _value);
         balanceOf[_from] = safeSub(balanceOf[_from], _value);
         balanceOf[_to] = safeAdd(balanceOf[_to], _value);
-        Transfer(_from, _to, _value);
+        emit Transfer(_from, _to, _value);
         return true;
     }
 
@@ -97,7 +97,7 @@ contract ERC20Token is IERC20Token, Utils {
         require(_value == 0 || allowance[msg.sender][_spender] == 0);
 
         allowance[msg.sender][_spender] = _value;
-        Approval(msg.sender, _spender, _value);
+        emit Approval(msg.sender, _spender, _value);
         return true;
     }
 }

@@ -27,8 +27,8 @@
 
 pragma solidity ^0.4.17;
 
-import './TokenCrowdsurance.sol';
-import './interfaces/IERC20Token.sol';
+import "./TokenCrowdsurance.sol";
+import "./interfaces/IERC20Token.sol";
 
 /// Luggage crowdsurance protection product based on TokenCrowdsurance NFT token 
 contract LuggageCrowdsurance is TokenCrowdsurance {
@@ -167,8 +167,7 @@ contract LuggageCrowdsurance is TokenCrowdsurance {
             }
         }
     }
-    function LuggageCrowdsurance(address _rst, uint256 _amount, bool _only, uint8 _max) 
-                TokenCrowdsurance("Luggage Crowdsurance Smart Token", "LCST") public {
+    constructor(address _rst, uint256 _amount, bool _only, uint8 _max) TokenCrowdsurance("Luggage Crowdsurance Smart Token", "LCST") public {
         // setting up contract parameters 
         RST = IERC20Token(_rst);
         parameters.joinAmount = 0.038 ether;

@@ -11,13 +11,13 @@ module.exports = {
     },
     ropsten: {
       provider: function() {
-        return new HDWalletProvider(mnemonic, "https://ropsten.infura.io/BymPe6F1XQoQ3ZwlEzme")
+        return new HDWalletProvider(mnemonic, "https://ropsten.infura.io/BymPe6F1XQoQ3ZwlEzme");
       },
       network_id: 3
     },
     mainnet: {
       provider: function() {
-        return new HDWalletProvider(mnemonic, "https://mainnet.infura.io/fyE6fpwJWFc6fBYSet1w")
+        return new HDWalletProvider(mnemonic, "https://mainnet.infura.io/fyE6fpwJWFc6fBYSet1w");
       },
       network_id: 1
     }  

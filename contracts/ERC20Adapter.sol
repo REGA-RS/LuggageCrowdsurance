@@ -26,8 +26,8 @@
 //  
 pragma solidity ^0.4.18;
 
-import './interfaces/IERC20Controller.sol';
-import './interfaces/IERC20Adapter.sol';
+import "./interfaces/IERC20Controller.sol";
+import "./interfaces/IERC20Adapter.sol";
 /// ERC20 Adapter
 contract ERC20Adapter is IERC20Adapter {
     /// ERC20 Controller 
@@ -123,7 +123,7 @@ contract ERC20Adapter is IERC20Adapter {
     /// @param _name ERC20 token name
     /// @param _symbol ERC20 token symbol
     /// @param _decimals ERC20 token decimals
-    function ERC20Adapter(IERC20Controller _controller, string _name, string _symbol, uint8 _decimals) public {
+    constructor(IERC20Controller _controller, string _name, string _symbol, uint8 _decimals) public {
         require(bytes(_name).length > 0 && bytes(_symbol).length > 0); // validate input
 
         name = _name;

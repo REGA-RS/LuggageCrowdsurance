@@ -27,7 +27,7 @@
 
 pragma solidity ^0.4.17;
 
-import './interfaces/IERC721.sol';
+import "./interfaces/IERC721.sol";
 
 /// ERC721 non-fungible token
 contract ERC721 is IERC721 {
@@ -38,20 +38,11 @@ contract ERC721 is IERC721 {
     /// @dev stateBlocked
     uint256 constant StateBlocked = uint256(1024);
     /// @dev interface signature ERC165
-    bytes4 constant InterfaceSignature_ERC165 =
-        bytes4(keccak256("supportsInterface(bytes4)"));
+    bytes4 constant InterfaceSignature_ERC165 = bytes4(keccak256("supportsInterface(bytes4)"));
     /// @dev interface signature ERC721
-    bytes4 constant InterfaceSignature_ERC721 =
-        bytes4(keccak256("name()")) ^
-        bytes4(keccak256("symbol()")) ^
-        bytes4(keccak256("totalSupply()")) ^
-        bytes4(keccak256("balanceOf(address)")) ^
-        bytes4(keccak256("ownerOf(uint256)")) ^
-        bytes4(keccak256("approve(address,uint256)")) ^
-        bytes4(keccak256("transfer(address,uint256)")) ^
-        bytes4(keccak256("transferFrom(address,address,uint256)")) ^
-        bytes4(keccak256("tokensOfOwner(address)")) ^
-        bytes4(keccak256("tokenMetadata(uint256,string)"));
+    bytes4 constant InterfaceSignature_ERC721 = bytes4(keccak256("name()")) ^ bytes4(keccak256("symbol()")) ^ bytes4(keccak256("totalSupply()")) ^ 
+    bytes4(keccak256("balanceOf(address)")) ^ bytes4(keccak256("ownerOf(uint256)")) ^ bytes4(keccak256("approve(address,uint256)")) ^ bytes4(keccak256("transfer(address,uint256)")) ^ 
+    bytes4(keccak256("transferFrom(address,address,uint256)")) ^ bytes4(keccak256("tokensOfOwner(address)")) ^  bytes4(keccak256("tokenMetadata(uint256,string)"));
     /// @dev NFT token data : value, metadata, kind, level and state
     /// @param value ERC20 token value
     /// @param metadata NFT metadata
@@ -115,7 +106,7 @@ contract ERC721 is IERC721 {
             delete tokenIndexToApproved[_tokenId];
         }
         // Fire event
-        Transfer(_from, _to, _tokenId);
+        emit Transfer(_from, _to, _tokenId);
     }
     /// ERC721 Helpers
     /// @dev create new NFT token
@@ -140,7 +131,7 @@ contract ERC721 is IERC721 {
         }
         require(newId == uint256(uint32(newId)));
         // emit the birth event
-        Birth(_value, _metadata, _kind, _owner);
+        emit Birth(_value, _metadata, _kind, _owner);
         // transfer to the Owner
         _transfer(0, _owner, newId);
         // return new token Id > 0
@@ -240,7 +231,7 @@ contract ERC721 is IERC721 {
         require(_owns(msg.sender, _tokenId));
 
         _approve(_tokenId, _to);
-        Approval(msg.sender, _to, _tokenId);
+        emit Approval(msg.sender, _to, _tokenId);
     }
     /// ERC721 Public
     /// @dev transfer token from current owner to new one. The transfer must be approved before
@@ -286,14 +277,16 @@ contract ERC721 is IERC721 {
     /// @dev Get  NFT token metadate
     /// @param _tokenId NFT ID to get metadata
     /// @return metadata for _tokenId
-    function tokenMetadata(uint256 _tokenId) public constant returns (string infoUrl) {
+    function tokenMetadata(uint256 _tokenId) public view returns (string infoUrl) {
         return nfts[_tokenId].metadata;
     }
     /// ERC721 Public
     /// @dev Constructor
     /// @param _n NFT token name
     /// @param _s NFT token symbol
-    function ERC721(string _n, string _s) public {
-        owner = msg.sender; _name = _n; _symbol = _s;
+    constructor(string _n, string _s) public {
+        owner = msg.sender; 
+        _name = _n;
+        _symbol = _s;
     }
 }

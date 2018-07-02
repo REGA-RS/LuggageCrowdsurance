@@ -27,7 +27,7 @@
 
 pragma solidity ^0.4.17;
 
-import './ERC721SmartToken.sol';
+import "./ERC721SmartToken.sol";
 
 /// TokenContainer is ERC721SmartToken that provide hierarchical structure for token pools
 contract TokenContainer is ERC721SmartToken {
@@ -53,7 +53,7 @@ contract TokenContainer is ERC721SmartToken {
         tokenIndexToPoolToken[_nodeId] = _parentId;
         nfts[_nodeId].level = nfts[_parentId].level + 1;
 
-        AddToken(_nodeId, _parentId, nfts[_nodeId].level);
+        emit AddToken(_nodeId, _parentId, nfts[_nodeId].level);
     }
     function removeToken(uint256 _nodeId) public {
         require(_nodeId != uint256(0) && _nodeId < nfts.length);
@@ -62,7 +62,7 @@ contract TokenContainer is ERC721SmartToken {
 
         delete tokenIndexToPoolToken[_nodeId];
 
-        RemoveToken(_nodeId, nfts[_nodeId].level);
+        emit RemoveToken(_nodeId, nfts[_nodeId].level);
     }
     function getPath(uint256 _nodeId) external view returns(uint256[] path) {
         uint256 parentId;
@@ -101,5 +101,5 @@ contract TokenContainer is ERC721SmartToken {
         }
         return result;
     }
-    function TokenContainer(string _name, string _symbol) ERC721SmartToken(_name, _symbol) public { maxLevel = 4; }
+    constructor(string _name, string _symbol) ERC721SmartToken(_name, _symbol) public { maxLevel = 4; }
 }

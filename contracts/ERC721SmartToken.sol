@@ -27,10 +27,10 @@
 
 pragma solidity ^0.4.17;
 
-import './ERC721.sol';
-import './interfaces/IERC20.sol';
-import './ERC20Controller.sol';
-import './Owned.sol';
+import "./ERC721.sol";
+import "./interfaces/IERC20.sol";
+import "./ERC20Controller.sol";
+import "./Owned.sol";
 
 /// ERC721SmartToken contract implements non-fungible tokens based on ERC721 standard that also supports ERC20 interface. 
 /// The contract is subclass of ERC721, ERC20Controller and Owned contracts
@@ -107,7 +107,7 @@ contract ERC721SmartToken is ERC721, ERC20Controller, Owned() {
         nfts[_fromId].value = nfts[_fromId].value - _value;
         nfts[_toId].value = nfts[_toId].value + _value;
 
-        Transfer(_from, _fromId, _to, _toId, _value);
+        emit Transfer(_from, _fromId, _to, _toId, _value);
     }
     /// ERC20Controller helper
     /// @dev return default NFT token ID for specific address
@@ -131,7 +131,7 @@ contract ERC721SmartToken is ERC721, ERC20Controller, Owned() {
         require(_value != uint256(0));
         nfts[_toId].value = nfts[_toId].value + _value;
 
-        AddValue(_to, _toId, _value);
+        emit AddValue(_to, _toId, _value);
     }
     /// ERC20Controller helper
     /// @dev decrease NFT token value
@@ -144,7 +144,7 @@ contract ERC721SmartToken is ERC721, ERC20Controller, Owned() {
         require(nfts[_fromId].value >= _value);
         nfts[_fromId].value = nfts[_fromId].value - _value;
 
-        RemoveValue(_from, _fromId, _value);
+        emit RemoveValue(_from, _fromId, _value);
     }
     /// ERC20Controller helper
     /// @dev set level for NFT token
@@ -155,7 +155,7 @@ contract ERC721SmartToken is ERC721, ERC20Controller, Owned() {
         require(_owns(_to, _toId));
         nfts[_toId].level = _level;
 
-        SetLevel(_to, _toId, _level);
+        emit SetLevel(_to, _toId, _level);
     }
     /// ERC20Controller helper
     /// @dev increase level for NFT token for one 
@@ -165,7 +165,7 @@ contract ERC721SmartToken is ERC721, ERC20Controller, Owned() {
         require(_owns(_to, _toId));
         nfts[_toId].level = nfts[_toId].level + 1;
 
-        IncreaseLevel(_to, _toId);
+        emit IncreaseLevel(_to, _toId);
     }
     /// ERC20Controller helper
     /// @dev return current level for NFT token
@@ -180,5 +180,5 @@ contract ERC721SmartToken is ERC721, ERC20Controller, Owned() {
     /// @dev calls ERC721 constructor 
     /// @param _name NFT token name
     /// @param _symbol NFT token symbol
-    function ERC721SmartToken(string _name, string _symbol) ERC721(_name, _symbol) public {}
+    constructor(string _name, string _symbol) ERC721(_name, _symbol) public {}
 }

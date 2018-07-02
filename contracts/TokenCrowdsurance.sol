@@ -27,7 +27,7 @@
 
 pragma solidity ^0.4.17;
 
-import './TokenPool.sol';
+import "./TokenPool.sol";
 /// TokenCrowdsurance is ERC721SmartToken for crowdsurance products. 
 /// Crowdsurance, meaning people unite in communities to provide a guarantee of compensation for unexpected loss. 
 /// Using ERC721SmartToken crowdsurance product can be 'tokenized' and can be availible as ERC20 token.
@@ -183,7 +183,7 @@ contract TokenCrowdsurance is TokenPool {
         }
 
         // emit scoring event
-        Scoring(_member, _score, _amount);
+        emit Scoring(_member, _score, _amount);
     }
     function fssf() ownerOnly public {
         address member;
@@ -194,7 +194,7 @@ contract TokenCrowdsurance is TokenPool {
         if(member != address(0) && appId != uint256(0)) {
             scoring(member, parameters.averageScore, parameters.joinAmount);
             // emit FSSF event
-            FSSF(member, appId);
+            emit FSSF(member, appId);
         }
     }
     /// get next application to process
@@ -251,7 +251,7 @@ contract TokenCrowdsurance is TokenPool {
             appNumber++;
 
             // emit Apply event
-            Apply(msg.sender, addId);
+            emit Apply(msg.sender, addId);
         }
     }
     function _join(address _member, uint256 _score, uint256 _amount) internal returns(uint256) {
@@ -270,7 +270,7 @@ contract TokenCrowdsurance is TokenPool {
         // now insert in a subpool
         _addTokenToSubPool(id);
         // emit event 
-        Join(_member, id, _amount);
+        emit Join(_member, id, _amount);
         // clear mapping
         delete addressToAmount[_member];
         delete addressToScore[_member];
@@ -304,7 +304,7 @@ contract TokenCrowdsurance is TokenPool {
         extensions[_id].activated = now;
         nfts[_id].metadata = _hash;
         // emit event
-        Activate(_id, extensions[_id].amount, extensions[_id].score);
+        emit Activate(_id, extensions[_id].amount, extensions[_id].score);
     }
     /// claim function
     /// @param _id NFT token ID to claim payment 
@@ -336,7 +336,7 @@ contract TokenCrowdsurance is TokenPool {
         // add claim to the Queue
         claims.push(_id);
         // emit event
-        Claim(_id, _claim, extensions[_id].claimNumber);
+        emit Claim(_id, _claim, extensions[_id].claimNumber);
         return true;
     }
     function getNumberOfClaims() view public returns(uint256) {
@@ -387,7 +387,7 @@ contract TokenCrowdsurance is TokenPool {
         }
         delete voters[msg.sender]; // deliting prevent the second time voting
         // emit event
-        Vote(msg.sender, _id, _positive);
+        emit Vote(msg.sender, _id, _positive);
     }
     /// token ID helpers
     function getCurrentTokenId() public view returns (uint256 currentId) {
@@ -427,7 +427,7 @@ contract TokenCrowdsurance is TokenPool {
         uint8 negative = _request.negative;
         VotingState state = VotingState.Progress;
         uint256 payment = _request.amount * parameters.paymentRatio / 100;
-        uint256 balance = this.balance;
+        uint256 balance = address(this).balance;
         bool timeout = ( _request.timeStamp + _request.duration ) < now;
         bool voted = ( _request.positive + _request.negative ) == parameters.juriesNumber;
 
@@ -471,10 +471,9 @@ contract TokenCrowdsurance is TokenPool {
             // update pools' balances
             distribution = _payValue(_id, _payment);
             // emit event
-            Payment(msg.sender, _id, _payment, uint8(Status.Approved));
+            emit Payment(msg.sender, _id, _payment, uint8(Status.Approved));
         } else if   (((_request.positive == _request.negative) || 
-                    ((_request.positive + _request.negative) < parameters.minJuriesNumber))
-                    && _checkPayment(_id, extensions[_id].amount)) {
+                    ((_request.positive + _request.negative) < parameters.minJuriesNumber)) && _checkPayment(_id, extensions[_id].amount)) {
             // pay back join amount
             msg.sender.transfer(extensions[_id].amount);
             extensions[_id].status = uint8(Status.Closed);
@@ -482,12 +481,12 @@ contract TokenCrowdsurance is TokenPool {
              // update pools' balances
             distribution = _payValue(_id, extensions[_id].amount);
             // emit event
-            Payment(msg.sender, _id, extensions[_id].amount, uint8(Status.Closed));
+            emit Payment(msg.sender, _id, extensions[_id].amount, uint8(Status.Closed));
         } else {
             // no payment
             extensions[_id].status = uint8(Status.Rejected);
             // emit event
-            Payment(msg.sender, _id, uint256(0), uint8(Status.Rejected));
+            emit Payment(msg.sender, _id, uint256(0), uint8(Status.Rejected));
         }
         // now time to clean voting enviroment
         for(uint i; i < _request.number; i++) {
@@ -511,10 +510,10 @@ contract TokenCrowdsurance is TokenPool {
             }
         }
     }
-    function TokenCrowdsurance(string _name, string _symbol) TokenPool(_name, _symbol) public {
+    constructor(string _name, string _symbol) TokenPool(_name, _symbol) public {
         // setup default crowdsurance product parameters
         parameters.joinAmount = 0.038 ether;                // default join amount
-        parameters.coverageDuration = 0.5 years;            // coverage duration in sec
+        parameters.coverageDuration = 180 days;             // coverage duration in sec
         parameters.maxClaimAmount = 4 ether;                // max claim amount
         parameters.maxClaimNumber = 3;                      // max claim number for the contract
         parameters.paymentRatio = 100;                      // claim to payment patio
