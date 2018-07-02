@@ -14,11 +14,17 @@ module.exports = {
         return new HDWalletProvider(mnemonic, "https://ropsten.infura.io/BymPe6F1XQoQ3ZwlEzme")
       },
       network_id: 3
-    }   
+    },
+    mainnet: {
+      provider: function() {
+        return new HDWalletProvider(mnemonic, "https://mainnet.infura.io/fyE6fpwJWFc6fBYSet1w")
+      },
+      network_id: 1
+    }  
   },
   solc: {
     optimizer: {
-      enabled: true,
+      enabled: false,
       runs: 500
     }
   } 
