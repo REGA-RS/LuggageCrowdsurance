@@ -40,6 +40,8 @@ contract ERC20Adapter is IERC20Adapter {
     string public symbol = "";
     /// ERC20 Token decimals 
     uint8 public decimals = 0;
+    /// Root contract
+    address public root;
     /// ERC20 total supply
     /// @return total ERC20 supply
     function totalSupply() public view returns (uint256) {
@@ -123,13 +125,14 @@ contract ERC20Adapter is IERC20Adapter {
     /// @param _name ERC20 token name
     /// @param _symbol ERC20 token symbol
     /// @param _decimals ERC20 token decimals
-    constructor(IERC20Controller _controller, string _name, string _symbol, uint8 _decimals) public {
+    constructor(IERC20Controller _controller, address _root, string _name, string _symbol, uint8 _decimals) public {
         require(bytes(_name).length > 0 && bytes(_symbol).length > 0); // validate input
 
         name = _name;
         symbol = _symbol;
         decimals = _decimals;
         controller = _controller;
+        root = _root;
     }
 
 }

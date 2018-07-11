@@ -49,14 +49,14 @@
     "absolutePath": "/Users/sergei/LuggageCrowdsurance/contracts/interfaces/IOwned.sol",
     "exportedSymbols": {
       "IOwned": [
-        6580
+        2860
       ]
     },
-    "id": 6581,
+    "id": 2861,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 6565,
+        "id": 2845,
         "literals": [
           "solidity",
           "^",
@@ -64,7 +64,7 @@
           ".18"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:13"
+        "src": "0:24:5"
       },
       {
         "baseContracts": [],
@@ -72,22 +72,22 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 6580,
+        "id": 2860,
         "linearizedBaseContracts": [
-          6580
+          2860
         ],
         "name": "IOwned",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 6570,
+              "id": 2850,
               "nodeType": "Block",
-              "src": "244:2:13",
+              "src": "244:2:5",
               "statements": []
             },
             "documentation": null,
-            "id": 6571,
+            "id": 2851,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -95,23 +95,23 @@
             "name": "owner",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 6566,
+              "id": 2846,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "211:2:13"
+              "src": "211:2:5"
             },
             "payable": false,
             "returnParameters": {
-              "id": 6569,
+              "id": 2849,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6568,
+                  "id": 2848,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6571,
-                  "src": "235:7:13",
+                  "scope": 2851,
+                  "src": "235:7:5",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -119,10 +119,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 6567,
+                    "id": 2847,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "235:7:13",
+                    "src": "235:7:5",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -132,10 +132,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "234:9:13"
+              "src": "234:9:5"
             },
-            "scope": 6580,
-            "src": "197:49:13",
+            "scope": 2860,
+            "src": "197:49:5",
             "stateMutability": "pure",
             "superFunction": null,
             "visibility": "public"
@@ -143,7 +143,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 6576,
+            "id": 2856,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -151,16 +151,16 @@
             "name": "transferOwnership",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 6574,
+              "id": 2854,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6573,
+                  "id": 2853,
                   "name": "_newOwner",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6576,
-                  "src": "279:17:13",
+                  "scope": 2856,
+                  "src": "279:17:5",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -168,10 +168,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 6572,
+                    "id": 2852,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "279:7:13",
+                    "src": "279:7:5",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -181,17 +181,17 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "278:19:13"
+              "src": "278:19:5"
             },
             "payable": false,
             "returnParameters": {
-              "id": 6575,
+              "id": 2855,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "304:0:13"
+              "src": "304:0:5"
             },
-            "scope": 6580,
-            "src": "252:53:13",
+            "scope": 2860,
+            "src": "252:53:5",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
@@ -199,7 +199,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 6579,
+            "id": 2859,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -207,43 +207,43 @@
             "name": "acceptOwnership",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 6577,
+              "id": 2857,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "334:2:13"
+              "src": "334:2:5"
             },
             "payable": false,
             "returnParameters": {
-              "id": 6578,
+              "id": 2858,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "343:0:13"
+              "src": "343:0:5"
             },
-            "scope": 6580,
-            "src": "310:34:13",
+            "scope": 2860,
+            "src": "310:34:5",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 6581,
-        "src": "61:285:13"
+        "scope": 2861,
+        "src": "61:285:5"
       }
     ],
-    "src": "0:346:13"
+    "src": "0:346:5"
   },
   "legacyAST": {
     "absolutePath": "/Users/sergei/LuggageCrowdsurance/contracts/interfaces/IOwned.sol",
     "exportedSymbols": {
       "IOwned": [
-        6580
+        2860
       ]
     },
-    "id": 6581,
+    "id": 2861,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 6565,
+        "id": 2845,
         "literals": [
           "solidity",
           "^",
@@ -251,7 +251,7 @@
           ".18"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:13"
+        "src": "0:24:5"
       },
       {
         "baseContracts": [],
@@ -259,22 +259,22 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 6580,
+        "id": 2860,
         "linearizedBaseContracts": [
-          6580
+          2860
         ],
         "name": "IOwned",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 6570,
+              "id": 2850,
               "nodeType": "Block",
-              "src": "244:2:13",
+              "src": "244:2:5",
               "statements": []
             },
             "documentation": null,
-            "id": 6571,
+            "id": 2851,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -282,23 +282,23 @@
             "name": "owner",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 6566,
+              "id": 2846,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "211:2:13"
+              "src": "211:2:5"
             },
             "payable": false,
             "returnParameters": {
-              "id": 6569,
+              "id": 2849,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6568,
+                  "id": 2848,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6571,
-                  "src": "235:7:13",
+                  "scope": 2851,
+                  "src": "235:7:5",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -306,10 +306,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 6567,
+                    "id": 2847,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "235:7:13",
+                    "src": "235:7:5",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -319,10 +319,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "234:9:13"
+              "src": "234:9:5"
             },
-            "scope": 6580,
-            "src": "197:49:13",
+            "scope": 2860,
+            "src": "197:49:5",
             "stateMutability": "pure",
             "superFunction": null,
             "visibility": "public"
@@ -330,7 +330,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 6576,
+            "id": 2856,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -338,16 +338,16 @@
             "name": "transferOwnership",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 6574,
+              "id": 2854,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6573,
+                  "id": 2853,
                   "name": "_newOwner",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6576,
-                  "src": "279:17:13",
+                  "scope": 2856,
+                  "src": "279:17:5",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -355,10 +355,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 6572,
+                    "id": 2852,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "279:7:13",
+                    "src": "279:7:5",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -368,17 +368,17 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "278:19:13"
+              "src": "278:19:5"
             },
             "payable": false,
             "returnParameters": {
-              "id": 6575,
+              "id": 2855,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "304:0:13"
+              "src": "304:0:5"
             },
-            "scope": 6580,
-            "src": "252:53:13",
+            "scope": 2860,
+            "src": "252:53:5",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
@@ -386,7 +386,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 6579,
+            "id": 2859,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -394,30 +394,30 @@
             "name": "acceptOwnership",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 6577,
+              "id": 2857,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "334:2:13"
+              "src": "334:2:5"
             },
             "payable": false,
             "returnParameters": {
-              "id": 6578,
+              "id": 2858,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "343:0:13"
+              "src": "343:0:5"
             },
-            "scope": 6580,
-            "src": "310:34:13",
+            "scope": 2860,
+            "src": "310:34:5",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 6581,
-        "src": "61:285:13"
+        "scope": 2861,
+        "src": "61:285:5"
       }
     ],
-    "src": "0:346:13"
+    "src": "0:346:5"
   },
   "compiler": {
     "name": "solc",
@@ -425,5 +425,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-07-02T09:42:58.775Z"
+  "updatedAt": "2018-07-10T13:41:09.796Z"
 }

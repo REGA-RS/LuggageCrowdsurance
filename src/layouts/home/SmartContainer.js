@@ -70,8 +70,25 @@ class SmartContainer extends Component {
     var bizProcessId = displayData['bizProcessId'];
 
     if(this.account === contractOwner && this.props.ownerOnly) {
+      if(bizProcessId ==='100') {
+        if(this.props.init) {
+          return(
+            <div className="pure-u-1-1"><h2>Owner Only : Initializing</h2>{this.props.children}</div>
+          )
+        }
+        else {
+          return(
+            null
+          )
+        }
+      }
+      if(!this.props.init) {
+        return(
+          <div className="pure-u-1-1"><h2>Owner Only</h2>{this.props.children}</div>
+        )
+      }
       return(
-        <div className="pure-u-1-1"><h2>Owner Only</h2>{this.props.children}</div>
+        null
       )
     }
     else if((this.props.notOwnerOnly && this.account !== contractOwner) || (!this.props.notOwnerOnly && !this.props.ownerOnly)) {
@@ -97,6 +114,11 @@ class SmartContainer extends Component {
               <ProgressBar bizProcessId={bizProcessId}/>
               <br/><br/>
             </div>
+          )
+        }
+        if(bizProcessId ==='100') {
+          return(
+            null
           )
         }
         return(

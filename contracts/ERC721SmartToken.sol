@@ -176,6 +176,57 @@ contract ERC721SmartToken is ERC721, ERC20Controller, Owned() {
         require(_owns(_to, _toId));
         return nfts[_toId].level;
     }
+    function getNFT(uint256 _id) public view ownerOrConnector 
+      returns (uint256 value, string metadata, uint256 kind, uint256 level, uint256 state) {
+        value = nfts[_id].value;
+        metadata = nfts[_id].metadata;
+        kind = nfts[_id].kind;
+        level = nfts[_id].level;
+        state = nfts[_id].state;
+    }
+    function createNFT(uint256 _value, string  _metadata, uint256 _kind, address _owner) public ownerOrConnector returns (uint) {
+        return _createNFT(_value, _metadata, _kind, _owner);
+    }
+    function setNFT(uint256 _id, uint256 value, string metadata, uint256 kind, uint256 level, uint256 state) public ownerOrConnector {
+        nfts[_id].value = value;
+        nfts[_id].metadata = metadata;
+        nfts[_id].kind = kind;
+        nfts[_id].level = level;
+        nfts[_id].state = state;
+    }
+    function setNFTValue(uint256 _id, uint256 value) public ownerOrConnector {
+        nfts[_id].value = value;
+    }
+    function setNFTMetadata(uint256 _id, string metadata) public ownerOrConnector {
+        nfts[_id].metadata = metadata;
+    }
+    function setNFTKind(uint256 _id, uint256 kind) public ownerOrConnector {
+        nfts[_id].kind = kind;
+    }
+    function setNFTLevel(uint256 _id, uint256 level) public ownerOrConnector {
+        nfts[_id].level = level;
+    }
+    function setNFTState(uint256 _id, uint256 state) public ownerOrConnector {
+        nfts[_id].state = state;
+    }
+    function getNFTValue(uint256 _id) public view ownerOrConnector returns (uint256) {
+        return nfts[_id].value;
+    }
+    function getNFTMetadata(uint256 _id) public view ownerOrConnector returns (string) {
+        return nfts[_id].metadata;
+    }
+    function getNFTKind(uint256 _id) public view ownerOrConnector returns (uint256) {
+        return nfts[_id].kind;
+    }
+    function getNFTLevel(uint256 _id) public view ownerOrConnector returns (uint256) {
+        return nfts[_id].level;
+    }
+    function getNFTState(uint256 _id) public view ownerOrConnector returns (uint256) {
+        return nfts[_id].state;
+    }
+    function owns(address _claimant, uint256 _tokenId) public view ownerOrConnector returns (bool) {
+        return _owns(_claimant, _tokenId);
+    }
     /// Constructor
     /// @dev calls ERC721 constructor 
     /// @param _name NFT token name

@@ -27,7 +27,10 @@
 
 pragma solidity ^0.4.17;
 
-import "./TokenContainer.sol";
+import "./interfaces/ITokenContainer.sol";
+import "./interfaces/ITokenPool.sol";
+import "./Owned.sol";
+
 /// TokenPool is TokenContainer with 4 level pool structure: 
 /// Super Pool (Level 0), Pool (Level 1), Sub Pool (Level 2) and Token (Level 3)
 /// Level       Container / Member
@@ -36,7 +39,7 @@ import "./TokenContainer.sol";
 ///   1              |______Pool
 ///   2                      |______SubPool
 ///   3                                |_______Token
-contract TokenPool is TokenContainer {
+contract TokenPool is ITokenPool, Owned() {
     /// TokenPool insertPool event
     /// @param id inserted token ID
     /// @param poolId pool ID
@@ -80,6 +83,9 @@ contract TokenPool is TokenContainer {
     }
     /// @dev Pool structure 
     Pool[] pools;           // Pool structure
+    ITokenContainer public container;
+    uint256 public maxLevel;
+    uint256 constant StateBlocked = uint256(1024);
     /// inset new member in the pool
     /// @param _id NFT token ID to inserr
     /// @param _level Pool level to insert
@@ -96,12 +102,12 @@ contract TokenPool is TokenContainer {
     }
     function _insertPool(uint256 _id, uint8 _level) internal returns (bool) {
         uint256 parentId = _getParent(_id, _level); // pool NFT token ID
-        uint256 size = _getPoolSize(parentId);      // current pool size
+        uint256 size = container.getPoolSize(parentId);      // current pool size
         uint256 max = _getCapacity(_id, _level);    // max pool size - 1
         // check if there is a place to insert 
         if (size < max) {
             // simple insert
-            addToken(_id, parentId); // add to pool 
+            container.addToken(_id, parentId); // add to pool 
             emit InsertPool(_id, parentId, _level); // event 
             return true;
         }
@@ -114,12 +120,12 @@ contract TokenPool is TokenContainer {
             }
             else {
                 // make a copy from the last pool
-                uint newPool = _createNFT(uint256(0), nfts[parentId].metadata, nfts[parentId].kind, owner);
+                uint newPool = container.createNFT(uint256(0), container.getNFTMetadata(parentId), container.getNFTKind(parentId), owner);
                 if (newPool != uint(0)) { 
                     // insert pool in the pool structure
                     if (_insertPool(newPool, _level-1)) {
                         // insert token to the new pool
-                        addToken(_id, newPool); // add to pool
+                        container.addToken(_id, newPool); // add to pool
                         emit InsertPool(_id, newPool, _level); // event 
                         // record new pool data in the structure 
                         pools[_level].last = newPool; // new pool is last one
@@ -143,32 +149,35 @@ contract TokenPool is TokenContainer {
     /// @return TRUE if distribution is complited 
     function _distributeValue(uint256 _id) internal returns (bool) {
         // need to make sure that _id is terminal node in the structure 
-        require(_id != uint256(0) && _id < nfts.length);
-        require(nfts[_id].level == maxLevel - 1);
+        require(_id != uint256(0));
+        require(container.getNFTLevel(_id) == maxLevel - 1);
         // now we can check then the path has all pools
-        uint256 subPoolId = tokenIndexToPoolToken[_id];
+        uint256 subPoolId = container.tokenIndexToPoolToken(_id);
         require(subPoolId != uint256(0)); // SubPool
-        uint256 poolId = tokenIndexToPoolToken[subPoolId];
+        uint256 poolId = container.tokenIndexToPoolToken(subPoolId);
         require(poolId != uint256(0)); // Pool
-        uint256 superPoolId = tokenIndexToPoolToken[poolId];
+        uint256 superPoolId = container.tokenIndexToPoolToken(poolId);
         require(superPoolId != uint256(0)); // SuperPool
         // calculate values to distribute based of pool structure shares
-        uint256 subPoolValue = nfts[_id].value * pools[2].share / 100;
+        uint256 value = container.getNFTValue(_id);
+        uint256 subPoolValue = value * pools[2].share / 100;
         require(subPoolValue != uint256(0));
-        uint256 poolValue = nfts[_id].value * pools[1].share / 100;
+        uint256 poolValue = value * pools[1].share / 100;
         require(poolValue != uint256(0));
-        uint256 superPoolValue = nfts[_id].value * pools[0].share / 100;
+        uint256 superPoolValue = value * pools[0].share / 100;
         require(superPoolValue != uint256(0));
-        uint256 commission = nfts[_id].value - subPoolValue - poolValue - superPoolValue;
+        uint256 commission = value - subPoolValue - poolValue - superPoolValue;
         require(commission != uint256(0));
         // ready to distribute
-        nfts[subPoolId].value = nfts[subPoolId].value + subPoolValue;
-        nfts[poolId].value = nfts[poolId].value + poolValue;
-        nfts[superPoolId].value = nfts[superPoolId].value + superPoolValue;
+        container.setNFTValue(subPoolId, container.getNFTValue(subPoolId) + subPoolValue);
+        container.setNFTValue(poolId, container.getNFTValue(poolId) + poolValue);
+        container.setNFTValue(superPoolId, container.getNFTValue(superPoolId) + superPoolValue);
+        
         // we will keep comission in the reserved token with ID = 0
-        nfts[0].value = nfts[0].value + commission;
+        container.setNFTValue(uint256(0), container.getNFTValue(uint256(0)) + commission);
+    
         // the distribution is done 0 --> _id value
-        nfts[_id].value = uint256(0);
+        container.setNFTValue(_id, uint256(0));
         emit DistributeValue(_id, superPoolValue, poolValue, subPoolValue, commission);
         return true;
     }
@@ -176,7 +185,7 @@ contract TokenPool is TokenContainer {
     /// @param _id NFT token ID to insert
     /// @return TRUE if insert is done 
     function insertPool(uint256 _id) ownerOnly public returns(bool) {
-        require(_id != uint256(0) && _id < nfts.length);
+        require(_id != uint256(0));
         // call internal function
         assert(_insertPool(_id, 2));
         // if inserted then make value distribution 
@@ -187,7 +196,7 @@ contract TokenPool is TokenContainer {
     /// @param _id NFT token ID to insert
     /// @return TRUE if insert is done 
     function _addTokenToSubPool(uint256 _id) internal returns(bool) {
-        require(_id != uint256(0) && _id < nfts.length);
+        require(_id != uint256(0));
         // call internal function
         assert(_insertPool(_id, 2));
         // if inserted then make value distribution 
@@ -197,67 +206,49 @@ contract TokenPool is TokenContainer {
     /// get collected comission
     /// @return commission commission value
     function getComission() public view returns(uint256 commission) {
-        commission = nfts[0].value;
-    }
-    /// get value distribution except commission 
-    /// @return distribution [0] = SuperPool, [1] = Pool, [2] = SubPool and [3] = Tokens (must be 0)
-    function getDistribution() public view returns(uint256[4] distribution)
-    {
-        uint8 _level;
-        distribution[0] = uint256(0);   // Super Pool Value
-        distribution[1] = uint256(0);   // Pool Value
-        distribution[2] = uint256(0);   // SubPool Value
-        distribution[3] = uint256(0);   // Tokens Value (must be 0)
-
-        for (uint256 id = 1; id < nfts.length; id++) {
-            _level = uint8(nfts[id].level);
-            if(_level < maxLevel) {
-                distribution[_level] = distribution[_level] + nfts[id].value;
-            }
-            else {
-                distribution[3] = distribution[3] + nfts[id].value; // if something wrong w/ level add to tokens
-            }
-        }
+        commission = container.getNFTValue(uint256(0));
     }
     function _payValue(uint256 _id, uint256 _value) internal returns(uint256[4] distribution) {
-        require(_id != uint256(0) && _id < nfts.length);
+        require(_id != uint256(0));
         require(_value != uint256(0));
         distribution[0] = uint256(0);   // Super Pool Value
         distribution[1] = uint256(0);   // Pool Value
         distribution[2] = uint256(0);   // SubPool Value
         distribution[3] = uint256(0);   // Tokens Value (must be 0)
         // now we can check then the path has all pools
-        uint256 subPoolId = tokenIndexToPoolToken[_id];
+        uint256 subPoolId = container.tokenIndexToPoolToken(_id);
         require(subPoolId != uint256(0)); // SubPool
-        uint256 poolId = tokenIndexToPoolToken[subPoolId];
+        uint256 poolId = container.tokenIndexToPoolToken(subPoolId);
         require(poolId != uint256(0)); // Pool
-        uint256 superPoolId = tokenIndexToPoolToken[poolId];
+        uint256 superPoolId = container.tokenIndexToPoolToken(poolId);
         require(superPoolId != uint256(0)); // SuperPool
-        if(_value <= nfts[subPoolId].value) {
+        if(_value <= container.getNFTValue(subPoolId)) {
             distribution[2] = _value;
-            nfts[subPoolId].value = nfts[subPoolId].value - distribution[2];
+            container.setNFTValue(subPoolId, container.getNFTValue(subPoolId) - distribution[2]);
 
             emit PaymentValue(_id, _value, uint8(2));
         }
-        else if (_value <= nfts[poolId].value + nfts[subPoolId].value) {
+        else if (_value <= container.getNFTValue(poolId) + container.getNFTValue(subPoolId)) {
             emit ShortOfFunds(_id, subPoolId, _value, uint8(2));
 
-            distribution[2] = nfts[subPoolId].value;
-            distribution[1] = _value - nfts[subPoolId].value;
-            nfts[subPoolId].value = nfts[subPoolId].value - distribution[2];
-            nfts[poolId].value = nfts[poolId].value - distribution[1];
+            distribution[2] = container.getNFTValue(subPoolId);
+            distribution[1] = _value - container.getNFTValue(subPoolId);
+
+            container.setNFTValue(subPoolId, container.getNFTValue(subPoolId) - distribution[2]);
+            container.setNFTValue(poolId, container.getNFTValue(poolId) - distribution[1]);
 
             emit PaymentValue(_id, _value, uint8(1));
         }
-        else if (_value <= nfts[superPoolId].value + nfts[poolId].value + nfts[subPoolId].value) {
+        else if (_value <= container.getNFTValue(superPoolId) + container.getNFTValue(poolId) + container.getNFTValue(subPoolId)) {
             emit ShortOfFunds(_id, poolId, _value, uint8(1));
 
-            distribution[2] = nfts[subPoolId].value;
-            distribution[1] = nfts[poolId].value;
-            distribution[0] = _value - nfts[subPoolId].value - nfts[poolId].value;
-            nfts[subPoolId].value = nfts[subPoolId].value - distribution[2];
-            nfts[poolId].value = nfts[poolId].value - distribution[1];
-            nfts[superPoolId].value = nfts[superPoolId].value - distribution[0];
+            distribution[2] = container.getNFTValue(subPoolId);
+            distribution[1] = container.getNFTValue(poolId);
+            distribution[0] = _value - container.getNFTValue(subPoolId) - container.getNFTValue(poolId);
+
+            container.setNFTValue(subPoolId, container.getNFTValue(subPoolId) - distribution[2]);
+            container.setNFTValue(poolId, container.getNFTValue(poolId) - distribution[1]);
+            container.setNFTValue(superPoolId, container.getNFTValue(superPoolId) - distribution[0]);
 
             emit PaymentValue(_id, _value, uint8(0));
         }
@@ -268,80 +259,69 @@ contract TokenPool is TokenContainer {
     }
     function _checkPayment(uint256 _id, uint256 _value) internal view returns(bool possible) {
         possible = false;
-        uint256 subPoolId = tokenIndexToPoolToken[_id];
+        uint256 subPoolId = container.tokenIndexToPoolToken(_id);
         require(subPoolId != uint256(0)); // SubPool
-        uint256 poolId = tokenIndexToPoolToken[subPoolId];
+        uint256 poolId = container.tokenIndexToPoolToken(subPoolId);
         require(poolId != uint256(0)); // Pool
-        uint256 superPoolId = tokenIndexToPoolToken[poolId];
+        uint256 superPoolId = container.tokenIndexToPoolToken(poolId);
         require(superPoolId != uint256(0)); // SuperPool
-        if(_value <= nfts[subPoolId].value) {
+        if(_value <= container.getNFTValue(subPoolId)) {
             possible = true;
         }
-        else if (_value <= nfts[poolId].value + nfts[subPoolId].value) {
+        else if (_value <= container.getNFTValue(poolId) + container.getNFTValue(subPoolId)) {
             possible = true;
         }
-        else if (_value <= nfts[superPoolId].value + nfts[poolId].value + nfts[subPoolId].value) {
+        else if (_value <= container.getNFTValue(superPoolId) + container.getNFTValue(poolId) + container.getNFTValue(subPoolId)) {
             possible = true;
         }
     }
 
-    function checkPaymentAmount(uint256 _id, uint256 _value) public view 
-        returns(uint8 level, uint256 amtSubPool, uint256 amtPool, uint256 amtSuperPool, uint256 balance) {
-        level = uint8(4);
-        uint256[4] memory distribution;
-        distribution[0] = uint256(0);   // Super Pool Value
-        distribution[1] = uint256(0);   // Pool Value
-        distribution[2] = uint256(0);   // SubPool Value
-        distribution[3] = uint256(0);   // Tokens Value (must be 0)
-        
-        require(_id != uint256(0) && _id < nfts.length);
-        require(_value != uint256(0));
-        require(_owns(msg.sender, _id));
-        
-        uint256 subPoolId = tokenIndexToPoolToken[_id];
-        require(subPoolId != uint256(0)); // SubPool
-        uint256 poolId = tokenIndexToPoolToken[subPoolId];
-        require(poolId != uint256(0)); // Pool
-        uint256 superPoolId = tokenIndexToPoolToken[poolId];
-        require(superPoolId != uint256(0)); // SuperPool
-
-        level = uint8(3);
-
-        if(_value <= nfts[subPoolId].value) {
-            level = uint8(2);
-            distribution[2] = _value;
-        }
-        else if (_value <= nfts[poolId].value + nfts[subPoolId].value) {
-            level = uint8(1);
-            distribution[2] = nfts[subPoolId].value;
-            distribution[1] = _value - nfts[subPoolId].value;
-        }
-        else if (_value <= nfts[superPoolId].value + nfts[poolId].value + nfts[subPoolId].value) {
-            level = uint8(0);
-            distribution[2] = nfts[subPoolId].value;
-            distribution[1] = nfts[poolId].value;
-            distribution[0] = _value - nfts[subPoolId].value - nfts[poolId].value;
-        }
-
-        amtSubPool = distribution[2];
-        amtPool = distribution[1];
-        amtSuperPool = distribution[0];
-        
-        balance = address(this).balance;
+    /// TokenPool Connectors helpers
+    function connector_owns(address _claimant, uint256 _tokenId) public view connectorOnly returns (bool) {
+        return container.owns(_claimant, _tokenId);
     }
-
-    /// TokenPool Constructor
-    constructor(string _name, string _symbol) TokenContainer(_name, _symbol) public { 
-        maxLevel = 4; // FIXED DO NOT CHANGE!
-
+    function connector_getMetadata(uint256 _id) view public connectorOnly returns (string) {
+        return container.getNFTMetadata(_id);
+    }
+    function connector_setMetadata(uint256 _id, string _metadata) public connectorOnly {
+        container.setNFTMetadata(_id, _metadata);
+    }
+    function connector_blocked(uint256 _id) public connectorOnly {
+        container.setNFTState(_id, StateBlocked);
+    }
+    function connector_createNFT(uint256 _amount, address _member) public connectorOnly returns(uint256) {
+        return container.createNFT(_amount, "Crowdsurance", uint256(0), _member);
+    }
+    function connector_addTokenToSubPool(uint256 _id) public connectorOnly returns(bool) {
+        return _addTokenToSubPool(_id);
+    }
+    function connector_tokensOfOwner(address _owner) view public connectorOnly returns(uint256[] ownerTokens) {
+        return container.tokensOfOwner(_owner);
+    }
+    function connector_checkPayment(uint256 _id, uint256 _value) view public connectorOnly  returns(bool possible) {
+        return _checkPayment(_id, _value);
+    }
+    function connector_payValue(uint256 _id, uint256 _value) public connectorOnly returns(uint256[4] distribution) {
+        return _payValue(_id, _value);
+    }
+    function getValue(uint256 _id) public view connectorOnly returns(uint256) {
+        return container.getNFTValue(_id);
+    }
+    function setValue(uint256 _id, uint256 _value) public connectorOnly {
+        container.setNFTValue(_id, _value);
+    }
+    function getPoolSize() public view returns (uint256) {
+        return pools.length;
+    }
+    function init() public ownerOnly {
         // Creating templates
-        uint superPoolId = _createNFT(10 ether, "SuperPool", uint256(1), owner);    // fix initial capital for 10 Ether
-        uint poolId = _createNFT(uint256(0), "Pool", uint256(1), owner);
-        uint subPoolId = _createNFT(uint256(0), "SubPool", uint256(2), owner);
+        uint superPoolId = container.createNFT(10 ether, "SuperPool", uint256(1), owner);    // fix initial capital for 10 Ether
+        uint poolId = container.createNFT(uint256(0), "Pool", uint256(1), owner);
+        uint subPoolId = container.createNFT(uint256(0), "SubPool", uint256(2), owner);
 
         // Build initil structure SubPool --> Pool --> SuperPool
-        addToken(poolId, superPoolId);
-        addToken(subPoolId, poolId);
+        container.addToken(poolId, superPoolId);
+        container.addToken(subPoolId, poolId);
 
         // Build configuration 
         // SuperPool configuration
@@ -375,6 +355,11 @@ contract TokenPool is TokenContainer {
         });
         pools.push(subPool);
         // set comission to 0
-        nfts[0].value = uint256(0);
+        container.setNFTValue(uint256(0), uint256(0));
+    }
+    /// TokenPool Constructor
+    constructor(ITokenContainer _container)  public { 
+        container = _container;
+        maxLevel = 4;
     }
 }

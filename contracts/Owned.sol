@@ -9,7 +9,11 @@ contract Owned is IOwned {
     address public owner;
     address public newOwner;
 
+    mapping (address => address) public connectors;
+
     event OwnerUpdate(address indexed _prevOwner, address indexed _newOwner);
+    event ReceiverUpdate(address _sender, address _receiver);
+    event SenderUpdate(address _sender, address _receiver);
 
     /**
         @dev constructor
@@ -24,6 +28,16 @@ contract Owned is IOwned {
         _;
     }
 
+    modifier connectorOnly {
+        assert(address(this) == connectors[msg.sender]);
+        _;
+    }
+
+    modifier ownerOrConnector {
+        assert(address(this) == connectors[msg.sender] || msg.sender == owner);
+        _;
+    }
+
     /**
         @dev allows transferring the contract ownership
         the new owner still needs to accept the transfer
@@ -34,6 +48,16 @@ contract Owned is IOwned {
     function transferOwnership(address _newOwner) public ownerOnly {
         require(_newOwner != owner);
         newOwner = _newOwner;
+    }
+
+    function setReceiver(address _receiver) public ownerOnly {
+        connectors[address(this)] = _receiver;
+        emit ReceiverUpdate(address(this), _receiver);
+    }
+
+    function setSender(address _sender) public ownerOnly {
+        connectors[_sender] = address(this);
+        emit SenderUpdate(_sender, address(this));
     }
 
     /**

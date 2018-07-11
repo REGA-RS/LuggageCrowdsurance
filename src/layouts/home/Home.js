@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { AccountData, ContractData, ContractForm } from 'drizzle-react-components';
-import rega from '../../rega.png';
+import rega from '../../Case_Tape.jpg';
 import BalanceData  from './BalanceData.js';
 import SmartContainer from './SmartContainer.js';
 import ContractFormExtension from './ContractFormExtension.js';
@@ -8,6 +8,44 @@ import Uploader from './Uploader.js';
 
 
 class Home extends Component {
+  constructor(props, context) {
+    super(props);
+    console.log(props);
+    console.log(context);
+
+    this.addresses = {
+      TokenPool : context.drizzle.contracts.TokenPool._address,
+      TokenContainer: context.drizzle.contracts.TokenContainer._address,
+      LCSToken: context.drizzle.contracts.LCSToken._address
+    };
+  }
+  renderSetSender(receiver, sender) {
+    return (
+      <SmartContainer accountIndex="0" ownerOnly init>
+        <h3>{sender} Address</h3>
+        <p>{this.addresses[sender]}</p>
+        <h3>{receiver} Address</h3>
+        <p>{this.addresses[receiver]}</p>
+        <h3>Connectors</h3>
+        <p><ContractData contract={receiver} method="connectors" methodArgs={[this.addresses[sender]]} /></p>
+        <h3>{receiver} : setSender ( {sender} )</h3>
+        <ContractForm contract={receiver} method="setSender" labels={[sender]} />
+
+        <br/><br/>
+      </SmartContainer>
+    )
+  }
+  renderInit() {
+    return (
+      <SmartContainer accountIndex="0" ownerOnly init>
+        <h3>Number of pools</h3>
+        <p><ContractData contract="TokenPool" method="getPoolSize" /></p>
+        <h3>TokenPool : init ( )</h3>
+        <ContractForm contract="TokenPool" method="init" />
+        <br/><br/>
+      </SmartContainer>
+    )
+  }
   render() {
     return (
       <main className="container">
@@ -16,7 +54,7 @@ class Home extends Component {
           <div className="pure-u-1-1 header">
             <img src={rega} alt="drizzle-logo" />
             <h1>REGA Luggage Crowdsurance</h1>
-            <h3>Smart contract test enviroment &nbsp;<small>v 0.0.3</small></h3>
+            <h3>Smart Contracts &nbsp;<small>v 0.1.0</small></h3>
 
             <br/><br/>
           </div>
@@ -53,6 +91,36 @@ class Home extends Component {
           <SmartContainer accountIndex="0" notOwnerOnly ProgressBar>
             <h2>Biz process status</h2>
           </SmartContainer>
+
+          <SmartContainer accountIndex="0" ownerOnly init>
+            <h2>Smart Contract Information</h2>
+            <h3>Current Account</h3>
+            <AccountData accountIndex="0" units="ether" precision="4" />
+            <BalanceData contract="RSTToken" method="balanceOf" accountIndex="0" units="nano" precision="3" correction="1" /> <ContractData contract="RSTToken" method="symbol" hideIndicator />
+            <h3>RST Token Address</h3>
+            <p><ContractData contract="LCSToken" method="RST" /></p>
+            <p><BalanceData contract="RSTToken" method="totalSupply" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
+            <h3>LCS Token Address</h3>
+            <p><ContractData contract="ERC20Adapter" method="root" /></p>
+            <p><ContractData contract="TokenContainer" method="balanceOf" methodArgs={[this.props.accounts[0]]} /> <ContractData contract="TokenContainer" method="symbol" hideIndicator /> </p>
+            <p><BalanceData contract="ERC20Adapter" method="balanceOf" accountIndex="0" units="ether" precision="4" /> Ether </p>
+            <h3>LCS Current Token</h3>
+            <p><ContractData contract="LCSToken" method="getCurrentTokenId" /> </p>
+            <h3>LCS Total Supply</h3>
+            <p><ContractData contract="TokenContainer" method="totalSupply" /> </p>
+            <h3>Application number</h3>
+            <p><ContractData contract="LCSToken" method="appNumber" /></p>
+            <h3>LCS Token Owner</h3>
+            <p><ContractData contract="LCSToken" method="owner" /></p>
+            <h3>Join Amount [RST]</h3>
+            <p><BalanceData contract="LCSToken" method="joinAmountRST" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
+
+            <br/><br/>
+          </SmartContainer>
+
+          {this.renderSetSender("TokenContainer", "TokenPool")}
+          {this.renderSetSender("TokenPool", "LCSToken")}
+          {this.renderInit()}
         
           <SmartContainer accountIndex="0">
             <h2>Smart Contract Information</h2>
@@ -63,25 +131,25 @@ class Home extends Component {
             <p><ContractData contract="LCSToken" method="RST" /></p>
             <p><BalanceData contract="RSTToken" method="totalSupply" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
             <h3>LCS Token Address</h3>
-            <p><ContractData contract="ERC20Adapter" method="controller" /></p>
-            <p><ContractData contract="LCSToken" method="balanceOf" methodArgs={[this.props.accounts[0]]} /> <ContractData contract="LCSToken" method="symbol" hideIndicator /> </p>
+            <p><ContractData contract="ERC20Adapter" method="root" /></p>
+            <p><ContractData contract="TokenContainer" method="balanceOf" methodArgs={[this.props.accounts[0]]} /> <ContractData contract="TokenContainer" method="symbol" hideIndicator /> </p>
             <p><BalanceData contract="ERC20Adapter" method="balanceOf" accountIndex="0" units="ether" precision="4" /> Ether </p>
             <h3>LCS Current Token</h3>
             <p><ContractData contract="LCSToken" method="getCurrentTokenId" /> </p>
             <h3>LCS Total Supply</h3>
-            <p><ContractData contract="LCSToken" method="totalSupply" /> </p>
+            <p><ContractData contract="TokenContainer" method="totalSupply" /> </p>
             <h3>Application number</h3>
             <p><ContractData contract="LCSToken" method="appNumber" /></p>
             <h3>LCS Token Owner</h3>
             <p><ContractData contract="LCSToken" method="owner" /></p>
             <h3>Super Pool</h3>
-            <p><BalanceData contract="LCSToken" method="valueOf" methodArgs={[1]} units="ether" precision="4" /> Ether </p>
+            <p><BalanceData contract="TokenContainer" method="valueOf" methodArgs={[1]} units="ether" precision="4" /> Ether </p>
             <h3>Pools</h3>
-            <p><BalanceData contract="LCSToken" method="valueOf" methodArgs={[2]} units="ether" precision="4" /> Ether </p>
+            <p><BalanceData contract="TokenContainer" method="valueOf" methodArgs={[2]} units="ether" precision="4" /> Ether </p>
             <h3>Sub Pools</h3>
-            <p><BalanceData contract="LCSToken" method="valueOf" methodArgs={[3]} units="ether" precision="4" /> Ether </p>
+            <p><BalanceData contract="TokenContainer" method="valueOf" methodArgs={[3]} units="ether" precision="4" /> Ether </p>
             <h3>Commission</h3>
-            <p><BalanceData contract="LCSToken" method="getComission" accountIndex="0" units="ether" precision="4" viewOnly /> Ether </p>
+            <p><BalanceData contract="TokenPool" method="getComission" accountIndex="0" units="ether" precision="4" viewOnly /> Ether </p>
             <h3>Join Amount [RST]</h3>
             <p><BalanceData contract="LCSToken" method="joinAmountRST" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
 
@@ -142,11 +210,11 @@ class Home extends Component {
             <h3>Current Account RST Balance</h3>
             <p><BalanceData contract="RSTToken" method="balanceOf" accountIndex="0" units="nano" precision="3" correction="1" /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
             <h3>Allowance</h3>
-            <p><BalanceData contract="RSTToken" method="allowance" methodArgs={[this.props.accounts[0],"0x9A343c4BD1676736872Ba4e531555b7924c72458"]} units="nano" precision="3" correction="1" /> <ContractData contract="RSTToken" method="symbol" hideIndicator /></p>
+            <p><BalanceData contract="RSTToken" method="allowance" methodArgs={[this.props.accounts[0],this.addresses.LCSToken]} units="nano" precision="3" correction="1" /> <ContractData contract="RSTToken" method="symbol" hideIndicator /></p>
             <h3>Join Amount [RST]</h3>
             <p><BalanceData contract="LCSToken" method="joinAmountRST" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
             <h3>Approve token transfer</h3>
-            <p><strong>To Address</strong>: <ContractData contract="ERC20Adapter" method="controller" /></p>
+            <p><strong>To Address</strong>: <ContractData contract="ERC20Adapter" method="root" /></p>
             <p><strong>Amount to Approve</strong>: <ContractData contract="LCSToken" method="joinAmountRST" /></p>
             <p>Just copy and paste information above in the form fields. Please note that <b>Amount to Approve</b> is an integer number and will be adjusted by the smart contract by the number of decimals for the RST token by dividing <b>Amount to Approve</b> by 10 ^ <ContractData contract="RSTToken" method="decimals" />. <br/><br/>If the transaction approval is done then <b>Allowance</b> will be equal to <b>Join Amount [RST]</b></p>
             <ContractForm contract="RSTToken" method="approve" labels={['To Address', 'Amount to Approve']} />
@@ -159,7 +227,7 @@ class Home extends Component {
             <p>If token transfer approval was done then the new member can join crowdsurance and RST tokens will be transfered from the new member account to the LCS owner account. </p>
             <h3>Join Info</h3>
             <p><strong>Join Amount</strong>: <BalanceData contract="LCSToken" method="joinAmountRST" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
-            <p><strong>Balance</strong>: <ContractData contract="LCSToken" method="balanceOf" methodArgs={[this.props.accounts[0]]} /> <ContractData contract="LCSToken" method="symbol" hideIndicator /> </p>
+            <p><strong>Balance</strong>: <ContractData contract="TokenContainer" method="balanceOf" methodArgs={[this.props.accounts[0]]} /> <ContractData contract="TokenContainer" method="symbol" hideIndicator /> </p>
             <h3>Crowdsurance ID</h3>
             <p><ContractData contract="LCSToken" method="getCurrentTokenId" /></p>
             <h3>Join Crowdsurance</h3>

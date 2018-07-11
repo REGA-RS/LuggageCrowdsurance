@@ -57,7 +57,7 @@ contract TokenContainer is ERC721SmartToken {
     }
     function removeToken(uint256 _nodeId) public {
         require(_nodeId != uint256(0) && _nodeId < nfts.length);
-        uint256 poolSize = _getPoolSize(_nodeId);
+        uint256 poolSize = getPoolSize(_nodeId);
         require(poolSize == uint256(0));
 
         delete tokenIndexToPoolToken[_nodeId];
@@ -73,7 +73,7 @@ contract TokenContainer is ERC721SmartToken {
             parentId = tokenIndexToPoolToken[parentId];
         }
     }
-    function _getPoolSize(uint256 _nodeId) view internal returns(uint256 size) {
+    function getPoolSize(uint256 _nodeId) view public returns(uint256 size) {
         require(_nodeId != uint256(0) && _nodeId < nfts.length);
 
         uint256 total = totalSupply(); // totalSupply is cases.lenght -1, 0 index is reserved
@@ -89,7 +89,7 @@ contract TokenContainer is ERC721SmartToken {
     function _getPool(uint256 _nodeId) view internal returns(uint256[] pool) {
         require(_nodeId != uint256(0) && _nodeId < nfts.length);
 
-        uint256 poolSize = _getPoolSize(_nodeId);
+        uint256 poolSize = getPoolSize(_nodeId);
         uint256[] memory result = new uint256[](poolSize);
         uint256 total = totalSupply(); // totalSupply is cases.lenght -1, 0 index is reserved
         uint256 resultIndex = 0;

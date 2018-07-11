@@ -90,7 +90,7 @@ contract LuggageCrowdsurance is TokenCrowdsurance {
     /// get payback function
     /// @param _id luggage protection token to get payback
     function getPayback(uint256 _id) public {
-        require(_owns(msg.sender, _id));
+        require(pool.connector_owns(msg.sender, _id));
         require(_id != uint256(0));
         uint256 _amount = payback[_id];
         require(_amount != uint256(0));
@@ -115,14 +115,18 @@ contract LuggageCrowdsurance is TokenCrowdsurance {
     }
     /// get commission function
     function transferCommission() ownerOnly public {
-        uint256 commission = nfts[0].value;
+        uint256 commission = pool.getValue(uint256(0));
         require(commission != uint256(0)); 
-        nfts[0].value = 0;
+        pool.setValue(uint256(0), uint256(0));
         msg.sender.transfer(commission);
     }
     function getBizProcessId() view public returns(address contractOwner, uint8 bizProcessId) {
         contractOwner = owner;
         bizProcessId = 0;
+        if (pool.getPoolSize() == 0) {
+            bizProcessId = 100; // wait fot init
+            return;
+        }
         // check voting first
         if (voters[msg.sender] != uint256(0)) {
             // voter
@@ -167,7 +171,7 @@ contract LuggageCrowdsurance is TokenCrowdsurance {
             }
         }
     }
-    constructor(address _rst, uint256 _amount, bool _only, uint8 _max) TokenCrowdsurance("Luggage Crowdsurance Smart Token", "LCST") public {
+    constructor(address _rst, address _pool, uint256 _amount, bool _only, uint8 _max) TokenCrowdsurance(_pool) public {
         // setting up contract parameters 
         RST = IERC20Token(_rst);
         parameters.joinAmount = 0.038 ether;

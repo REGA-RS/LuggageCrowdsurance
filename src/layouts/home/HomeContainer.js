@@ -1,5 +1,6 @@
 import Home from './Home'
 import { drizzleConnect } from 'drizzle-react'
+import PropTypes from 'prop-types'
 
 // May still need this even with data function to refresh component on updates for this contract.
 const mapStateToProps = state => {
@@ -7,8 +8,15 @@ const mapStateToProps = state => {
     accounts: state.accounts,
     LCSToken: state.contracts.LCSToken,
     RSTToken: state.contracts.RSTToken,
+    ERC20Adapter: state.contracts.ERC20Adapter,
+    TokenContainer: state.contracts.TokenContainer,
+    TokenPool: state.contracts.TokenPool,
     drizzleStatus: state.drizzleStatus
   }
+}
+
+Home.contextTypes = {
+  drizzle: PropTypes.object
 }
 
 const HomeContainer = drizzleConnect(Home, mapStateToProps);
