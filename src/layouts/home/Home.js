@@ -46,6 +46,46 @@ class Home extends Component {
       </SmartContainer>
     )
   }
+  renderInfo(t) {
+    return (
+     <div>
+        <h2>Smart Contract Information</h2>
+        <h3>Current Account</h3>
+        <AccountData accountIndex="0" units="ether" precision="4" />
+        <BalanceData contract="RSTToken" method="balanceOf" accountIndex="0" units="nano" precision="3" correction="1" /> <ContractData contract="RSTToken" method="symbol" hideIndicator />
+        <h3>RST Token Address</h3>
+        <p><ContractData contract="LCSToken" method="RST" /></p>
+        <p><BalanceData contract="RSTToken" method="totalSupply" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
+        <h3>LCS Token Address</h3>
+        <p><ContractData contract="ERC20Adapter" method="root" /></p>
+        <p><ContractData contract="TokenContainer" method="balanceOf" methodArgs={[this.props.accounts[0]]} /> <ContractData contract="TokenContainer" method="symbol" hideIndicator /> </p>
+        <p><BalanceData contract="ERC20Adapter" method="balanceOf" accountIndex="0" units="ether" precision="4" /> Ether </p>
+        <h3>LCS Current Token</h3>
+        <p><ContractData contract="LCSToken" method="getCurrentTokenId" /> </p>
+        <h3>LCS Total Supply</h3>
+        <p><ContractData contract="TokenContainer" method="totalSupply" /> </p>
+        <h3>Application number</h3>
+        <p><ContractData contract="LCSToken" method="appNumber" /></p>
+        <h3>LCS Token Owner</h3>
+        <p><ContractData contract="LCSToken" method="owner" /></p>
+        <h3>Join Amount [RST]</h3>
+        <p><BalanceData contract="LCSToken" method="joinAmountRST" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
+        {t && 
+          <div>
+            <h3>Super Pool</h3>
+            <p><BalanceData contract="TokenContainer" method="valueOf" methodArgs={[1]} units="ether" precision="4" /> Ether </p>
+            <h3>Pools</h3>
+            <p><BalanceData contract="TokenContainer" method="valueOf" methodArgs={[2]} units="ether" precision="4" /> Ether </p>
+            <h3>Sub Pools</h3>
+            <p><BalanceData contract="TokenContainer" method="valueOf" methodArgs={[3]} units="ether" precision="4" /> Ether </p>
+            <h3>Commission</h3>
+            <p><BalanceData contract="TokenPool" method="getComission" accountIndex="0" units="ether" precision="4" viewOnly /> Ether </p>
+          </div>
+        }
+        <br/><br/>
+      </div>
+    )
+  }
   render() {
     return (
       <main className="container">
@@ -93,29 +133,7 @@ class Home extends Component {
           </SmartContainer>
 
           <SmartContainer accountIndex="0" ownerOnly init>
-            <h2>Smart Contract Information</h2>
-            <h3>Current Account</h3>
-            <AccountData accountIndex="0" units="ether" precision="4" />
-            <BalanceData contract="RSTToken" method="balanceOf" accountIndex="0" units="nano" precision="3" correction="1" /> <ContractData contract="RSTToken" method="symbol" hideIndicator />
-            <h3>RST Token Address</h3>
-            <p><ContractData contract="LCSToken" method="RST" /></p>
-            <p><BalanceData contract="RSTToken" method="totalSupply" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
-            <h3>LCS Token Address</h3>
-            <p><ContractData contract="ERC20Adapter" method="root" /></p>
-            <p><ContractData contract="TokenContainer" method="balanceOf" methodArgs={[this.props.accounts[0]]} /> <ContractData contract="TokenContainer" method="symbol" hideIndicator /> </p>
-            <p><BalanceData contract="ERC20Adapter" method="balanceOf" accountIndex="0" units="ether" precision="4" /> Ether </p>
-            <h3>LCS Current Token</h3>
-            <p><ContractData contract="LCSToken" method="getCurrentTokenId" /> </p>
-            <h3>LCS Total Supply</h3>
-            <p><ContractData contract="TokenContainer" method="totalSupply" /> </p>
-            <h3>Application number</h3>
-            <p><ContractData contract="LCSToken" method="appNumber" /></p>
-            <h3>LCS Token Owner</h3>
-            <p><ContractData contract="LCSToken" method="owner" /></p>
-            <h3>Join Amount [RST]</h3>
-            <p><BalanceData contract="LCSToken" method="joinAmountRST" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
-
-            <br/><br/>
+            {this.renderInfo(false)}
           </SmartContainer>
 
           {this.renderSetSender("TokenContainer", "TokenPool")}
@@ -123,37 +141,7 @@ class Home extends Component {
           {this.renderInit()}
         
           <SmartContainer accountIndex="0">
-            <h2>Smart Contract Information</h2>
-            <h3>Current Account</h3>
-            <AccountData accountIndex="0" units="ether" precision="4" />
-            <BalanceData contract="RSTToken" method="balanceOf" accountIndex="0" units="nano" precision="3" correction="1" /> <ContractData contract="RSTToken" method="symbol" hideIndicator />
-            <h3>RST Token Address</h3>
-            <p><ContractData contract="LCSToken" method="RST" /></p>
-            <p><BalanceData contract="RSTToken" method="totalSupply" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
-            <h3>LCS Token Address</h3>
-            <p><ContractData contract="ERC20Adapter" method="root" /></p>
-            <p><ContractData contract="TokenContainer" method="balanceOf" methodArgs={[this.props.accounts[0]]} /> <ContractData contract="TokenContainer" method="symbol" hideIndicator /> </p>
-            <p><BalanceData contract="ERC20Adapter" method="balanceOf" accountIndex="0" units="ether" precision="4" /> Ether </p>
-            <h3>LCS Current Token</h3>
-            <p><ContractData contract="LCSToken" method="getCurrentTokenId" /> </p>
-            <h3>LCS Total Supply</h3>
-            <p><ContractData contract="TokenContainer" method="totalSupply" /> </p>
-            <h3>Application number</h3>
-            <p><ContractData contract="LCSToken" method="appNumber" /></p>
-            <h3>LCS Token Owner</h3>
-            <p><ContractData contract="LCSToken" method="owner" /></p>
-            <h3>Super Pool</h3>
-            <p><BalanceData contract="TokenContainer" method="valueOf" methodArgs={[1]} units="ether" precision="4" /> Ether </p>
-            <h3>Pools</h3>
-            <p><BalanceData contract="TokenContainer" method="valueOf" methodArgs={[2]} units="ether" precision="4" /> Ether </p>
-            <h3>Sub Pools</h3>
-            <p><BalanceData contract="TokenContainer" method="valueOf" methodArgs={[3]} units="ether" precision="4" /> Ether </p>
-            <h3>Commission</h3>
-            <p><BalanceData contract="TokenPool" method="getComission" accountIndex="0" units="ether" precision="4" viewOnly /> Ether </p>
-            <h3>Join Amount [RST]</h3>
-            <p><BalanceData contract="LCSToken" method="joinAmountRST" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
-
-            <br/><br/>
+            {this.renderInfo(true)}
           </SmartContainer>
 
           <SmartContainer accountIndex="0" notOwnerOnly bizProcessId={["1"]}>
