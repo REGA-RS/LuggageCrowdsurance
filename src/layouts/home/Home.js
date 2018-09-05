@@ -5,6 +5,7 @@ import BalanceData  from './BalanceData.js';
 import SmartContainer from './SmartContainer.js';
 import ContractFormExtension from './ContractFormExtension.js';
 import Uploader from './Uploader.js';
+import MsgForm from './MsgForm.js';
 
 
 class Home extends Component {
@@ -164,6 +165,12 @@ class Home extends Component {
           </SmartContainer>
 
           <SmartContainer accountIndex="0" ownerOnly>
+            <MsgForm />
+            
+            <br/><br/>
+          </SmartContainer>
+
+          <SmartContainer accountIndex="0" ownerOnly>
             <h2>Transfer</h2>
             <p>Transfer some RST Tokens to the new member if needed.</p>
             <h3>Applications Info</h3>
@@ -221,6 +228,15 @@ class Home extends Component {
             <h3>Join Crowdsurance</h3>
             <ContractForm contract="LCSToken" method="join" />
 
+            <br/><br/>
+          </SmartContainer>
+
+           <SmartContainer accountIndex="0" notOwnerOnly bizProcessId="10">
+            <h2>LCST Transfer</h2>
+            <p>Transfer LCST Token to the member</p>
+            <h3>Token transfer</h3>
+            <ContractForm contract="TokenContainer" method="transfer" labels={['To Address', 'Token ID']} />
+            
             <br/><br/>
           </SmartContainer>
 
@@ -311,6 +327,8 @@ class Home extends Component {
 
           <SmartContainer accountIndex="0" notOwnerOnly bizProcessId="23">
             <h2>Rejected</h2>
+            <h3>Current voting status</h3>
+            <ContractData contract="LCSToken" method="getCurrentVotingStatus" />
             <p>Claim is rejected</p>
 
             <br/><br/>

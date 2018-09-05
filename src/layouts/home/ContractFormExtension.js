@@ -132,13 +132,19 @@ class ContractFormExtension extends Component {
   
     var displayData = this.props.contracts['LCSToken']['getHash'][this.dataKey].value;
     // var imgUrl = `/files/${displayData}`;
-    var imgUrl = `https://rega.life/lexi/luggage/${displayData}`;
+    var imgUrl = `https://rega.life/lexi/luggage/${displayData}.`;
+    var imgUrl01 = `https://rega.life/lexi/luggage/${displayData}-1.`;
+    var imgUrl02 = `https://rega.life/lexi/luggage/${displayData}-2.`;
     
     return (
       <form className="pure-form pure-form-stacked">
         {this.props.check &&
-            <h3>Claim docs</h3> &&
-            <img alt="vote-img" src={imgUrl} />
+            <div>
+                <h3>Claim docs</h3>
+                <img alt="vote-img" src={imgUrl} />
+                <img alt="vote-img01" src={imgUrl01} />
+                <img alt="vote-img02" src={imgUrl02} />
+            </div>
         }
         {this.error_msg.length > 0 &&
             <h3>
