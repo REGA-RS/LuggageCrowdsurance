@@ -69,6 +69,7 @@ class SmartContainer extends Component {
     var contractOwner = displayData['contractOwner'];
     var bizProcessId = displayData['bizProcessId'];
 
+
     if(this.account === contractOwner && this.props.ownerOnly) {
       if(bizProcessId ==='100') {
         if(this.props.init) {

@@ -68,6 +68,19 @@ class BalanceData extends Component {
 
     var displayData = this.props.contracts[this.props.contract][this.props.method][this.dataKey].value
 
+    if(this.props.array) {
+      const displayObjectProps = [];
+      Object.keys(displayData).forEach((key) => {
+        displayObjectProps.push(<span key={key}>{pendingSpinner} {`${displayData[key]}`}</span>)
+      })
+
+      return (
+        <div>
+          {displayObjectProps}
+        </div>
+      )
+    }
+
     // Get account address and balance.
     var balance = displayData;
     // const units = this.props.units ? this.props.units.charAt(0).toUpperCase() + this.props.units.slice(1) : 'Wei'

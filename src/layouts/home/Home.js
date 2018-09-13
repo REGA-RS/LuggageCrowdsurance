@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import { AccountData, ContractData, ContractForm } from 'drizzle-react-components';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import rega from '../../Case_Tape.jpg';
 import BalanceData  from './BalanceData.js';
 import SmartContainer from './SmartContainer.js';
 import ContractFormExtension from './ContractFormExtension.js';
 import Uploader from './Uploader.js';
 import MsgForm from './MsgForm.js';
+import ApplyForm from './ApplyForm.js';
+import JoinForm from './JoinForm.js';
 
 
 class Home extends Component {
@@ -14,11 +17,28 @@ class Home extends Component {
     console.log(props);
     console.log(context);
 
+    this.setOption = this.setOption.bind(this);
+
+    this.contracts = context.drizzle.contracts;
+
+    var initialState = {};
+
     this.addresses = {
       TokenPool : context.drizzle.contracts.TokenPool._address,
       TokenContainer: context.drizzle.contracts.TokenContainer._address,
-      LCSToken: context.drizzle.contracts.LCSToken._address
+      LCSToken: context.drizzle.contracts.LCSToken._address,
+      ERC20Adapter: context.drizzle.contracts.ERC20Adapter._address
     };
+
+    this.dataKey = this.contracts['LCSToken'].methods['getBizProcessId'].cacheCall(...[]);
+    this.dataKeyParameters = this.contracts['LCSToken'].methods['parameters'].cacheCall(...[]);
+
+    initialState['option'] = 'RST';
+
+    this.state = initialState;
+  }
+  setOption(option) {
+    this.setState({ option });
   }
   renderSetSender(receiver, sender) {
     return (
@@ -47,7 +67,98 @@ class Home extends Component {
       </SmartContainer>
     )
   }
+
+  renderInfoTabs() {
+
+    if(!(this.dataKey in this.props['LCSToken']['getBizProcessId'])) {
+      return (
+        <span>Fetching...</span>
+      )
+    }
+
+    if(!(this.dataKeyParameters in this.props['LCSToken']['parameters'])) {
+      return (
+        <span>Fetching...</span>
+      )
+    }
+
+    var displayDataParameters = this.props['LCSToken']['parameters'][this.dataKeyParameters].value
+    var joinAmountETH = displayDataParameters['joinAmount'];
+
+    var displayData = this.props['LCSToken']['getBizProcessId'][this.dataKey].value
+    var bizProcessId = displayData['bizProcessId'];
+
+    return (
+        <Tabs>
+        <h2>Information</h2>
+          <TabList>
+            <Tab>Account</Tab>
+            <Tab>Contracts</Tab>
+            <Tab>Token</Tab>
+            <Tab disabled={bizProcessId === '100'}>Pools</Tab>
+          </TabList>
+
+          <TabPanel>
+            <AccountData accountIndex="0" units="ether" precision="4" />
+            <h3>Tokens</h3>
+            <BalanceData contract="RSTToken" method="balanceOf" accountIndex="0" units="nano" precision="3" correction="1" /> <ContractData contract="RSTToken" method="symbol" hideIndicator />
+            <p><ContractData contract="TokenContainer" method="balanceOf" methodArgs={[this.props.accounts[0]]} /> <ContractData contract="TokenContainer" method="symbol" hideIndicator /> [ <BalanceData contract="ERC20Adapter" method="balanceOf" accountIndex="0" units="ether" precision="4" /> Ether ] </p>
+          </TabPanel>
+
+          <TabPanel>
+            <h3>LCST Token</h3>
+            <p><ContractData contract="ERC20Adapter" method="root" /></p>
+            <p><ContractData contract="LCSToken" method="owner" /> <strong>owner address</strong> </p>
+            <p><ContractData contract="TokenContainer" method="totalSupply" /> <ContractData contract="TokenContainer" method="symbol" hideIndicator /></p>
+            <h3>RST Token</h3>
+            <p><ContractData contract="LCSToken" method="RST" /></p>
+            <p><BalanceData contract="RSTToken" method="totalSupply" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
+            <h3>Token Container</h3>
+            <p>{this.addresses.TokenContainer}</p>
+            <h3>Token Pool</h3>
+            <p>{this.addresses.TokenPool}</p>
+            <h3>ERC20 Adapter</h3>
+            <p>{this.addresses.ERC20Adapter}</p>
+            
+          </TabPanel>
+
+          <TabPanel>
+            <h3>LCS Current Token</h3>
+            <p><ContractData contract="LCSToken" method="getCurrentTokenId" /> </p>
+            <h3>Token IDs</h3>
+            <BalanceData contract="TokenContainer" method="tokensOfOwner" methodArgs={[this.props.accounts[0]]} array/>
+            <h3>Join Amount [RST]</h3>
+            <p><BalanceData contract="LCSToken" method="joinAmountRST" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
+            <h3>Join Amount [Wei]</h3>
+            <p>{joinAmountETH}</p>
+          </TabPanel>
+
+          <TabPanel>
+            <h3>Super Pool</h3>
+            <p><BalanceData contract="TokenContainer" method="valueOf" methodArgs={[1]} units="ether" precision="4" /> Ether </p>
+            <h3>Pools</h3>
+            <p><BalanceData contract="TokenContainer" method="valueOf" methodArgs={[2]} units="ether" precision="4" /> Ether </p>
+            <h3>Sub Pools</h3>
+            <p><BalanceData contract="TokenContainer" method="valueOf" methodArgs={[3]} units="ether" precision="4" /> Ether </p>
+            <h3>Commission</h3>
+            <p><BalanceData contract="TokenPool" method="getComission" accountIndex="0" units="ether" precision="4" viewOnly /> Ether </p>
+            
+          </TabPanel>
+          <br/><br/>
+        </Tabs>
+    )
+  }
+
   renderInfo(t) {
+
+    if(!(this.dataKeyParameters in this.props['LCSToken']['parameters'])) {
+      return (
+        <span>Fetching...</span>
+      )
+    }
+    var displayDataParameters = this.props['LCSToken']['parameters'][this.dataKeyParameters].value
+    var joinAmountETH = displayDataParameters['joinAmount'];
+
     return (
      <div>
         <h2>Smart Contract Information</h2>
@@ -71,6 +182,8 @@ class Home extends Component {
         <p><ContractData contract="LCSToken" method="owner" /></p>
         <h3>Join Amount [RST]</h3>
         <p><BalanceData contract="LCSToken" method="joinAmountRST" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
+        <h3>Join Amount [Wei]</h3>
+        <p>{joinAmountETH}</p>
         {t && 
           <div>
             <h3>Super Pool</h3>
@@ -81,96 +194,166 @@ class Home extends Component {
             <p><BalanceData contract="TokenContainer" method="valueOf" methodArgs={[3]} units="ether" precision="4" /> Ether </p>
             <h3>Commission</h3>
             <p><BalanceData contract="TokenPool" method="getComission" accountIndex="0" units="ether" precision="4" viewOnly /> Ether </p>
+            <h3>Token IDs</h3>
+            <BalanceData contract="TokenContainer" method="tokensOfOwner" methodArgs={[this.props.accounts[0]]} array/>
           </div>
         }
         <br/><br/>
       </div>
     )
   }
-  render() {
+  renderJoinTabs() {
+
+    if(!(this.dataKey in this.props['LCSToken']['getBizProcessId'])) {
+      return (
+        <span>Fetching...</span>
+      )
+    }
+
+    if(!(this.dataKeyParameters in this.props['LCSToken']['parameters'])) {
+      return (
+        <span>Fetching...</span>
+      )
+    }
+
+    var displayDataParameters = this.props['LCSToken']['parameters'][this.dataKeyParameters].value
+    var joinAmountETH = displayDataParameters['joinAmount'];
+
+    var displayData = this.props['LCSToken']['getBizProcessId'][this.dataKey].value
+    var bizProcessId = displayData['bizProcessId'];
+
     return (
-      <main className="container">
-       
-        <div className="pure-g">
-          <div className="pure-u-1-1 header">
-            <img src={rega} alt="drizzle-logo" />
-            <h1>REGA Luggage Crowdsurance</h1>
-            <h3>Smart Contracts &nbsp;<small>v 0.1.0</small></h3>
+      <SmartContainer accountIndex="0" notOwnerOnly bizProcessId={["3","4"]}>
+        <Tabs>
+          <TabList>
+            <Tab>RST</Tab>
+            <Tab disabled={bizProcessId === "4"}>ETH</Tab>
+          </TabList>
 
-            <br/><br/>
-          </div>
-
-          <SmartContainer accountIndex="0" ownerOnly>
-            <h2>Test check list</h2>
-            <label>
-              <input type="checkbox" name="ether_transfer" /> &nbsp;
-              01&nbsp;-&nbsp;Transfer Ether to the LCS Smart contract &nbsp;
-            </label>
-            <br/>
-            <label>
-              <input type="checkbox" name="rst_transfer" /> &nbsp;
-              02&nbsp;-&nbsp;Transfer RST tokens to the new member address &nbsp;
-            </label>
-            <br/>
-            <label>
-              <input type="checkbox" name="apply" /> &nbsp;
-              04&nbsp;-&nbsp;Score the new member &nbsp;
-            </label>
-            <br/>
-            <label>
-              <input type="checkbox" name="jury" /> &nbsp;
-              05&nbsp;-&nbsp;Select juries &nbsp;
-            </label>
-            <br/>
-            <label>
-              <input type="checkbox" name="voting" /> &nbsp;
-              06&nbsp;-&nbsp;Juries voting &nbsp;[juries]
-            </label>
-            <br/><br/>
-          </SmartContainer>
-
-          <SmartContainer accountIndex="0" notOwnerOnly ProgressBar>
-            <h2>Biz process status</h2>
-          </SmartContainer>
-
-          <SmartContainer accountIndex="0" ownerOnly init>
-            {this.renderInfo(false)}
-          </SmartContainer>
-
-          {this.renderSetSender("TokenContainer", "TokenPool")}
-          {this.renderSetSender("TokenPool", "LCSToken")}
-          {this.renderInit()}
-        
-          <SmartContainer accountIndex="0">
-            {this.renderInfo(true)}
-          </SmartContainer>
-
-          <SmartContainer accountIndex="0" notOwnerOnly bizProcessId={["1"]}>
-            <h2>Apply</h2>
-            <p>The first step is make an application and get application ID</p>
-            <h3>Application Info</h3>
+          <TabPanel>
+            <h2>Join with RST</h2>
+            <SmartContainer accountIndex="0" notOwnerOnly bizProcessId={["3"]}>
+              <p>Before join Crowdsurance with RST you need to approve token transfer from your account to LCS smart contract address. The amount to approve is join amount in RST</p>
+              <h3>Current Account RST Balance</h3>
+              <p><BalanceData contract="RSTToken" method="balanceOf" accountIndex="0" units="nano" precision="3" correction="1" /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
+              <h3>Allowance</h3>
+              <p><BalanceData contract="RSTToken" method="allowance" methodArgs={[this.props.accounts[0],this.addresses.LCSToken]} units="nano" precision="3" correction="1" /> <ContractData contract="RSTToken" method="symbol" hideIndicator /></p>
+              <h3>Join Amount [RST]</h3>
+              <p><BalanceData contract="LCSToken" method="joinAmountRST" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
+              <h3>Approve token transfer</h3>
+              <p><strong>To Address</strong>: <ContractData contract="ERC20Adapter" method="root" /></p>
+              <p><strong>Amount to Approve</strong>: <ContractData contract="LCSToken" method="joinAmountRST" /></p>
+              <p>Just copy and paste information above in the form fields. Please note that <b>Amount to Approve</b> is an integer number and will be adjusted by the smart contract by the number of decimals for the RST token by dividing <b>Amount to Approve</b> by 10 ^ <ContractData contract="RSTToken" method="decimals" />. <br/><br/>If the transaction approval is done then <b>Allowance</b> will be equal to <b>Join Amount [RST]</b></p>
+              <ContractForm contract="RSTToken" method="approve" labels={['To Address', 'Amount to Approve']} />
             
-            <p><strong>Application ID</strong>: <ContractData contract="LCSToken" method="getAppID" /></p>
-            <h3>Make Application</h3>
-            <ContractFormExtension contract="LCSToken" method="apply" extension={[]} emitEvent="apply" />
+              <br/><br/>
+            </SmartContainer>
 
-            <br/><br/>
+            <SmartContainer accountIndex="0" notOwnerOnly bizProcessId={["4"]}>
+              <p>If token transfer approval was done then the new member can join crowdsurance and RST tokens will be transfered from the new member account to the LCS owner account. </p>
+              <h3>Join Info</h3>
+              <p><strong>Join Amount [RST]</strong>: <BalanceData contract="LCSToken" method="joinAmountRST" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
+              <p><strong>Balance</strong>: <ContractData contract="TokenContainer" method="balanceOf" methodArgs={[this.props.accounts[0]]} /> <ContractData contract="TokenContainer" method="symbol" hideIndicator /> </p>
+              <h3>Crowdsurance ID</h3>
+              <p><ContractData contract="LCSToken" method="getCurrentTokenId" /></p>
+              <h3>Join Crowdsurance</h3>
+              <ContractForm contract="LCSToken" method="join" />
+
+              <br/><br/>
+            </SmartContainer>
+
+          </TabPanel>
+          <TabPanel>
+            <h2>Join with ETH</h2>
+            <SmartContainer accountIndex="0" notOwnerOnly bizProcessId={["3"]}>
+              <p>To Join crowdsurance transfer join amount in Wei from your account to crowdsurance pool</p>
+              <h3>Join Amount [Wei]</h3>
+              <p>{joinAmountETH}</p>
+              <h3>Account Balance</h3>
+              <p><AccountData accountIndex="0" units="ether" precision="4" /></p>
+              <h3>Crowdsurance ID</h3>
+              <p><ContractData contract="LCSToken" method="getCurrentTokenId" /></p>
+              <h3>Join Crowdsurance</h3>
+              <JoinForm contract="LCSToken" method="join" />
+            </SmartContainer>
+          </TabPanel>
+        </Tabs>
+      </SmartContainer>
+    )
+  }
+
+  renderActivateTabs() {
+
+    return (
+      <SmartContainer accountIndex="0" notOwnerOnly bizProcessId={["10"]}>
+        <Tabs>
+          <TabList>
+            <Tab>Activate</Tab>
+            <Tab>Transfer</Tab>
+          </TabList>
+
+          <TabPanel>
+            <h2>Activate</h2>
+            <SmartContainer accountIndex="0" notOwnerOnly bizProcessId="10">
+              <p>To protect your luggage activate crowdsurance token</p>
+              <h3>Crowdsurance ID</h3>
+              <p><ContractData contract="LCSToken" method="getCurrentTokenId" /></p>
+              <h3>Activate Crowdsurance</h3>
+              <ContractFormExtension contract="LCSToken" method="activateCurrent" extension={[{name:'Name', type:'text'}, {name:'Surname', type:'text'}]} />
+            </SmartContainer>
+    
+          </TabPanel>
+
+          <TabPanel>
+            <h2>Transfer</h2>
+            <SmartContainer accountIndex="0" notOwnerOnly bizProcessId="10">
+              <p>Before activation you can Transfer LCST Token to a new member</p>
+              <h3>Token IDs</h3>
+              <BalanceData contract="TokenContainer" method="tokensOfOwner" methodArgs={[this.props.accounts[0]]} array/>
+              <h3>Token transfer</h3>
+              <ContractForm contract="TokenContainer" method="transfer" labels={['To Address', 'Token ID']} />
           </SmartContainer>
-
-          <SmartContainer accountIndex="0" notOwnerOnly bizProcessId="2" >
-            <h2>Wait</h2>
-            <p>Wait for aplication approval...</p>
-
-            <br/><br/>
-          </SmartContainer>
-
-          <SmartContainer accountIndex="0" ownerOnly>
-            <MsgForm />
             
-            <br/><br/>
-          </SmartContainer>
+          </TabPanel>
+        </Tabs>
+      </SmartContainer>
+    )
+  }
 
-          <SmartContainer accountIndex="0" ownerOnly>
+  renderOwnerTabs() {
+
+    if(!(this.dataKey in this.props['LCSToken']['getBizProcessId'])) {
+      return (
+        <span>Fetching...</span>
+      )
+    }
+
+    var displayData = this.props['LCSToken']['getBizProcessId'][this.dataKey].value
+    var bizProcessId = displayData['bizProcessId'];
+
+    return (
+      <SmartContainer accountIndex="0" ownerOnly>
+        <Tabs>
+          <TabList>
+            <Tab>Scoring</Tab>
+            <Tab>Send RST</Tab>
+            <Tab>Transfer</Tab>
+            <Tab>Select</Tab>
+            <Tab disabled={bizProcessId !== "5"}>Vote</Tab>
+          </TabList>
+
+          <TabPanel>
+            <h2>Scoring</h2>
+            <p>The next step is new member scoring</p>
+            <h3>Applications Info</h3>
+            <ContractData contract="LCSToken" method="getApplication" />
+            <h3>Applications number</h3>
+            <p><ContractData contract="LCSToken" method="appNumber" /></p>
+            <h3>Score new application [owner only]</h3> 
+            <ContractForm contract="LCSToken" method="fssf" />
+          </TabPanel>
+
+          <TabPanel>
             <h2>Transfer</h2>
             <p>Transfer some RST Tokens to the new member if needed.</p>
             <h3>Applications Info</h3>
@@ -181,75 +364,94 @@ class Home extends Component {
             <p>100000000000</p>
             <h3>Token transfer</h3>
             <ContractForm contract="RSTToken" method="transfer" labels={['To Address', 'Amount to Transfer']} />
-            
-            <br/><br/>
-          </SmartContainer>
+          </TabPanel>
 
-          <SmartContainer accountIndex="0" ownerOnly>
-            <h2>Score</h2>
-            <p>The next step is new member scoring</p>
-            <h3>Applications Info</h3>
-            <ContractData contract="LCSToken" method="getApplication" />
-            <h3>Applications number</h3>
-            <p><ContractData contract="LCSToken" method="appNumber" /></p>
-            <h3>Score new application [owner only]</h3>
-            
-            <ContractForm contract="LCSToken" method="fssf" />
-
-            <br/><br/>
-          </SmartContainer>
-
-          <SmartContainer accountIndex="0" notOwnerOnly bizProcessId={["3"]}>
-            <h2>Approve</h2>
-            <p>Before join Crowdsurance the the new member need to approve token transfer from own account to LCS smart contract address. The amount to approve is join amount in RST</p>
-            <h3>Current Account RST Balance</h3>
-            <p><BalanceData contract="RSTToken" method="balanceOf" accountIndex="0" units="nano" precision="3" correction="1" /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
-            <h3>Allowance</h3>
-            <p><BalanceData contract="RSTToken" method="allowance" methodArgs={[this.props.accounts[0],this.addresses.LCSToken]} units="nano" precision="3" correction="1" /> <ContractData contract="RSTToken" method="symbol" hideIndicator /></p>
-            <h3>Join Amount [RST]</h3>
-            <p><BalanceData contract="LCSToken" method="joinAmountRST" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
-            <h3>Approve token transfer</h3>
-            <p><strong>To Address</strong>: <ContractData contract="ERC20Adapter" method="root" /></p>
-            <p><strong>Amount to Approve</strong>: <ContractData contract="LCSToken" method="joinAmountRST" /></p>
-            <p>Just copy and paste information above in the form fields. Please note that <b>Amount to Approve</b> is an integer number and will be adjusted by the smart contract by the number of decimals for the RST token by dividing <b>Amount to Approve</b> by 10 ^ <ContractData contract="RSTToken" method="decimals" />. <br/><br/>If the transaction approval is done then <b>Allowance</b> will be equal to <b>Join Amount [RST]</b></p>
-            <ContractForm contract="RSTToken" method="approve" labels={['To Address', 'Amount to Approve']} />
-            
-            <br/><br/>
-          </SmartContainer>
-
-          <SmartContainer accountIndex="0" notOwnerOnly bizProcessId={["4"]}>
-            <h2>Join</h2>
-            <p>If token transfer approval was done then the new member can join crowdsurance and RST tokens will be transfered from the new member account to the LCS owner account. </p>
-            <h3>Join Info</h3>
-            <p><strong>Join Amount</strong>: <BalanceData contract="LCSToken" method="joinAmountRST" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
-            <p><strong>Balance</strong>: <ContractData contract="TokenContainer" method="balanceOf" methodArgs={[this.props.accounts[0]]} /> <ContractData contract="TokenContainer" method="symbol" hideIndicator /> </p>
-            <h3>Crowdsurance ID</h3>
-            <p><ContractData contract="LCSToken" method="getCurrentTokenId" /></p>
-            <h3>Join Crowdsurance</h3>
-            <ContractForm contract="LCSToken" method="join" />
-
-            <br/><br/>
-          </SmartContainer>
-
-           <SmartContainer accountIndex="0" notOwnerOnly bizProcessId="10">
+          <TabPanel>
             <h2>LCST Transfer</h2>
             <p>Transfer LCST Token to the member</p>
+            <p>DON'T TRANSFER POOLS TOKEN: 1,2,3</p>
+            <h3>Token IDs</h3>
+            <BalanceData contract="TokenContainer" method="tokensOfOwner" methodArgs={[this.props.accounts[0]]} array/>
             <h3>Token transfer</h3>
             <ContractForm contract="TokenContainer" method="transfer" labels={['To Address', 'Token ID']} />
+          </TabPanel>
+
+          <TabPanel>
+            <h2>Select</h2>
+            <p>Select jury to vote the claim payment</p>
+            <h3>Number of claims waiting for jury</h3>
+            <p><ContractData contract="LCSToken" method="getNumberOfClaims" /></p>
+           
+            <h3>Add Voter [owner only]</h3>
+            <ContractForm contract="LCSToken" method="addVoter" labels={['Voter address']} />
+          </TabPanel>
+
+          <TabPanel>
+            <SmartContainer accountIndex="0" bizProcessId="5">
+              <h2>Vote</h2>
+              <p>Vote for the claim that you have been selected</p>
+              <h3>Activation Hash</h3>
+              <p><ContractData contract="LCSToken" method="getHash" /></p>
+              <h3>Cast Positive</h3>
+              <p>To vote in favore of the case please enter in the form the name and surname of the member who has made the claim. You can found them below in the provided Claim documents.</p>
+              <ContractFormExtension contract="LCSToken" method="castPositiveSelected" extension={[{name:'Name', type:'text'}, {name:'Surname', type:'text'}]} check />
+              <h3>Cast Negative</h3>
+              <ContractForm contract="LCSToken" method="castNegativeSelected"  />
+              <br/><br/>
+            </SmartContainer>
+          </TabPanel>
+
+        </Tabs>
+      </SmartContainer>
+    )
+  }
+  
+  render() {
+    return (
+      <main className="container">
+       
+        <div className="pure-g">
+          <div className="pure-u-1-1 header">
+            <img src={rega} alt="drizzle-logo" />
+            <h1>REGA Luggage Crowdsurance</h1>
+            <h3>Smart Contracts &nbsp;<small>v 0.1.2</small></h3>
+
+            <br/><br/>
+          </div>
+
+          <SmartContainer accountIndex="0" notOwnerOnly ProgressBar>
+            <h2>Biz process status</h2>
+          </SmartContainer>
+
+
+          {this.renderSetSender("TokenContainer", "TokenPool")}
+          {this.renderSetSender("TokenPool", "LCSToken")}
+          {this.renderInit()}
+          {this.renderInfoTabs()}
+
+          <SmartContainer accountIndex="0" notOwnerOnly bizProcessId={["1"]}>
+            <h2>Apply</h2>
+            <p>The first step is make an application and get application ID</p>
+            <h3>Application Info</h3>
             
-            <br/><br/>
-          </SmartContainer>
-
-          <SmartContainer accountIndex="0" notOwnerOnly bizProcessId="10">
-            <h2>Activate</h2>
-            <p>To protect your luggage activate crowdsurance</p>
-            <h3>Crowdsurance ID</h3>
-            <p><ContractData contract="LCSToken" method="getCurrentTokenId" /></p>
-            <h3>Activate Crowdsurance</h3>
-            <ContractFormExtension contract="LCSToken" method="activateCurrent" extension={[{name:'Name', type:'text'}, {name:'Surname', type:'text'}]} />
+            <p><strong>Application ID</strong>: <ContractData contract="LCSToken" method="getAppID" /></p>
+            <h3>Make Application</h3>
+            <ApplyForm contract="LCSToken" method="apply" emitEvent="apply" />
 
             <br/><br/>
           </SmartContainer>
+
+          <SmartContainer accountIndex="0" notOwnerOnly bizProcessId="2" >
+            <h2>Wait</h2>
+            <p>Wait for aplication approval...</p>
+
+            <br/><br/>
+          </SmartContainer>
+          
+          {this.renderJoinTabs()}
+          {this.renderActivateTabs()}
+          {this.renderOwnerTabs()}
+
 
           <SmartContainer accountIndex="0" notOwnerOnly bizProcessId="11">
             <h2>Claim</h2>
@@ -258,24 +460,12 @@ class Home extends Component {
             <p><ContractData contract="LCSToken" method="getCurrentTokenId" /></p>
            
             <h3>Claim Payment</h3>
-            <Uploader contract="LCSToken" method="claimCurrent" extension={[{name:'Name', type:'text'}, {name:'Surname', type:'text'}]} />
+            <Uploader contract="LCSToken" method="claimCurrent" extension={[{name:'name', type:'text'}, {name:'surname', type:'text'}, {name:'email', type:'text'}, {name:'PIRNumber', type:'text'}, {name:'PIRDate', type:'text'} ]} />
 
             <br/><br/>
           </SmartContainer>
 
-          <SmartContainer accountIndex="0" ownerOnly>
-            <h2>Select</h2>
-            <p>Select jury to vote the claim payment</p>
-            <h3>Number of claims waiting for jury</h3>
-            <p><ContractData contract="LCSToken" method="getNumberOfClaims" /></p>
-           
-            <h3>Add Voter [owner only]</h3>
-            <ContractForm contract="LCSToken" method="addVoter" labels={['Voter address']} />
-
-            <br/><br/>
-          </SmartContainer>
-
-          <SmartContainer accountIndex="0" bizProcessId="5">
+          <SmartContainer accountIndex="0" notOwnerOnly bizProcessId="5">
             <h2>Vote</h2>
             <p>Vote for the claim that you have been selected</p>
             <h3>Activation Hash</h3>
@@ -293,7 +483,6 @@ class Home extends Component {
             <p>Wait for claim payment approval...</p>
             <h3>Current voting status</h3>
             <ContractData contract="LCSToken" method="getCurrentVotingStatus" />
-
             <br/><br/>
           </SmartContainer>
 

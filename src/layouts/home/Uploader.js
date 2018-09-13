@@ -50,20 +50,29 @@ class Uploader extends Component {
   }
 
   handleSubmit() {
-    var name = this.state['Name'];
-    var surname = this.state['Surname'];
+    var name = this.state['name'];
+    var surname = this.state['surname'];
+    var email = this.state['email'];
+    var PIRNumber = this.state['PIRNumber'];
+    var PIRDate = this.state['PIRDate'];
     var file = this.state['file'];
+    var file1 = this.state['file-1'];
+    var file2 = this.state['file-2'];
     var hash = this.context.drizzle.web3.utils.sha3(name.concat(surname));
-    var description = name.concat(surname);
 
     const data = new FormData();
 
     if(file && hash) {
       this.contracts[this.props.contract].methods[this.props.method].cacheSend(...[]);
       data.append(hash, file);
-      data.append('name', hash);
-      data.append('description', description);
-      // axios.post('/files', data).then((response) => {
+      data.append(`${hash}-1`, file1);
+      data.append(`${hash}-2`, file2);
+      data.append('name', name);
+      data.append('surname', surname);
+      data.append('email', email);
+      data.append('PIRNumber', PIRNumber);
+      data.append('PIRDate', PIRDate);
+      
       axios.post('https://rega.life/lexi/luggage', data).then((response) => {
         console.log(file);
         this.setState({
@@ -83,6 +92,8 @@ class Uploader extends Component {
   // Component method
   handleFileUpload(event) {
     this.setState({ 'file': event.target.files[0]});
+    this.setState({ 'file-1': event.target.files[1]});
+    this.setState({ 'file-2': event.target.files[2]});
   }
 
   translateType(type) {
@@ -113,8 +124,8 @@ class Uploader extends Component {
         {this.props.extension.map((input, index) => {
             return (<input key={input.name} type={input.type} name={input.name} value={this.state[input.name]} placeholder={input.name} onChange={this.handleInputChange} />)
         })}
-        <h3>Upload claim docs</h3>
-        <input type="file" onChange={this.handleFileUpload} />
+        <h3>Upload claim docs: boarding pass, luggage ticket and RIP</h3>
+        <input type="file" onChange={this.handleFileUpload} multiple/>
         <button key="submit" className="pure-button" type="button" onClick={this.handleSubmit}>Submit</button>
       </form>
     )
