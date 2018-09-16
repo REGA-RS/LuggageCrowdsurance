@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { AccountData, ContractData, ContractForm } from 'drizzle-react-components';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import moment from 'moment';
 import rega from '../../Case_Tape.jpg';
 import BalanceData  from './BalanceData.js';
 import SmartContainer from './SmartContainer.js';
@@ -9,6 +10,7 @@ import Uploader from './Uploader.js';
 import MsgForm from './MsgForm.js';
 import ApplyForm from './ApplyForm.js';
 import JoinForm from './JoinForm.js';
+
 
 
 class Home extends Component {
@@ -29,6 +31,17 @@ class Home extends Component {
       LCSToken: context.drizzle.contracts.LCSToken._address,
       ERC20Adapter: context.drizzle.contracts.ERC20Adapter._address
     };
+
+    this.currentTokenInfo = undefined;
+
+    context.drizzle.contracts.LCSToken.methods.getCurrentTokenId().call()
+      .then((result)=> {
+        context.drizzle.contracts.LCSToken.methods.extensions(result).call()
+          .then((data)=> {
+            this.currentTokenInfo = data;
+          });
+      });
+
 
     this.dataKey = this.contracts['LCSToken'].methods['getBizProcessId'].cacheCall(...[]);
     this.dataKeyParameters = this.contracts['LCSToken'].methods['parameters'].cacheCall(...[]);
@@ -67,6 +80,30 @@ class Home extends Component {
       </SmartContainer>
     )
   }
+  // enum Status {Init, Active, Claim, Approved, Rejected, Closed}
+  renderTokenStatus(status) {
+    switch(status) {
+      case '0':
+        return('Init');
+      case '1':
+        return('Active');
+      case '2':
+        return('Claim');
+      case '3':
+        return('Approved');
+      case '4':
+        return('Rejected');
+      case '5':
+        return('Closed');
+      default:
+        return('ERROR');
+    }
+  }
+
+  precisionRound(number, precision) {
+    var factor = Math.pow(10, precision)
+    return Math.round(number * factor) / factor
+  }
 
   renderInfoTabs() {
 
@@ -82,6 +119,13 @@ class Home extends Component {
       )
     }
 
+    if(this.currentTokenInfo === undefined) {
+      return (
+        <span>Fetching...</span>
+      )
+    }
+
+
     var displayDataParameters = this.props['LCSToken']['parameters'][this.dataKeyParameters].value
     var joinAmountETH = displayDataParameters['joinAmount'];
 
@@ -96,6 +140,7 @@ class Home extends Component {
             <Tab>Contracts</Tab>
             <Tab>Token</Tab>
             <Tab disabled={bizProcessId === '100'}>Pools</Tab>
+            <Tab disabled={bizProcessId === '100'}>Crowdsurance</Tab>
           </TabList>
 
           <TabPanel>
@@ -144,11 +189,25 @@ class Home extends Component {
             <p><BalanceData contract="TokenPool" method="getComission" accountIndex="0" units="ether" precision="4" viewOnly /> Ether </p>
             
           </TabPanel>
+                    
+          <TabPanel>
+            <table>
+              <tbody>
+                <tr><td><strong>Join</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.currentTokenInfo.timeStamp==='0'?'-':moment.unix(this.currentTokenInfo.timeStamp).format("hh:mm DD/MM/YY")}</td><td></td></tr>
+                <tr><td><strong>Activated</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.currentTokenInfo.activated==='0'?'-':moment.unix(this.currentTokenInfo.activated).format("hh:mm DD/MM/YY")}</td><td></td></tr>
+                <tr><td><strong>End</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.currentTokenInfo.activated==='0'?'-':moment.unix(this.currentTokenInfo.activated).add(parseInt(this.currentTokenInfo.duration,10),'seconds').format("hh:mm DD/MM/YY")}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.currentTokenInfo.duration==='0'?'-':moment.duration(parseInt(this.currentTokenInfo.duration,10),'seconds').asDays()}&nbsp;Days</td></tr>
+                <tr><td><strong>To Go</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.currentTokenInfo.activated==='0'?'-':this.precisionRound(moment.duration(moment.unix(this.currentTokenInfo.activated).add(parseInt(this.currentTokenInfo.duration,10),'seconds').diff(moment())).asDays(),1)}&nbsp;Days</td><td></td></tr>
+                <tr><td><strong>Value</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.context.drizzle.web3.utils.fromWei(this.currentTokenInfo.amount, 'ether')}&nbsp;Ether</td><td></td></tr>
+                <tr><td><strong>Paid</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.context.drizzle.web3.utils.fromWei(this.currentTokenInfo.paid, 'ether')}&nbsp;Ether</td><td></td></tr>
+                <tr><td><strong>Claim number</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.currentTokenInfo.claimNumber}&nbsp;</td><td></td></tr>
+                <tr><td><strong>Status</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.renderTokenStatus(this.currentTokenInfo.status)}&nbsp;</td><td></td></tr>
+              </tbody>
+            </table>
+          </TabPanel>
           <br/><br/>
         </Tabs>
     )
   }
-
   renderInfo(t) {
 
     if(!(this.dataKeyParameters in this.props['LCSToken']['parameters'])) {
