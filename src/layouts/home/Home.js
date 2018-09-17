@@ -20,12 +20,15 @@ class Home extends Component {
     console.log(context);
 
     this.setOption = this.setOption.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
 
     this.contracts = context.drizzle.contracts;
 
     var initialState = {};
 
     this.addresses = {
+      RSTToken : context.drizzle.contracts.RSTToken._address,
       TokenPool : context.drizzle.contracts.TokenPool._address,
       TokenContainer: context.drizzle.contracts.TokenContainer._address,
       LCSToken: context.drizzle.contracts.LCSToken._address,
@@ -33,15 +36,29 @@ class Home extends Component {
     };
 
     this.currentTokenInfo = undefined;
+    this.request = undefined;
+    this.currentTokenId = undefined;
+    this.currentNetworkId = undefined;
+
+    const that = this;
 
     context.drizzle.contracts.LCSToken.methods.getCurrentTokenId().call()
       .then((result)=> {
+        that.currentTokenId = result;
         context.drizzle.contracts.LCSToken.methods.extensions(result).call()
           .then((data)=> {
-            this.currentTokenInfo = data;
+            that.currentTokenInfo = data;
+            if(parseInt(data.claimNumber,10) > 0) {
+              context.drizzle.contracts.LCSToken.methods.requests(result).call()
+                .then((request) => {
+                  that.request = request;
+                });
+            }
           });
       });
 
+    context.drizzle.web3.eth.net.getId()
+    .then((id) => { this.currentNetworkId = id; });
 
     this.dataKey = this.contracts['LCSToken'].methods['getBizProcessId'].cacheCall(...[]);
     this.dataKeyParameters = this.contracts['LCSToken'].methods['parameters'].cacheCall(...[]);
@@ -49,6 +66,25 @@ class Home extends Component {
     initialState['option'] = 'RST';
 
     this.state = initialState;
+  }
+  handleSubmit() {
+    const that = this;
+    
+    this.context.drizzle.contracts.LCSToken.methods.extensions(this.state.tokenId).call()
+      .then((data)=> {
+        console.log(data);
+        that.currentTokenInfo = data;
+          if(parseInt(data.claimNumber,10) > 0) {
+            that.context.drizzle.contracts.LCSToken.methods.requests(this.state.tokenId).call()
+              .then((request) => {
+                that.request = request;
+              });
+            }
+        });
+  }
+
+  handleInputChange(event) {
+    this.setState({ [event.target.name]: event.target.value });
   }
   setOption(option) {
     this.setState({ option });
@@ -105,6 +141,72 @@ class Home extends Component {
     return Math.round(number * factor) / factor
   }
 
+  renderCrowdsurance(owner) {
+
+    if(this.currentTokenInfo === undefined) {
+      return (
+        <span>Fetching...</span>
+      )
+    }
+    var dontHaveToken = parseInt(this.currentTokenId,10) === 0;
+
+    if(dontHaveToken && !owner) {
+      return (
+        <h2>You dont have any active crowdsurance token</h2>
+      )
+    }
+
+    const toGo = this.precisionRound(moment.duration(moment.unix(this.currentTokenInfo.activated).add(parseInt(this.currentTokenInfo.duration,10),'seconds').diff(moment())).asDays(),1);
+
+    return (
+      <table>
+        <tbody>
+          <tr><td><strong>Join</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.currentTokenInfo.timeStamp==='0'?'-':moment.unix(this.currentTokenInfo.timeStamp).format("hh:mm DD/MM/YY")}</td><td></td></tr>
+          <tr><td><strong>Activated</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.currentTokenInfo.activated==='0'?'-':moment.unix(this.currentTokenInfo.activated).format("hh:mm DD/MM/YY")}</td><td></td></tr>
+          <tr><td><strong>End</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.currentTokenInfo.activated==='0'?'-':moment.unix(this.currentTokenInfo.activated).add(parseInt(this.currentTokenInfo.duration,10),'seconds').format("hh:mm DD/MM/YY")}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.currentTokenInfo.duration==='0'?'-':moment.duration(parseInt(this.currentTokenInfo.duration,10),'seconds').asDays()}&nbsp;Days</td></tr>
+          <tr><td><strong>To Go</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.currentTokenInfo.activated==='0'?'-':toGo < 0 ? 'Closed' : toGo}&nbsp;{this.currentTokenInfo.activated==='0'?'':toGo < 0 ? '' : 'Days'}</td><td></td></tr>
+          <tr><td><strong>Value</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.context.drizzle.web3.utils.fromWei(this.currentTokenInfo.amount, 'ether')}&nbsp;Ether</td><td></td></tr>
+          <tr><td><strong>Paid</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.context.drizzle.web3.utils.fromWei(this.currentTokenInfo.paid, 'ether')}&nbsp;Ether</td><td></td></tr>
+          <tr><td><strong>Claim number</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.currentTokenInfo.claimNumber}&nbsp;</td><td></td></tr>
+          <tr><td><strong>Status</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.renderTokenStatus(this.currentTokenInfo.status)}&nbsp;</td><td></td></tr>
+        </tbody>
+      </table>
+    )
+  }
+
+  renderRequest() {
+
+    if(this.currentTokenInfo === undefined || this.request === undefined) {
+      return (
+        <h2>You dont have any claims</h2>
+      )
+    }
+
+    const dontHaveClaims = parseInt(this.currentTokenInfo.claimNumber,10) === 0 || this.currentTokenInfo.status === '4' || (this.currentTokenInfo.status === '3' && parseInt(this.currentTokenInfo.paid,10) > 0);
+
+    if(dontHaveClaims) {
+      return (
+        <h2>You dont have any active claims</h2>
+      )
+    }
+
+    const toWait = this.precisionRound(moment.duration(moment.unix(this.request.timeStamp).add(parseInt(this.request.duration,10),'seconds').diff(moment())).asHours(),1);
+
+    return (
+      <table>
+        <tbody>
+          <tr><td><strong>Amount</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.context.drizzle.web3.utils.fromWei(this.request.amount, 'ether')}&nbsp;Ether</td><td></td></tr>
+          <tr><td><strong>Open</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.request.timeStamp==='0'?'-':moment.unix(this.request.timeStamp).format("hh:mm DD/MM/YY")}</td><td></td></tr>
+          <tr><td><strong>Voting End</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.request.timeStamp==='0'?'-':moment.unix(this.request.timeStamp).add(parseInt(this.request.duration,10),'seconds').format("hh:mm DD/MM/YY")}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.request.duration==='0'?'-':moment.duration(parseInt(this.request.duration,10),'seconds').asHours()}&nbsp;Hours</td></tr>
+          <tr><td><strong>To Wait</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.request.timeStamp==='0'?'-':toWait < 0 ? 'Closed' : toWait}&nbsp;{this.request.timeStamp==='0'?'':toWait < 0 ? '' : 'Hours'}</td><td></td></tr>
+          <tr><td><strong>Positive</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.request.positive}&nbsp;</td><td></td></tr>
+          <tr><td><strong>Negative</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.request.negative}&nbsp;</td><td></td></tr>
+          <tr><td><strong>Jury Number</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.request.number}&nbsp;</td><td></td></tr>
+        </tbody>
+      </table>
+    )
+  }
+
   renderInfoTabs() {
 
     if(!(this.dataKey in this.props['LCSToken']['getBizProcessId'])) {
@@ -125,12 +227,30 @@ class Home extends Component {
       )
     }
 
+    if(this.currentTokenId === undefined) {
+      return (
+        <span>Fetching...</span>
+      )
+    }
+
 
     var displayDataParameters = this.props['LCSToken']['parameters'][this.dataKeyParameters].value
     var joinAmountETH = displayDataParameters['joinAmount'];
 
     var displayData = this.props['LCSToken']['getBizProcessId'][this.dataKey].value
     var bizProcessId = displayData['bizProcessId'];
+    var contractOwner = displayData['contractOwner'];
+    var owner = this.props.accounts[0] === contractOwner;
+    
+    var dontHaveClaims = parseInt(this.currentTokenInfo.status,10) !== 2;
+
+    if(!dontHaveClaims) {
+      if(this.request === undefined) {
+        return (
+          <span>Fetching...</span>
+        )
+      }
+    }
 
     return (
         <Tabs>
@@ -138,9 +258,10 @@ class Home extends Component {
           <TabList>
             <Tab>Account</Tab>
             <Tab>Contracts</Tab>
-            <Tab>Token</Tab>
+            <Tab disabled={bizProcessId === '100'}>Token</Tab>
             <Tab disabled={bizProcessId === '100'}>Pools</Tab>
-            <Tab disabled={bizProcessId === '100'}>Crowdsurance</Tab>
+            <Tab disabled={bizProcessId === '100' || owner}>Crowdsurance</Tab>
+            <Tab disabled={bizProcessId === '100' || owner}>Claim</Tab>
           </TabList>
 
           <TabPanel>
@@ -152,18 +273,17 @@ class Home extends Component {
 
           <TabPanel>
             <h3>LCST Token</h3>
-            <p><ContractData contract="ERC20Adapter" method="root" /></p>
-            <p><ContractData contract="LCSToken" method="owner" /> <strong>owner address</strong> </p>
+            <p><a href={this.getEtherscanLink() !== '' ? this.getEtherscanLink() + this.addresses.LCSToken : '' }>{this.addresses.LCSToken}</a></p>
             <p><ContractData contract="TokenContainer" method="totalSupply" /> <ContractData contract="TokenContainer" method="symbol" hideIndicator /></p>
             <h3>RST Token</h3>
-            <p><ContractData contract="LCSToken" method="RST" /></p>
+            <p><a href={this.getEtherscanLink() !== '' ? this.getEtherscanLink() + this.addresses.RSTToken : '' }>{this.addresses.RSTToken}</a></p>
             <p><BalanceData contract="RSTToken" method="totalSupply" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
             <h3>Token Container</h3>
-            <p>{this.addresses.TokenContainer}</p>
+            <p><a href={this.getEtherscanLink() !== '' ? this.getEtherscanLink() + this.addresses.TokenContainer : '' }>{this.addresses.TokenContainer}</a></p>
             <h3>Token Pool</h3>
-            <p>{this.addresses.TokenPool}</p>
+            <p><a href={this.getEtherscanLink() !== '' ? this.getEtherscanLink() + this.addresses.TokenPool : '' }>{this.addresses.TokenPool}</a></p>
             <h3>ERC20 Adapter</h3>
-            <p>{this.addresses.ERC20Adapter}</p>
+            <p><a href={this.getEtherscanLink() !== '' ? this.getEtherscanLink() + this.addresses.ERC20Adapter : '' }>{this.addresses.ERC20Adapter}</a></p>
             
           </TabPanel>
 
@@ -191,76 +311,18 @@ class Home extends Component {
           </TabPanel>
                     
           <TabPanel>
-            <table>
-              <tbody>
-                <tr><td><strong>Join</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.currentTokenInfo.timeStamp==='0'?'-':moment.unix(this.currentTokenInfo.timeStamp).format("hh:mm DD/MM/YY")}</td><td></td></tr>
-                <tr><td><strong>Activated</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.currentTokenInfo.activated==='0'?'-':moment.unix(this.currentTokenInfo.activated).format("hh:mm DD/MM/YY")}</td><td></td></tr>
-                <tr><td><strong>End</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.currentTokenInfo.activated==='0'?'-':moment.unix(this.currentTokenInfo.activated).add(parseInt(this.currentTokenInfo.duration,10),'seconds').format("hh:mm DD/MM/YY")}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.currentTokenInfo.duration==='0'?'-':moment.duration(parseInt(this.currentTokenInfo.duration,10),'seconds').asDays()}&nbsp;Days</td></tr>
-                <tr><td><strong>To Go</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.currentTokenInfo.activated==='0'?'-':this.precisionRound(moment.duration(moment.unix(this.currentTokenInfo.activated).add(parseInt(this.currentTokenInfo.duration,10),'seconds').diff(moment())).asDays(),1)}&nbsp;Days</td><td></td></tr>
-                <tr><td><strong>Value</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.context.drizzle.web3.utils.fromWei(this.currentTokenInfo.amount, 'ether')}&nbsp;Ether</td><td></td></tr>
-                <tr><td><strong>Paid</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.context.drizzle.web3.utils.fromWei(this.currentTokenInfo.paid, 'ether')}&nbsp;Ether</td><td></td></tr>
-                <tr><td><strong>Claim number</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.currentTokenInfo.claimNumber}&nbsp;</td><td></td></tr>
-                <tr><td><strong>Status</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{this.renderTokenStatus(this.currentTokenInfo.status)}&nbsp;</td><td></td></tr>
-              </tbody>
-            </table>
+            {this.renderCrowdsurance(false)}
           </TabPanel>
+            
+          <TabPanel>
+            {this.renderRequest()}
+          </TabPanel>
+
           <br/><br/>
         </Tabs>
     )
   }
-  renderInfo(t) {
-
-    if(!(this.dataKeyParameters in this.props['LCSToken']['parameters'])) {
-      return (
-        <span>Fetching...</span>
-      )
-    }
-    var displayDataParameters = this.props['LCSToken']['parameters'][this.dataKeyParameters].value
-    var joinAmountETH = displayDataParameters['joinAmount'];
-
-    return (
-     <div>
-        <h2>Smart Contract Information</h2>
-        <h3>Current Account</h3>
-        <AccountData accountIndex="0" units="ether" precision="4" />
-        <BalanceData contract="RSTToken" method="balanceOf" accountIndex="0" units="nano" precision="3" correction="1" /> <ContractData contract="RSTToken" method="symbol" hideIndicator />
-        <h3>RST Token Address</h3>
-        <p><ContractData contract="LCSToken" method="RST" /></p>
-        <p><BalanceData contract="RSTToken" method="totalSupply" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
-        <h3>LCS Token Address</h3>
-        <p><ContractData contract="ERC20Adapter" method="root" /></p>
-        <p><ContractData contract="TokenContainer" method="balanceOf" methodArgs={[this.props.accounts[0]]} /> <ContractData contract="TokenContainer" method="symbol" hideIndicator /> </p>
-        <p><BalanceData contract="ERC20Adapter" method="balanceOf" accountIndex="0" units="ether" precision="4" /> Ether </p>
-        <h3>LCS Current Token</h3>
-        <p><ContractData contract="LCSToken" method="getCurrentTokenId" /> </p>
-        <h3>LCS Total Supply</h3>
-        <p><ContractData contract="TokenContainer" method="totalSupply" /> </p>
-        <h3>Application number</h3>
-        <p><ContractData contract="LCSToken" method="appNumber" /></p>
-        <h3>LCS Token Owner</h3>
-        <p><ContractData contract="LCSToken" method="owner" /></p>
-        <h3>Join Amount [RST]</h3>
-        <p><BalanceData contract="LCSToken" method="joinAmountRST" accountIndex="0" units="nano" correction="1" precision="3" viewOnly /> <ContractData contract="RSTToken" method="symbol" hideIndicator /> </p>
-        <h3>Join Amount [Wei]</h3>
-        <p>{joinAmountETH}</p>
-        {t && 
-          <div>
-            <h3>Super Pool</h3>
-            <p><BalanceData contract="TokenContainer" method="valueOf" methodArgs={[1]} units="ether" precision="4" /> Ether </p>
-            <h3>Pools</h3>
-            <p><BalanceData contract="TokenContainer" method="valueOf" methodArgs={[2]} units="ether" precision="4" /> Ether </p>
-            <h3>Sub Pools</h3>
-            <p><BalanceData contract="TokenContainer" method="valueOf" methodArgs={[3]} units="ether" precision="4" /> Ether </p>
-            <h3>Commission</h3>
-            <p><BalanceData contract="TokenPool" method="getComission" accountIndex="0" units="ether" precision="4" viewOnly /> Ether </p>
-            <h3>Token IDs</h3>
-            <BalanceData contract="TokenContainer" method="tokensOfOwner" methodArgs={[this.props.accounts[0]]} array/>
-          </div>
-        }
-        <br/><br/>
-      </div>
-    )
-  }
+  
   renderJoinTabs() {
 
     if(!(this.dataKey in this.props['LCSToken']['getBizProcessId'])) {
@@ -398,6 +460,7 @@ class Home extends Component {
             <Tab>Send RST</Tab>
             <Tab>Transfer</Tab>
             <Tab>Select</Tab>
+            <Tab>View</Tab>
             <Tab disabled={bizProcessId !== "5"}>Vote</Tab>
           </TabList>
 
@@ -446,6 +509,19 @@ class Home extends Component {
           </TabPanel>
 
           <TabPanel>
+            <h2>Select Token ID</h2>
+            <form>
+              <input key="tokenId" type="text" name="tokenId" value={this.state.tokenId} placeholder="Token Id" onChange={this.handleInputChange} />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <button key="submit" className="pure-button" type="button" onClick={this.handleSubmit}>Submit</button>
+            </form>
+            <h2>Crowdsurance Info</h2>
+            {this.renderCrowdsurance(true)}
+            <h2>Claim Info</h2>
+            {this.renderRequest()}
+          </TabPanel>
+
+          <TabPanel>
             <SmartContainer accountIndex="0" bizProcessId="5">
               <h2>Vote</h2>
               <p>Vote for the claim that you have been selected</p>
@@ -464,6 +540,36 @@ class Home extends Component {
       </SmartContainer>
     )
   }
+
+  renderNetwork() {
+    switch(this.currentNetworkId) {
+      case 1:
+        return('Mainnet');
+      case 3:
+        return('Ropsten');
+      case 4:
+        return('Rinkeby');
+      case 577:
+        return('Local');
+      default:
+        return('Undefined');
+    }
+  }
+
+  getEtherscanLink() {
+    switch(this.currentNetworkId) {
+      case 1:
+        return('https://etherscan.io/address/');
+      case 3:
+        return('https://ropsten.etherscan.io/address/');
+      case 4:
+        return('https://rinkeby.etherscan.io/address/');
+      case 577:
+        return('');
+      default:
+        return('');
+    }
+  }
   
   render() {
     return (
@@ -474,8 +580,8 @@ class Home extends Component {
             <img src={rega} alt="drizzle-logo" />
             <h1>REGA Luggage Crowdsurance</h1>
             <h3>Smart Contracts &nbsp;<small>v 0.1.2</small></h3>
-
-            <br/><br/>
+            <h2>{this.renderNetwork()}</h2>
+            <br/>
           </div>
 
           <SmartContainer accountIndex="0" notOwnerOnly ProgressBar>
